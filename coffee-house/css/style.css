@@ -118,6 +118,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  margin-bottom: 100px;
 }
 
 .hero__text {
@@ -161,4 +162,19 @@ body {
   line-height: 24px;
   color: #403F3D;
   text-align: center;
+}
+
+/* ==== main -> favorites ==== */
+
+.favorites__title {
+  font-size: 60px;
+  font-style: normal;
+  line-height: 75px;
+  text-align: center;
+  color: #403F3D;
+}
+
+.favorites__title > em {
+  font-style: oblique 8deg;
+  color:#B0907A;
 }
