@@ -1,4 +1,6 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -41,10 +43,10 @@ body {
   margin: 0 auto;
 }
 
-/* header */
+/* ==== header ==== */
 
 .header {
-  padding-top: 15px;
+  padding-top: 20px;
 }
 
 .header__container {
@@ -55,12 +57,12 @@ body {
 }
 
 .header__logo {
-  transform: translateY(5px);
+  max-height: 60px;
 }
 
 .nav__list {
   display: flex;
-  align-items: center;
+  padding-bottom: 4px;
 }
 
 .nav__item:not(:last-child) {
@@ -70,23 +72,34 @@ body {
 .nav__link {
   font-size: 16px;
   font-style: normal;
-  line-height: 150%;
+  line-height: 24px;
   color: #403F3D;
 }
 
 .header__menu {
+  height: 100%;
   display: flex;
-  align-items: center;
+  padding-bottom: 4px;
 }
 
 .header__link {
   margin-right: 8px;
   font-size: 16px;
   font-style: normal;
-  line-height: 150%;
+  line-height: 24px;
   color: #403F3D; 
 }
 
 .menu-link__logo {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+/* ==== main ==== */
+
+.content {
+  padding-top: 20px;
+}
+
+.hero__image {
+  background-image: url(../img/hero-image.jpg);
 }
