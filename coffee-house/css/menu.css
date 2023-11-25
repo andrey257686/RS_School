@@ -1,0 +1,296 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  background-color: #E1D4C9;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.list-reset {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.btn-reset {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+/* ==== header ==== */
+
+.header {
+  padding-top: 20px;
+}
+
+.header__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__logo {
+  max-height: 60px;
+}
+
+.nav__list {
+  display: flex;
+  padding-bottom: 4px;
+}
+
+.nav__item:not(:last-child) {
+  margin-right: 40px;
+}
+
+.nav__link {
+  font-size: 16px;
+  font-style: normal;
+  line-height: 24px;
+  color: #403F3D;
+}
+
+.header__menu {
+  height: 100%;
+  display: flex;
+  padding-bottom: 4px;
+}
+
+.header__link {
+  margin-right: 8px;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 24px;
+  color: #403F3D; 
+}
+
+.menu-link__logo {
+  transform: translateY(-2px);
+}
+
+/* ==== main ==== */
+
+h1 {
+  margin: 0;
+}
+
+.banner {
+  padding-top: 20px;
+  margin: auto;
+  max-width: 800px;
+}
+
+.banner__title {
+  color: #403F3D;
+  text-align: center;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 75px; 
+}
+
+.banner__title > em {
+  color: #B0907A;
+  font-style: oblique 8deg;
+}
+
+.categories {
+  padding-top: 40px;
+}
+
+.categories__list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.categories__item--button {
+  display: flex;
+  padding: 8px 16px 8px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 100px;
+  background: #E1D4C9;
+  border: 1px solid #c1b6ad;
+}
+
+.categories__item--text {
+  color: #403F3D;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+
+/* ==== footer ==== */
+
+.footer {
+  padding-bottom: 20px;
+}
+
+.footer__container {
+  display: flex;
+  padding: 100px;
+  align-items: center;
+  gap: 100px;
+  border-radius: 40px;
+  background: #665F55;
+}
+
+.footer__offer {
+  display: flex;
+  flex-direction: column;
+  max-width: 530px;
+  gap: 40px
+}
+
+.footer__contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 40px
+}
+
+.footer__title {
+  color: #E1D4C9;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 75px;
+}
+
+.footer__title > em {
+  color:  #B0907A;
+  font-style: oblique 8deg;
+}
+
+.socials__list {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.socials__link {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  border: 1px solid #c1b6ad;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.socials__link--tw {
+  background-image: url(../img/twitter.svg);
+  background-size: 24px;
+}
+
+.socials__link--inst {
+  background-image: url(../img/instagram.svg);
+  background-size: 24px;
+}
+
+.socials__link--fb {
+  background-image: url(../img/facebook.svg);
+  background-size: 24px;
+}
+
+.contacts__title {
+  color: #E1D4C9;
+  font-size: 24px;
+  font-style: normal;
+  line-height: 30px; 
+}
+
+.contacts__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contacts__address {
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.contacts__address--link {
+  color: #E1D4C9;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height:24px; 
+}
+
+.contacts__phone {
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.contacts__phone--link {
+  color: #E1D4C9;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height:24px; 
+}
+
+.contacts__time {
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.contacts__time--link {
+  color: #E1D4C9;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height:24px; 
+}
