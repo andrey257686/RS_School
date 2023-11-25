@@ -282,6 +282,7 @@ body {
 
 .about {
   padding-top: 100px;
+  margin-bottom: 100px;
 }
 
 .about__title {
@@ -300,14 +301,14 @@ body {
 
 .about__images {
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 40px
 }
 
 .about__images--column {
   display: flex;
   flex-direction: column;
-  max-width: 660px;
+  align-items: flex-start;
   gap: 40px;
 }
 
@@ -333,7 +334,6 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  margin-bottom: 40px;
   overflow: hidden;
 }
 
@@ -370,4 +370,215 @@ body {
 .about__image--4 {
   object-fit: none;
   margin-top: -35px;
+}
+
+/* ==== main -> about ==== */
+
+.mobile {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+  margin-bottom: 100px;
+}
+
+.mobile__title {
+  color: #403F3D;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 75px;
+}
+
+.mobile__title > em {
+  color:  #B0907A;
+  font-style: oblique 8deg;
+}
+
+.mobile__description {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.mobile__advertising {
+  color: #403F3D;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.mobile__buttons {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.mobile__button {
+  display: flex;
+  width: 200px;
+  padding: 12px 20px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 100px;
+  border: 1px solid #665f55;
+  background-color: #e1d4c9;
+}
+
+.mobile__text {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  color: #403F3D;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.mobile__text--top {
+  font-size: 10px;
+  line-height:  14px; 
+}
+
+.mobile__text--bottom {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* ==== footer ==== */
+
+.footer {
+  padding-bottom: 20px;
+}
+
+.footer__container {
+  display: flex;
+  padding: 100px;
+  align-items: center;
+  gap: 100px;
+  border-radius: 40px;
+  background: #665F55;
+}
+
+.footer__offer {
+  display: flex;
+  flex-direction: column;
+  max-width: 530px;
+  gap: 40px
+}
+
+.footer__contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 40px
+}
+
+.footer__title {
+  color: #E1D4C9;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 75px;
+}
+
+.footer__title > em {
+  color:  #B0907A;
+  font-style: oblique 8deg;
+}
+
+.socials__list {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.socials__link {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  border: 1px solid #c1b6ad;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.socials__link--tw {
+  background-image: url(../img/twitter.svg);
+  background-size: 24px;
+}
+
+.socials__link--inst {
+  background-image: url(../img/instagram.svg);
+  background-size: 24px;
+}
+
+.socials__link--fb {
+  background-image: url(../img/facebook.svg);
+  background-size: 24px;
+}
+
+.contacts__title {
+  color: #E1D4C9;
+  font-size: 24px;
+  font-style: normal;
+  line-height: 30px; 
+}
+
+.contacts__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contacts__address {
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.contacts__address--link {
+  color: #E1D4C9;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height:24px; 
+}
+
+.contacts__phone {
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.contacts__phone--link {
+  color: #E1D4C9;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height:24px; 
+}
+
+.contacts__time {
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.contacts__time--link {
+  color: #E1D4C9;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height:24px; 
 }
