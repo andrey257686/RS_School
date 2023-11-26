@@ -6,8 +6,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <!-- <link  rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"> -->
-  <link rel="stylesheet" href="css/swiper-bundle.min.css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <title>Home</title>
@@ -55,30 +53,32 @@
         </div>
         <div class="favorites">
           <h2 class="favorites__title">Choose your <em>favorite</em> coffee</h2>
-          <div class="slider favorites__slider swiper">
-            <div class="swiper-wrapper">
-              <div class="slider__slide swiper-slide">
-                <img class="slider__img" src="img/coffee-slider-1.png" alt="Favorite coffee">
-                <h3 class="slider__title">S’mores Frappuccino</h3>
-                <p class="slider__description">This new drink takes an espresso and mixes it with brown sugar and cinnamon before being topped with oat milk.</p>
-                <h4 class="slider__price">$5.50</h4>
-              </div>
-              <div class="slider__slide swiper-slide">
-                <img class="slider__img" src="img/coffee-slider-2.png" alt="Favorite coffee">
-                <h3 class="slider__title">Caramel Macchiato</h3>
-                <p class="slider__description">Fragrant and unique classic espresso with rich caramel-peanut syrup, with cream under whipped thick foam.</p>
-                <h4 class="slider__price">$5.00</h4>
-              </div>
-              <div class="slider__slide swiper-slide">
-                <img class="slider__img" src="img/coffee-slider-3.png" alt="Favorite coffee">
-                <h3 class="slider__title">Ice coffee</h3>
-                <p class="slider__description">A popular summer drink that tones and invigorates. Prepared from coffee, milk and ice.</p>
-                <h4 class="slider__price">$4.50</h4>
-              </div>
+          <div class="slider favorites__slider">
+            <div class="favorites__button favorites__button--left"></div>
+            <div class="slider__slide slider__slide--1">
+              <img class="slider__img" src="img/coffee-slider-1.png" alt="Favorite coffee">
+              <h3 class="slider__title">S’mores Frappuccino</h3>
+              <p class="slider__description">This new drink takes an espresso and mixes it with brown sugar and cinnamon before being topped with oat milk.</p>
+              <h4 class="slider__price">$5.50</h4>
             </div>
-            <div class="favorites__button favorites__button--left swiper-button-prev"></div>
-            <div class="favorites__button favorites__button--right swiper-button-next"></div>
-            <div class="favorites__controls swiper-pagination"></div>
+            <div class="slider__slide slider__slide--2">
+              <img class="slider__img" src="img/coffee-slider-2.png" alt="Favorite coffee">
+              <h3 class="slider__title">Caramel Macchiato</h3>
+              <p class="slider__description">Fragrant and unique classic espresso with rich caramel-peanut syrup, with cream under whipped thick foam.</p>
+              <h4 class="slider__price">$5.00</h4>
+            </div>
+            <div class="slider__slide slider__slide--3">
+              <img class="slider__img" src="img/coffee-slider-3.png" alt="Favorite coffee">
+              <h3 class="slider__title">Ice coffee</h3>
+              <p class="slider__description">A popular summer drink that tones and invigorates. Prepared from coffee, milk and ice.</p>
+              <h4 class="slider__price">$4.50</h4>
+            </div>
+            <div class="favorites__button favorites__button--right"></div>
+            <div class="favorites__controls">
+              <div class="favorites__control"></div>
+              <div class="favorites__control"></div>
+              <div class="favorites__control"></div>
+            </div>
           </div>
         </div>
         <div class="about">
@@ -182,8 +182,5 @@
       </div>
     </div>
   </footer>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script> -->
-  <script src="js/swiper-bundle.min.js"></script>
-  <script src="js/main.js"></script>
 </body>
 </html>
