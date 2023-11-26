@@ -7,6 +7,7 @@
 a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 img {
@@ -83,10 +84,52 @@ body {
   color: #403F3D;
 }
 
+.nav__item {
+  position: relative;
+}
+
+.nav__item::after {
+  content: "";
+  display: block;
+  width: 0; 
+  height: 2px;
+  background: #E1D4C9;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.nav__item:hover::after {
+  width: 100%;
+  background: #403F3D;
+}
+
 .header__menu {
+  position: relative;
   height: 100%;
   display: flex;
   padding-bottom: 4px;
+  cursor: pointer;
+}
+
+.header__menu::after {
+  content: "";
+  display: block;
+  width: 0; 
+  height: 2px;
+  background: #E1D4C9;
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.header__menu:hover::after {
+  width: 100%;
+  background: #403F3D;
 }
 
 .header__link {
@@ -157,11 +200,21 @@ body {
   padding: 20px 78px;
   background-color: #E1D4C9;
   border-radius: 100px;
+  text-align: center;
   font-size: 16px;
   font-style: normal;
   line-height: 24px;
   color: #403F3D;
-  text-align: center;
+  gap: 8px;
+}
+
+.hero__button img {
+  width: 0px;
+  transition: width 0.5s ease-in-out;
+}
+
+.hero__button:hover img {
+  width: 20px;
 }
 
 /* ==== main -> favorites ==== */
@@ -256,15 +309,27 @@ body {
   border-radius: 100px;
   border: 1px solid  #665F55;
   bottom: 20px;
+  cursor: pointer;
+  transition: background-color, 0.5s ease;
+}
+
+.favorites__button svg path {
+  stroke: #403F3D;
+}
+
+.favorites__button:hover {
+  background-color: #665F55;
+}
+
+.favorites__button:hover svg path {
+  stroke: #E1D4C9;
 }
 
 .favorites__button--left {
-  background-image: url('../img/arrow-left.svg');
   left: 4px;
 }
 
 .favorites__button--right {
-  background-image: url('../img/arrow-right.svg');
   right: 4px;
 }
 
@@ -275,11 +340,21 @@ body {
   gap: 12px;
 }
 
+.favorites__control:first-child {
+  background: #665F55;
+}
+
 .favorites__control {
   width: 40px;
   height: 4px;
   border-radius: 100px;
   background: #C1B6AD;
+  cursor: pointer;
+  transition: background 0.5s ease;
+}
+
+.favorites__control:hover {
+  background: #665F55;
 }
 
 /* ==== main -> about ==== */
@@ -327,8 +402,13 @@ body {
 }
 
 .about__image--1 {
-  object-fit: none;
+  transform: scale(1.1);
   margin-top: -35px;
+  transition: transform 0.5s ease;
+}
+
+.about__image--1:hover {
+  transform: scale(1.0);
 }
 
 .about__image--box-2 {
@@ -342,8 +422,13 @@ body {
 }
 
 .about__image--2 {
-  object-fit: none;
+  transform: scale(1.1);
   margin-top: -115px;
+  transition: transform 0.5s ease;
+}
+
+.about__image--2:hover {
+  transform: scale(1.0);
 }
 
 .about__image--box-3 {
@@ -357,8 +442,13 @@ body {
 }
 
 .about__image--3 {
-  object-fit: none;
+  transform: scale(1.1);
   margin-top: -115px;
+  transition: transform 0.5s ease;
+}
+
+.about__image--3:hover {
+  transform: scale(1.0);
 }
 
 .about__image--box-4 {
@@ -372,8 +462,13 @@ body {
 }
 
 .about__image--4 {
-  object-fit: none;
+  transform: scale(1.1);
   margin-top: -35px;
+  transition: transform 0.5s ease;
+}
+
+.about__image--4:hover {
+  transform: scale(1.0);
 }
 
 /* ==== main -> about ==== */
@@ -428,7 +523,21 @@ body {
   gap: 8px;
   border-radius: 100px;
   border: 1px solid #665f55;
-  background-color: #e1d4c9;
+  background-color: #E1D4C9;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.mobile__button:hover {
+  background-color: #665F55;
+}
+
+.mobile__button:hover svg path {
+  fill: #E1D4C9;
+}
+
+.mobile__button:hover .mobile__text {
+  color: #E1D4C9;
 }
 
 .mobile__text {
@@ -499,29 +608,23 @@ body {
 }
 
 .socials__link {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 60px;
   height: 60px;
   border-radius: 100px;
   border: 1px solid #c1b6ad;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  cursor: pointer;
+  transition: all 0.5s ease;
 }
 
-.socials__link--tw {
-  background-image: url(../img/twitter.svg);
-  background-size: 24px;
+.socials__link:hover {
+  background: #E1D4C9;
 }
 
-.socials__link--inst {
-  background-image: url(../img/instagram.svg);
-  background-size: 24px;
-}
-
-.socials__link--fb {
-  background-image: url(../img/facebook.svg);
-  background-size: 24px;
+.socials__link:hover svg path {
+  stroke: #403F3D;
 }
 
 .contacts__title {
@@ -540,11 +643,30 @@ body {
 }
 
 .contacts__address {
+  position: relative;
   display: flex;
   height: 28px;
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
+  cursor: pointer;
+}
+
+.contacts__address::after {
+  content: "";
+  display: block;
+  width: 0; 
+  height: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.contacts__address:hover::after {
+  width: 100%;
+  background: #E1D4C9;
 }
 
 .contacts__address--link {
@@ -556,11 +678,29 @@ body {
 }
 
 .contacts__phone {
+  position: relative;
   display: flex;
   height: 28px;
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
+}
+
+.contacts__phone::after {
+  content: "";
+  display: block;
+  width: 0; 
+  height: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.contacts__phone:hover::after {
+  width: 100%;
+  background: #E1D4C9;
 }
 
 .contacts__phone--link {

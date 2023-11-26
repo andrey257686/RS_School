@@ -48,13 +48,20 @@
           <div class="hero__text">
             <h2 class="hero__title"><em>Enjoy</em> premium coffee at our charming cafe</h2>
             <p class="hero__description">With its inviting atmosphere and delicious coffee options, the Coffee House Resource is a popular destination for coffee lovers and those seeking a warm and inviting space to enjoy their favorite beverage.</p>
-            <button class="hero__button btn-reset">Menu</button>
+            <button class="hero__button btn-reset">
+              <a class="hero__button--link">Menu</a>
+              <img class="hero__button--logo" src="img/coffee-cup.svg" alt="Coffee cup">
+            </button>
           </div>
         </div>
         <div class="favorites">
           <h2 class="favorites__title">Choose your <em>favorite</em> coffee</h2>
           <div class="slider favorites__slider">
-            <div class="favorites__button favorites__button--left"></div>
+            <div class="favorites__button favorites__button--left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18.5 12H6M6 12L12 6M6 12L12 18" stroke="#403F3D" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
             <div class="slider__slide slider__slide--1">
               <img class="slider__img" src="img/coffee-slider-1.png" alt="Favorite coffee">
               <h3 class="slider__title">S’mores Frappuccino</h3>
@@ -73,7 +80,11 @@
               <p class="slider__description">A popular summer drink that tones and invigorates. Prepared from coffee, milk and ice.</p>
               <h4 class="slider__price">$4.50</h4>
             </div>
-            <div class="favorites__button favorites__button--right"></div>
+            <div class="favorites__button favorites__button--right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M6 12H18.5M18.5 12L12.5 6M18.5 12L12.5 18" stroke="#403F3D" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
             <div class="favorites__controls">
               <div class="favorites__control"></div>
               <div class="favorites__control"></div>
@@ -108,14 +119,23 @@
             <p class="mobile__advertising">Download the Resource app today and experience the comfort of ordering your favorite coffee from wherever you are</p>
             <div class="mobile__buttons">
               <button class="mobile__button mobile__button--apple">
-                <img class="mobile__logo--apple" src="./img/apple-icon.svg" alt="Apple">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                  <path d="M26.7073 18.6307C26.6704 14.6324 30.065 12.6872 30.2203 12.5966C28.2977 9.86366 25.3178 9.49026 24.2707 9.46048C21.7679 9.20369 19.3403 10.9206 18.0654 10.9206C16.765 10.9206 14.8017 9.48529 12.6858 9.52747C9.96293 9.56841 7.41566 11.1055 6.0186 13.4923C3.13542 18.359 5.28572 25.5108 8.04802 29.4446C9.42981 31.3712 11.0444 33.5223 13.1578 33.4466C15.2254 33.3635 15.9978 32.1614 18.4929 32.1614C20.9651 32.1614 21.6903 33.4466 23.8457 33.3983C26.0647 33.3635 27.4618 31.463 28.7952 29.519C30.392 27.3108 31.0333 25.1362 31.0588 25.0245C31.0066 25.0071 26.7493 23.4229 26.7073 18.6307Z" fill="#403F3D"/>
+                  <path d="M22.6357 6.87268C23.7477 5.51675 24.5086 3.67205 24.2974 1.80005C22.6879 1.86952 20.675 2.88554 19.5159 4.21169C18.4903 5.38029 17.5742 7.29571 17.8109 9.097C19.6189 9.2285 21.4753 8.20752 22.6357 6.87268Z" fill="#403F3D"/>
+                </svg>
                 <span class="mobile__text">
                   <span class="mobile__text--top">Available on the</span>
                   <span class="mobile__text--bottom">App Store</span>
                 </span>
               </button>
               <button class="mobile__button mobile__button--android">
-                <img class="mobile__logo--android" src="./img/google_play-icon.svg" alt="Android">
+                <!-- <img class="mobile__logo--android" src="./img/google_play-icon.svg" alt="Android"> -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                  <path d="M3.7558 3.20297C3.39335 3.57289 3.18359 4.14884 3.18359 4.89471V31.4994C3.18359 32.2453 3.39335 32.8212 3.7558 33.1911L3.84525 33.2723L19.1359 18.37V18.0181L3.84525 3.11575L3.7558 3.20297Z" fill="#403F3D"/>
+                  <path d="M26.0776 23.34L20.9863 18.37V18.0181L26.0837 13.0482L26.1979 13.1128L32.2345 16.4617C33.9573 17.4121 33.9573 18.976 32.2345 19.9324L26.1979 23.2753L26.0776 23.34Z" fill="#403F3D"/>
+                  <path d="M25.2733 24.2007L20.0617 19.1195L4.68164 34.1166C5.25384 34.7031 6.18695 34.7737 7.24807 34.1873L25.2733 24.2007Z" fill="#403F3D"/>
+                  <path d="M25.2733 12.1876L7.24807 2.20103C6.18695 1.62058 5.25384 1.69125 4.68164 2.27772L20.0617 17.2688L25.2733 12.1876Z" fill="#403F3D"/>
+                </svg>
                 <span class="mobile__text">
                   <span class="mobile__text--top">Available on</span>
                   <span class="mobile__text--bottom">Google Play</span>
@@ -137,13 +157,27 @@
         <div class="socials footer__socials">
           <ul class="socials__list list-reset">
             <li class="socials__item">
-              <a href="#" class="socials__link socials__link--tw" aria-label="Twitter"></a>
+              <a href="#" class="socials__link socials__link--tw" aria-label="Twitter">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M23 3.01006C23 3.01006 20.9821 4.20217 19.86 4.54006C19.2577 3.84757 18.4573 3.35675 17.567 3.13398C16.6767 2.91122 15.7395 2.96725 14.8821 3.29451C14.0247 3.62177 13.2884 4.20446 12.773 4.96377C12.2575 5.72309 11.9877 6.62239 12 7.54006V8.54006C10.2426 8.58562 8.50127 8.19587 6.93101 7.4055C5.36074 6.61513 4.01032 5.44869 3 4.01006C3 4.01006 -1 13.0101 8 17.0101C5.94053 18.408 3.48716 19.109 1 19.0101C10 24.0101 21 19.0101 21 7.51006C20.9991 7.23151 20.9723 6.95365 20.92 6.68006C21.9406 5.67355 23 3.01006 23 3.01006Z" stroke="#E1D4C9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
             </li>
             <li class="socials__item">
-              <a href="#" class="socials__link socials__link--inst" aria-label="Instagram"></a>
+              <a href="#" class="socials__link socials__link--inst" aria-label="Instagram">            
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="#E1D4C9" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="#E1D4C9"/>
+                  <path d="M17.5 6.51L17.51 6.49889" stroke="#E1D4C9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
             </li>
             <li class="socials__item">
-              <a href="#" class="socials__link socials__link--fb" aria-label="Facebook"></a>
+              <a href="#" class="socials__link socials__link--fb" aria-label="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M17 2H14C12.6739 2 11.4021 2.52678 10.4645 3.46447C9.52678 4.40215 9 5.67392 9 7V10H6V14H9V22H13V14H16L17 10H13V7C13 6.73478 13.1054 6.48043 13.2929 6.29289C13.4804 6.10536 13.7348 6 14 6H17V2Z" stroke="#E1D4C9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
             </li>
           </ul>
         </div>
@@ -156,7 +190,7 @@
               <path d="M16.6663 8.33329C16.6663 12.0152 9.99967 18.3333 9.99967 18.3333C9.99967 18.3333 3.33301 12.0152 3.33301 8.33329C3.33301 4.65139 6.31778 1.66663 9.99967 1.66663C13.6816 1.66663 16.6663 4.65139 16.6663 8.33329Z" stroke="#E1D4C9" stroke-width="1.5"/>
               <path d="M10.0003 9.16667C10.4606 9.16667 10.8337 8.79357 10.8337 8.33333C10.8337 7.8731 10.4606 7.5 10.0003 7.5C9.54009 7.5 9.16699 7.8731 9.16699 8.33333C9.16699 8.79357 9.54009 9.16667 10.0003 9.16667Z" fill="#E1D4C9" stroke="#E1D4C9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <address class="contacts__address--link">8558 Green Rd.,&ensp;LA</address>
+            <a class="contacts__address--link" href="https://www.google.com/maps/search/8558+Green+Rd.,++LA/@34.020479,-118.4117325,10z">8558 Green Rd.,&ensp;LA</a>
           </div>
           <div class="contacts__phone">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
