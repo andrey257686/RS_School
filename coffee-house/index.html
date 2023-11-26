@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link type="image/x-icon" href="./img/favicon.ico" rel="shortcut icon">
+  <link type="Image/x-icon" href="./img/favicon.ico" rel="icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -13,27 +15,27 @@
 <body>
   <header class="header">
     <div class="container header__container">
-      <a href="#" class="logo header__logo">
+      <a href="index.html" class="logo header__logo">
         <img src="img/logo.svg" alt="Logo">
       </a>
       <nav class="nav header__nav">
         <ul class="nav__list list-reset">
           <li class="nav__item">
-            <a class="nav__link">Favorite coffee</a>
+            <a class="nav__link" href="#favorite">Favorite coffee</a>
           </li>
           <li class="nav__item">
-            <a class="nav__link">About</a>
+            <a class="nav__link" href="#about">About</a>
           </li>
           <li class="nav__item">
-            <a class="nav__link">Mobile app</a>
+            <a class="nav__link" href="#mobile">Mobile app</a>
           </li>
           <li class="nav__item">
-            <a class="nav__link">Contact us</a>
+            <a class="nav__link" href="#footer">Contact us</a>
           </li>
         </ul>
       </nav>
       <div class="menu-link header__menu">
-        <a class="header__link">Menu</a>
+        <a class="header__link" href="menu.html">Menu</a>
         <img class="menu-link__logo" src="img/cup.svg" alt="Coffee cup">
       </div>
     </div>
@@ -48,13 +50,15 @@
           <div class="hero__text">
             <h2 class="hero__title"><em>Enjoy</em> premium coffee at our charming cafe</h2>
             <p class="hero__description">With its inviting atmosphere and delicious coffee options, the Coffee House Resource is a popular destination for coffee lovers and those seeking a warm and inviting space to enjoy their favorite beverage.</p>
-            <button class="hero__button btn-reset">
-              <a class="hero__button--link">Menu</a>
-              <img class="hero__button--logo" src="img/coffee-cup.svg" alt="Coffee cup">
-            </button>
+            <form action="menu.html" target="_blank">
+              <button class="hero__button btn-reset">
+                <span class="hero__button--link">Menu</span>
+                <img class="hero__button--logo" src="img/cup.svg" alt="Coffee cup">
+              </button>
+            </form>
           </div>
         </div>
-        <div class="favorites">
+        <div id="favorite" class="favorites">
           <h2 class="favorites__title">Choose your <em>favorite</em> coffee</h2>
           <div class="slider favorites__slider">
             <div class="favorites__button favorites__button--left">
@@ -93,7 +97,7 @@
           </div>
         </div>
         <div class="about">
-          <h2 class="about__title">Resource is <em>the perfect and cozy place</em> where you can enjoy a variety of hot beverages, relax, catch up with friends, or get some work done.</h2>
+          <h2 id="about" class="about__title">Resource is <em>the perfect and cozy place</em> where you can enjoy a variety of hot beverages, relax, catch up with friends, or get some work done.</h2>
           <div class="about__images">
             <div class="about__images--column">
               <div class="about__image about__image--box-1">
@@ -113,7 +117,7 @@
             </div>
           </div>
         </div>
-        <div class="mobile">
+        <div id="mobile" class="mobile">
           <div class="mobile__description">
             <h2 class="mobile__title"><em>Download</em> our apps to start ordering</h2>
             <p class="mobile__advertising">Download the Resource app today and experience the comfort of ordering your favorite coffee from wherever you are</p>
@@ -129,7 +133,6 @@
                 </span>
               </button>
               <button class="mobile__button mobile__button--android">
-                <!-- <img class="mobile__logo--android" src="./img/google_play-icon.svg" alt="Android"> -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
                   <path d="M3.7558 3.20297C3.39335 3.57289 3.18359 4.14884 3.18359 4.89471V31.4994C3.18359 32.2453 3.39335 32.8212 3.7558 33.1911L3.84525 33.2723L19.1359 18.37V18.0181L3.84525 3.11575L3.7558 3.20297Z" fill="#403F3D"/>
                   <path d="M26.0776 23.34L20.9863 18.37V18.0181L26.0837 13.0482L26.1979 13.1128L32.2345 16.4617C33.9573 17.4121 33.9573 18.976 32.2345 19.9324L26.1979 23.2753L26.0776 23.34Z" fill="#403F3D"/>
@@ -148,7 +151,7 @@
       </div>
     </section>
   </main>
-  <footer class="footer">
+  <footer id="footer" class="footer">
     <div class="container footer__container">
       <div class="footer__offer">
         <h2 class="footer__title">
@@ -186,18 +189,22 @@
         <h2 class="contacts__title">Contact us</h2>
         <div class="contacts__info">
           <div class="contacts__address">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M16.6663 8.33329C16.6663 12.0152 9.99967 18.3333 9.99967 18.3333C9.99967 18.3333 3.33301 12.0152 3.33301 8.33329C3.33301 4.65139 6.31778 1.66663 9.99967 1.66663C13.6816 1.66663 16.6663 4.65139 16.6663 8.33329Z" stroke="#E1D4C9" stroke-width="1.5"/>
-              <path d="M10.0003 9.16667C10.4606 9.16667 10.8337 8.79357 10.8337 8.33333C10.8337 7.8731 10.4606 7.5 10.0003 7.5C9.54009 7.5 9.16699 7.8731 9.16699 8.33333C9.16699 8.79357 9.54009 9.16667 10.0003 9.16667Z" fill="#E1D4C9" stroke="#E1D4C9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <a href="https://www.google.com/maps/search/8558+Green+Rd.,++LA/@34.020479,-118.4117325,10z">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.6663 8.33329C16.6663 12.0152 9.99967 18.3333 9.99967 18.3333C9.99967 18.3333 3.33301 12.0152 3.33301 8.33329C3.33301 4.65139 6.31778 1.66663 9.99967 1.66663C13.6816 1.66663 16.6663 4.65139 16.6663 8.33329Z" stroke="#E1D4C9" stroke-width="1.5"/>
+                <path d="M10.0003 9.16667C10.4606 9.16667 10.8337 8.79357 10.8337 8.33333C10.8337 7.8731 10.4606 7.5 10.0003 7.5C9.54009 7.5 9.16699 7.8731 9.16699 8.33333C9.16699 8.79357 9.54009 9.16667 10.0003 9.16667Z" fill="#E1D4C9" stroke="#E1D4C9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
             <a class="contacts__address--link" href="https://www.google.com/maps/search/8558+Green+Rd.,++LA/@34.020479,-118.4117325,10z">8558 Green Rd.,&ensp;LA</a>
-          </div>
-          <div class="contacts__phone">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M15.0984 12.2516L11.6665 12.9166C9.34845 11.7531 7.91654 10.4166 7.08321 8.33329L7.72483 4.89154L6.51197 1.66663L3.72946 1.66663C2.60191 1.66663 1.71466 2.59958 1.90108 3.71161C2.29888 6.08454 3.37231 10.0391 6.24987 12.9166C9.27338 15.9401 13.5661 17.3318 16.1378 17.9288C17.299 18.1983 18.3332 17.2908 18.3332 16.0988L18.3332 13.4843L15.0984 12.2516Z" stroke="#E1D4C9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <a href="tel:+1 (603) 555-0123" class="contacts__phone--link">+1 (603) 555-0123</a>
-          </div>
+            </div>
+            <div class="contacts__phone">
+              <a href="tel:+1(603)555-0123">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M15.0984 12.2516L11.6665 12.9166C9.34845 11.7531 7.91654 10.4166 7.08321 8.33329L7.72483 4.89154L6.51197 1.66663L3.72946 1.66663C2.60191 1.66663 1.71466 2.59958 1.90108 3.71161C2.29888 6.08454 3.37231 10.0391 6.24987 12.9166C9.27338 15.9401 13.5661 17.3318 16.1378 17.9288C17.299 18.1983 18.3332 17.2908 18.3332 16.0988L18.3332 13.4843L15.0984 12.2516Z" stroke="#E1D4C9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+              <a href="tel:+1(603)555-0123" class="contacts__phone--link">+1 (603) 555-0123</a>
+            </div>
           <div class="contacts__time">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <g clip-path="url(#clip0_217_1736)">
