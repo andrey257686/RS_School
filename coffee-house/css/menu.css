@@ -4,13 +4,10 @@
   box-sizing: border-box;
 }
 
-h2 {
-  margin: 0 !important;
-}
-
 a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 img {
@@ -87,10 +84,46 @@ body {
   color: #403F3D;
 }
 
+.nav__item {
+  position: relative;
+}
+
+.nav__item::after {
+  content: "";
+  display: block;
+  width: 0; 
+  height: 2px;
+  background: #E1D4C9;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.nav__item:hover::after {
+  width: 100%;
+  background: #403F3D;
+}
+
 .header__menu {
+  position: relative;
   height: 100%;
   display: flex;
   padding-bottom: 4px;
+  cursor: pointer;
+}
+
+.header__menu::after {
+  content: "";
+  display: block;
+  width: 100%; 
+  height: 2px;
+  background: #403F3D;
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .header__link {
@@ -144,14 +177,53 @@ h1 {
 
 .categories__item--button {
   display: flex;
-  height: 46px;            /* установил для того чтобы отладить menu-grid, потом правильно сделать эти кнопки */
+  height: 46px; 
   padding: 8px 16px 8px 8px;
   justify-content: center;
   align-items: center;
   gap: 8px;
   border-radius: 100px;
   background: #E1D4C9;
-  border: 1px solid #c1b6ad;
+  border: 1px solid #C1B6AD;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.categories__item--active {
+  background: #665F55;
+  border: 1px solid #665F55;
+}
+
+.categories__item--active .categories__image {
+  background: #E1D4C9;
+}
+
+.categories__item--active .categories__item--text{
+  color: #E1D4C9;
+}
+
+.categories__item--button:hover {
+  background: #665F55;
+  border: 1px solid #665F55;
+}
+
+.categories__item--button:hover .categories__image {
+  background: #E1D4C9;
+}
+
+.categories__item--button:hover .categories__item--text {
+  color: #E1D4C9;
+}
+
+.categories__image {
+  display: flex;
+  padding: 3px 7px;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 100px;
+  background: #C1B6AD;
 }
 
 .categories__item--text {
@@ -186,12 +258,32 @@ h1 {
   overflow: hidden;
 }
 
+.coffee-block__image--box {
+  max-width: 310px;
+  max-height: 310px;
+  border-radius: 40px;
+  overflow: hidden;
+}
+
 .coffee-block__image {
+  transform: scale(1.1);
+  transition: transform 0.5s ease;
+}
+
+.coffee-block__image:hover {
+  transform: scale(1.0);
+}
+
+/* .coffee-block__image {
   width: 100%;
-  height: 309px;
+  height: 310px;
   border-radius: 40px;
   object-fit: none;
 }
+
+.coffee-block__image:hover {
+  transform: scale(0.9);
+} */
 
 .coffee-block__text {
   height: 100%;
@@ -286,29 +378,23 @@ h1 {
 }
 
 .socials__link {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 60px;
   height: 60px;
   border-radius: 100px;
   border: 1px solid #c1b6ad;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  cursor: pointer;
+  transition: all 0.5s ease;
 }
 
-.socials__link--tw {
-  background-image: url(../img/twitter.svg);
-  background-size: 24px;
+.socials__link:hover {
+  background: #E1D4C9;
 }
 
-.socials__link--inst {
-  background-image: url(../img/instagram.svg);
-  background-size: 24px;
-}
-
-.socials__link--fb {
-  background-image: url(../img/facebook.svg);
-  background-size: 24px;
+.socials__link:hover svg path {
+  stroke: #403F3D;
 }
 
 .contacts__title {
@@ -327,11 +413,30 @@ h1 {
 }
 
 .contacts__address {
+  position: relative;
   display: flex;
   height: 28px;
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
+  cursor: pointer;
+}
+
+.contacts__address::after {
+  content: "";
+  display: block;
+  width: 0; 
+  height: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.contacts__address:hover::after {
+  width: 100%;
+  background: #E1D4C9;
 }
 
 .contacts__address--link {
@@ -343,11 +448,29 @@ h1 {
 }
 
 .contacts__phone {
+  position: relative;
   display: flex;
   height: 28px;
   justify-content: center;
   align-items: flex-start;
   gap: 8px;
+}
+
+.contacts__phone::after {
+  content: "";
+  display: block;
+  width: 0; 
+  height: 2px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.contacts__phone:hover::after {
+  width: 100%;
+  background: #E1D4C9;
 }
 
 .contacts__phone--link {
