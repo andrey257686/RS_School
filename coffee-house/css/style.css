@@ -183,7 +183,6 @@ html {
 }
 
 .hero__title > em {
-  /* font-style: oblique 8deg; */
   color:#B0907A;
 }
 
@@ -233,7 +232,6 @@ html {
 }
 
 .favorites__title > em {
-  /* font-style: oblique 8deg; */
   color:#B0907A;
 }
 
@@ -380,7 +378,6 @@ html {
 
 .about__title > em {
   color: #B0907A;
-  /* font-style: oblique 8deg; */
 }
 
 .about__images {
@@ -495,7 +492,6 @@ html {
 
 .mobile__title > em {
   color:  #B0907A;
-  /* font-style: oblique 8deg; */
 }
 
 .mobile__description {
@@ -602,7 +598,6 @@ html {
 
 .footer__title > em {
   color:  #B0907A;
-  /* font-style: oblique 8deg; */
 }
 
 .socials__list {
