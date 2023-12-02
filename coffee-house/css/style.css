@@ -109,11 +109,6 @@ html {
   transition: all 0.5s ease;
 }
 
-.nav__item:hover::after {
-  width: 100%;
-  background: #403F3D;
-}
-
 .header__menu {
   position: relative;
   height: 100%;
@@ -133,11 +128,6 @@ html {
   left: 50%;
   transform: translateX(-50%);
   transition: all 0.5s ease;
-}
-
-.header__menu:hover::after {
-  width: 100%;
-  background: #403F3D;
 }
 
 .header__link {
@@ -218,10 +208,6 @@ html {
 .hero__button img {
   width: 0px;
   transition: width 0.5s ease-in-out;
-}
-
-.hero__button:hover img {
-  width: 20px;
 }
 
 /* ==== main -> favorites ==== */
@@ -323,14 +309,6 @@ html {
   stroke: #403F3D;
 }
 
-.favorites__button:hover {
-  background-color: #665F55;
-}
-
-.favorites__button:hover svg path {
-  stroke: #E1D4C9;
-}
-
 .favorites__button--left {
   left: 4px;
 }
@@ -357,10 +335,6 @@ html {
   background: #C1B6AD;
   cursor: pointer;
   transition: background 0.5s ease;
-}
-
-.favorites__control:hover {
-  background: #665F55;
 }
 
 /* ==== main -> about ==== */
@@ -413,10 +387,6 @@ html {
   transition: transform 0.5s ease;
 }
 
-.about__image--1:hover {
-  transform: scale(1.0);
-}
-
 .about__image--box-2 {
   max-width: 660px;
   max-height: 430px;
@@ -431,10 +401,6 @@ html {
   transform: scale(1.1);
   margin-top: -115px;
   transition: transform 0.5s ease;
-}
-
-.about__image--2:hover {
-  transform: scale(1.0);
 }
 
 .about__image--box-3 {
@@ -453,10 +419,6 @@ html {
   transition: transform 0.5s ease;
 }
 
-.about__image--3:hover {
-  transform: scale(1.0);
-}
-
 .about__image--box-4 {
   max-width: 660px;
   max-height: 590px;
@@ -471,10 +433,6 @@ html {
   transform: scale(1.1);
   margin-top: -35px;
   transition: transform 0.5s ease;
-}
-
-.about__image--4:hover {
-  transform: scale(1.0);
 }
 
 /* ==== main -> about ==== */
@@ -531,18 +489,6 @@ html {
   background-color: #E1D4C9;
   cursor: pointer;
   transition: all 0.5s ease;
-}
-
-.mobile__button:hover {
-  background-color: #665F55;
-}
-
-.mobile__button:hover svg path {
-  fill: #E1D4C9;
-}
-
-.mobile__button:hover .mobile__text {
-  color: #E1D4C9;
 }
 
 .mobile__text {
@@ -623,14 +569,6 @@ html {
   transition: all 0.5s ease;
 }
 
-.socials__link:hover {
-  background: #E1D4C9;
-}
-
-.socials__link:hover svg path {
-  stroke: #403F3D;
-}
-
 .contacts__title {
   color: #E1D4C9;
   font-size: 24px;
@@ -668,11 +606,6 @@ html {
   transition: all 0.5s ease;
 }
 
-.contacts__address:hover::after {
-  width: 100%;
-  background: #E1D4C9;
-}
-
 .contacts__address--link {
   color: #E1D4C9;
   font-size: 16px;
@@ -700,11 +633,6 @@ html {
   left: 50%;
   transform: translateX(-50%);
   transition: all 0.5s ease;
-}
-
-.contacts__phone:hover::after {
-  width: 100%;
-  background: #E1D4C9;
 }
 
 .contacts__phone--link {
@@ -1172,5 +1100,88 @@ html {
 
   .footer__offer {
     align-items: start;
+  }
+}
+
+@media only screen and (max-width: 379px) and (min-width: 320px) {
+  .hero__title {
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 115%;
+  }
+}
+
+@media (hover: hover) {
+  .header__menu:hover::after {
+    width: 100%;
+    background: #403F3D;
+  }
+
+  .hero__button:hover img {
+    width: 20px;
+  }
+
+  .nav__item:hover::after {
+    width: 100%;
+    background: #403F3D;
+  }
+
+  .favorites__button:hover {
+    background-color: #665F55;
+  }
+  
+  .favorites__button:hover svg path {
+    stroke: #E1D4C9;
+  }
+
+  .favorites__control:hover {
+  background: #665F55;
+  }
+
+  .about__image--1:hover {
+    transform: scale(1.0);
+  }
+
+  .about__image--2:hover {
+    transform: scale(1.0);
+  }
+
+  .about__image--3:hover {
+    transform: scale(1.0);
+  }
+
+  .about__image--4:hover {
+    transform: scale(1.0);
+  }
+
+  .mobile__button:hover {
+    background-color: #665F55;
+  }
+  
+  .mobile__button:hover svg path {
+    fill: #E1D4C9;
+  }
+  
+  .mobile__button:hover .mobile__text {
+    color: #E1D4C9;
+  }
+
+  .socials__link:hover {
+    background: #E1D4C9;
+  }
+  
+  .socials__link:hover svg path {
+    stroke: #403F3D;
+  }
+
+  .contacts__address:hover::after {
+    width: 100%;
+    background: #E1D4C9;
+  }
+
+  .contacts__phone:hover::after {
+    width: 100%;
+    background: #E1D4C9;
   }
 }
