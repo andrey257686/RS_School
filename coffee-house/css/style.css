@@ -109,6 +109,10 @@ html {
   transition: all 0.5s ease;
 }
 
+.nav__menu {
+  display: none;
+}
+
 .open {
   display: flex !important;
 }
@@ -692,13 +696,19 @@ html {
   }
 }
 
-@media only screen and (max-width: 1024px) and (min-width: 768px) {
+/* @media only screen and (max-width: 1024px) and (min-width: 769px) { */
+@media only screen and (max-width: 1024px) {
   .container {
     max-width: 90%;
   }
 
   .header__nav {
-    display: none;
+    right: -100%;
+    transition: 0.4s;
+  }
+
+  .header__nav--active {
+    right: 0
   }
 
   .header__menu {
@@ -713,7 +723,6 @@ html {
   }
 
   .nav__list {
-    display: none;
     flex-direction: column;
     align-items: center;
     position: fixed;
@@ -721,10 +730,15 @@ html {
     width: 100%;
     z-index: 50;
     top: 80px;
-    right: 0;
+    right: -100%;
     background-color: #E1D4C9;
     padding-top: 80px;
-    gap: 60px
+    gap: 60px;
+    transition: 0.4s;
+  }
+
+  .nav__list--active {
+    right: 0;
   }
 
   .nav__menu {
@@ -774,7 +788,7 @@ html {
 
   .header__burger--line {
     height: 2px;
-    width: 16px;
+    width: 18px;
     background-color: #403F3D;
     transition: all 0.4s ease 0s;
   }
@@ -790,13 +804,13 @@ html {
   }
 
   .header__burger--active > .header__burger--top {
-    top: 19px;
-    transform: rotate(45deg) translate(0, 50%);
+    top: 20px;
+    transform: rotate(45deg);
   }
 
   .header__burger--active > .header__burger--bottom {
-    bottom: 19px;
-    transform: rotate(-45deg) translate(0, -50%);
+    bottom: 20px;
+    transform: rotate(-45deg);
   }
 
   .hero__image {
@@ -868,51 +882,16 @@ html {
   }
 
   .header__nav {
-    display: none;
+    right: -100%;
+    transition: 0.4s;
   }
 
+  .header__nav--active {
+    right: 0
+  }
+  
   .header__menu {
     display: none;
-  }
-
-  .header__burger {
-    position: relative;
-    display: flex;
-    flex-direction: column; 
-    gap: 6px;
-    width: 44px;
-    height: 44px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100px;
-    border: 1px solid #665F55;
-  }
-
-  .header__burger--line {
-    height: 2px;
-    width: 16px;
-    background-color: #403F3D;
-    transition: all 0.4s ease 0s;
-  }
-
-  .header__burger--top {
-    position: absolute;
-    top: 16px;
-  }
-
-  .header__burger--bottom {
-    position: absolute;
-    bottom: 16px;
-  }
-
-  .header__burger--active > .header__burger--top {
-    top: 19px;
-    transform: rotate(45deg) translate(0, 50%);
-  }
-
-  .header__burger--active > .header__burger--bottom {
-    bottom: 19px;
-    transform: rotate(-45deg) translate(0, -50%);
   }
 
   .hero__image {
