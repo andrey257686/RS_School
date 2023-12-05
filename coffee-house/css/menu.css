@@ -493,7 +493,12 @@ h1 {
   }
 
   .header__nav {
-    display: none;
+    right: -100%;
+    transition: 0.4s;
+  }
+
+  .header__nav--active {
+    right: 0
   }
 
   .header__menu {
@@ -508,7 +513,6 @@ h1 {
   }
 
   .nav__list {
-    display: none;
     flex-direction: column;
     align-items: center;
     position: fixed;
@@ -516,10 +520,15 @@ h1 {
     width: 100%;
     z-index: 50;
     top: 80px;
-    right: 0;
+    right: -100%;
     background-color: #E1D4C9;
     padding-top: 80px;
-    gap: 60px
+    gap: 60px;
+    transition: 0.4s;
+  }
+
+  .nav__list--active {
+    right: 0;
   }
 
   .nav__menu {
@@ -640,14 +649,6 @@ h1 {
   .container {
     max-width: 688px;
     margin: 0 auto;
-  }
-
-  .header__nav {
-    display: none;
-  }
-
-  .header__menu {
-    display: none;
   }
 
   .menu {

@@ -880,15 +880,6 @@ html {
     max-width: 688px;
     margin: 0 auto;
   }
-
-  .header__nav {
-    right: -100%;
-    transition: 0.4s;
-  }
-
-  .header__nav--active {
-    right: 0
-  }
   
   .header__menu {
     display: none;
