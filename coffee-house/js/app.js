@@ -30,7 +30,8 @@ closeBurgerMenu();
 
 let offset = 0;
 const sliderLine = document.querySelector('.slide__line');
-const sliderControls = document.querySelectorAll('.favorites__control');
+const sliderControls = document.querySelectorAll('.favorites__control--progress');
+
 
 let changeControls = function(offset) {
   switch (offset) {
@@ -54,13 +55,58 @@ let changeControls = function(offset) {
 
 changeControls(offset);
 
-document.querySelector('.favorites__button--right').addEventListener('click', function(){
+let changeSlide = function(offset) {
+  console.log(offset);
+  sliderLine.style.left = -offset + 'px';
+}
+
+let timerOffset = 0;
+let timerControls = '';
+let timerSlide = '';
+let widthOffset = 0;
+let progressBar = document.querySelector('.favorites__control--active');
+
+let autoTimer = function () {
+  clearInterval(timerSlide);
+  progressBar = document.querySelector('.favorites__control--active');
+  let autoTimerControls = function () {
+    clearInterval(timerControls);
+    timerControls = setInterval(function() {
+      widthOffset = widthOffset + 1;
+      if (widthOffset > 100) {
+        widthOffset = 0;
+      } 
+      progressBar.style.width = widthOffset + '%';
+    } ,50)
+  }
+  autoTimerControls();
+
+  timerSlide = setInterval(function() {
+    offset = offset + 480;
+    if (offset > 960) {
+      offset = 0;
+    }
+    changeSlide(offset);
+    changeControls(offset);
+    progressBar.style.width = 0;
+    widthOffset = 0;
+    progressBar = document.querySelector('.favorites__control--active');
+    autoTimerControls();
+  }, 5000)
+}
+
+autoTimer();
+
+document.querySelector('.favorites__button--right').addEventListener('click', function () {
   offset = offset + 480;
   if (offset > 960) {
     offset = 0;
   }
+  progressBar.style.width = 0;
+  widthOffset = 0;
+  changeSlide(offset);
   changeControls(offset);
-  sliderLine.style.left = -offset + 'px';
+  autoTimer();
 });
 
 document.querySelector('.favorites__button--left').addEventListener('click', function () {
@@ -68,8 +114,11 @@ document.querySelector('.favorites__button--left').addEventListener('click', fun
   if (offset < 0) {
     offset = 960;
   }
+  progressBar.style.width = 0;
+  widthOffset = 0;
+  changeSlide(offset);
   changeControls(offset);
-  sliderLine.style.left = -offset + 'px';
+  autoTimer();
 });
 
 let posInit = 0;
@@ -80,7 +129,6 @@ let posFinal = 0;
 let swipeStart = function() {
 
   let evt = (event.type.search('touch')) !== -1 ? event.touches[0] : event;
-  console.log(evt);
 
   posInit = posX1 = evt.clientX;
 
@@ -123,8 +171,11 @@ let swipeEnd = function() {
       }
     }
   }
+  progressBar.style.width = 0;
+  widthOffset = 0;
+  changeSlide(offset);
   changeControls(offset);
-  sliderLine.style.left = -offset + 'px';
+  autoTimer();
 
 };
 

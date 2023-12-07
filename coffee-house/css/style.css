@@ -359,8 +359,16 @@ html {
   background: #665F55;
 } */
 
-.favorites__control--active {
+/* .favorites__control--active {
   background: #665F55 !important;
+} */
+
+.favorites__control--progress {
+  height: 100%;
+  width: 0px;
+  border-radius: 100px;
+  background: #665F55 !important;
+  transition: all 0.2s ease;
 }
 
 .favorites__control {
