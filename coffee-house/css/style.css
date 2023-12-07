@@ -1012,6 +1012,14 @@ html {
     height: 100%;
   }
 
+  .slide__line {
+    width: 1044px;
+  }
+
+  .slide__container {
+    width: 348px;
+  }
+
   .about__title {
     font-size: 32px;
     font-style: normal;
@@ -1132,6 +1140,10 @@ html {
 
   .slider__img {
     height: 100%;
+  }
+
+  .slide__line {
+    width: 1044px;
   }
 
   .about__title {

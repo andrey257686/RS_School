@@ -29,6 +29,7 @@ closeBurgerMenu();
 // ============ Реализация Карусели ============
 
 let offset = 0;
+let offsetResolution = window.screen.width < 768 ? 348 : 480;
 const sliderLine = document.querySelector('.slide__line');
 const sliderControls = document.querySelectorAll('.favorites__control--progress');
 
@@ -40,12 +41,12 @@ let changeControls = function(offset) {
       sliderControls[1].classList.remove('favorites__control--active');
       sliderControls[2].classList.remove('favorites__control--active');
       break;
-    case 480:
+    case (offsetResolution):
       sliderControls[0].classList.remove('favorites__control--active');
       sliderControls[1].classList.add('favorites__control--active');
       sliderControls[2].classList.remove('favorites__control--active');
       break;
-    case 960:
+    case (offsetResolution*2):
       sliderControls[0].classList.remove('favorites__control--active');
       sliderControls[1].classList.remove('favorites__control--active');
       sliderControls[2].classList.add('favorites__control--active');
@@ -82,8 +83,8 @@ let autoTimer = function () {
   autoTimerControls();
 
   timerSlide = setInterval(function() {
-    offset = offset + 480;
-    if (offset > 960) {
+    offset = offset + offsetResolution;
+    if (offset > offsetResolution*2) {
       offset = 0;
     }
     changeSlide(offset);
@@ -98,8 +99,8 @@ let autoTimer = function () {
 autoTimer();
 
 document.querySelector('.favorites__button--right').addEventListener('click', function () {
-  offset = offset + 480;
-  if (offset > 960) {
+  offset = offset + offsetResolution;
+  if (offset > offsetResolution*2) {
     offset = 0;
   }
   progressBar.style.width = 0;
@@ -110,9 +111,9 @@ document.querySelector('.favorites__button--right').addEventListener('click', fu
 });
 
 document.querySelector('.favorites__button--left').addEventListener('click', function () {
-  offset = offset - 480;
+  offset = offset - offsetResolution*2;
   if (offset < 0) {
-    offset = 960;
+    offset = offsetResolution*2;
   }
   progressBar.style.width = 0;
   widthOffset = 0;
@@ -159,14 +160,14 @@ let swipeEnd = function() {
 
   if (Math.abs(posFinal) > 30) {
     if (posFinal < 0) {
-      offset = offset - 480;
+      offset = offset - offsetResolution;
       if (offset < 0) {
-        offset = 960;
+        offset = offsetResolution*2;
       }
     }
     if (posFinal > 0) {
-      offset = offset + 480;
-      if (offset > 960) {
+      offset = offset + offsetResolution;
+      if (offset > offsetResolution*2) {
         offset = 0;
       }
     }
