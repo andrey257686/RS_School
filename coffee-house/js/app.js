@@ -30,12 +30,36 @@ closeBurgerMenu();
 
 let offset = 0;
 const sliderLine = document.querySelector('.slide__line');
+const sliderControls = document.querySelectorAll('.favorites__control');
+
+let changeControls = function(offset) {
+  switch (offset) {
+    case 0:
+      sliderControls[0].classList.add('favorites__control--active');
+      sliderControls[1].classList.remove('favorites__control--active');
+      sliderControls[2].classList.remove('favorites__control--active');
+      break;
+    case 480:
+      sliderControls[0].classList.remove('favorites__control--active');
+      sliderControls[1].classList.add('favorites__control--active');
+      sliderControls[2].classList.remove('favorites__control--active');
+      break;
+    case 960:
+      sliderControls[0].classList.remove('favorites__control--active');
+      sliderControls[1].classList.remove('favorites__control--active');
+      sliderControls[2].classList.add('favorites__control--active');
+      break;
+  }
+}
+
+changeControls(offset);
 
 document.querySelector('.favorites__button--right').addEventListener('click', function(){
   offset = offset + 480;
   if (offset > 960) {
     offset = 0;
   }
+  changeControls(offset);
   sliderLine.style.left = -offset + 'px';
 });
 
@@ -44,6 +68,7 @@ document.querySelector('.favorites__button--left').addEventListener('click', fun
   if (offset < 0) {
     offset = 960;
   }
+  changeControls(offset);
   sliderLine.style.left = -offset + 'px';
 });
 
@@ -54,19 +79,24 @@ let posFinal = 0;
 
 let swipeStart = function() {
 
-  posInit = posX1 = event.layerX;
+  let evt = (event.type.search('touch')) !== -1 ? event.touches[0] : event;
+  console.log(evt);
+
+  posInit = posX1 = evt.clientX;
 
   sliderLine.style.transition = '';
 
+  document.addEventListener('touchmove', swipeAction);
   document.addEventListener('mousemove', swipeAction);
+  document.addEventListener('touchend', swipeEnd);
   document.addEventListener('mouseup', swipeEnd);
 }
 
 let swipeAction = function() {
 
-  posX1 = event.layerX;
-  console.log(`posX1 = ${posX1}`);
-  console.log(`posInit = ${posInit}`);
+  let evt = (event.type.search('touch') !== -1) ? event.touches[0] : event
+
+  posX1 = evt.clientX;
 
   sliderLine.style.left = -(posInit - posX1) + 'px';
 }
@@ -74,35 +104,34 @@ let swipeAction = function() {
 let swipeEnd = function() {
   posFinal = posInit - posX1;
 
+  document.removeEventListener('touchmove', swipeAction);
   document.removeEventListener('mousemove', swipeAction);
+  document.removeEventListener('touchend', swipeEnd);
   document.removeEventListener('mouseup', swipeEnd);
 
   if (Math.abs(posFinal) > 30) {
-    if (posInit < posX1) {
-      if (posInit > 0 && posInit < 480){
-        sliderLine.style.left = -960 + 'px';
+    if (posFinal < 0) {
+      offset = offset - 480;
+      if (offset < 0) {
+        offset = 960;
       }
-      if (posInit > 480 && posInit < 960){
-        sliderLine.style.left = 0 + 'px';
-      }
-      if (posInit > 960){
-        sliderLine.style.left = -480 + 'px';
-      }
-    } else if (posInit > posX1) {
-      if (posInit > 0 && posInit < 480){
-        sliderLine.style.left = -480 + 'px';
-      }
-      if (posInit > 480 && posInit < 960){
-        sliderLine.style.left = -960 + 'px';
-      }
-      if (posInit > 960){
-        sliderLine.style.left = 0 + 'px';
+    }
+    if (posFinal > 0) {
+      offset = offset + 480;
+      if (offset > 960) {
+        offset = 0;
       }
     }
   }
+  changeControls(offset);
+  sliderLine.style.left = -offset + 'px';
 
 };
 
+
 sliderLine.addEventListener('mousedown', function(event) {
+  swipeStart(event);
+});
+sliderLine.addEventListener('touchstart', function(event) {
   swipeStart(event);
 });

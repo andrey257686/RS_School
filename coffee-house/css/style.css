@@ -355,8 +355,12 @@ html {
   gap: 12px;
 }
 
-.favorites__control:first-child {
+/* .favorites__control:first-child {
   background: #665F55;
+} */
+
+.favorites__control--active {
+  background: #665F55 !important;
 }
 
 .favorites__control {
