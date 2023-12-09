@@ -206,6 +206,13 @@ fetch("./js/products.json")
       let closeButton = document.createElement("button");
       closeButton.className = "modal__button--close";
       closeButton.textContent = "Close";
+      closeButton.addEventListener('click', function() {
+        modalWindow.innerHTML = '';
+        overlay.style.display = 'none';
+        modalWindow.style.display = 'none';
+        priceAdditivies = 0;
+        priceSize = 0;
+      })
       modalMenu.appendChild(textBlock);
       modalMenu.appendChild(sizeBlock);
       modalMenu.appendChild(additiviesBlock);
