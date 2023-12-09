@@ -949,6 +949,10 @@ h1 {
     grid-template-rows: repeat(2, 1fr);
   }
 
+  .menu-grid__item--4 {
+    display: none;
+  }
+
   .menu-grid__item--5 {
     display: none;
   }
@@ -958,10 +962,6 @@ h1 {
   }
 
   .menu-grid__item--7 {
-    display: none;
-  }
-
-  .menu-grid__item--8 {
     display: none;
   }
 

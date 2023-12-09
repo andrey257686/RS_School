@@ -13,11 +13,15 @@ fetch("./js/products.json")
     const modalWindow = document.querySelector('.modal__container');
     const categoriesList = document.querySelectorAll('.categories__item');
     const categoriesButtonList = document.querySelectorAll('.categories__item--button');
+    const menu = document.querySelector('.menu');
+    let indexLastShownItem;
     let category = 'coffee';
     let categoryMap = new Map();
     categoryMap.set(0, "coffee"); 
     categoryMap.set(1, "tea"); 
     categoryMap.set(2, "dessert");
+    const mediaQueryMax = window.matchMedia('(max-width: 768px)');
+    const mediaQueryMin = window.matchMedia('(min-width: 769px)');
     for (let i = 0; i < 3; i++) {
       categoriesList[i].addEventListener('click', function() {
         category = categoryMap.get(i);
@@ -209,7 +213,41 @@ fetch("./js/products.json")
       modalWindow.appendChild(modalMenu);
     }
 
+    const createRefreshButton = function (length) {
+      let divElement = document.createElement("div");
+      let svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      let path1Element = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      let path2Element = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      divElement.className = "menu__refresh";
+      path1Element.setAttribute("d", "M21.8883 13.5C21.1645 18.3113 17.013 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C16.1006 2 19.6248 4.46819 21.1679 8");
+      path1Element.setAttribute("stroke", "#403F3D");
+      path1Element.setAttribute("stroke-linecap", "round");
+      path1Element.setAttribute("stroke-linejoin", "round");
+      path2Element.setAttribute("d", "M17 8H21.4C21.7314 8 22 7.73137 22 7.4V3");
+      path2Element.setAttribute("stroke", "#403F3D");
+      path2Element.setAttribute("stroke-linecap", "round");
+      path2Element.setAttribute("stroke-linejoin", "round");
+      svgElement.setAttribute("width", "24");
+      svgElement.setAttribute("height", "24");
+      svgElement.setAttribute("viewBox", "0 0 24 24");
+      svgElement.setAttribute("fill", "none");
+      svgElement.appendChild(path1Element);
+      svgElement.appendChild(path2Element);
+      divElement.appendChild(svgElement);
+      return divElement;
+    }
+
+    const showItems = function () {
+      let i = indexLastShownItem + 1;
+      for (i; i <= indexLastShownItem + 4; i++) {
+        const menuItem = document.querySelector(`.menu-grid__item--${i}`);
+        menuItem.style.display = 'flex';
+      }
+      indexLastShownItem = i - 1;
+    }
+
     let productsArray = [];
+    let refreshButton = "";
     const updateMenu = function(category) {
       productsArray = products.filter((product) => product.category === category);
       let i = 0;
@@ -224,7 +262,52 @@ fetch("./js/products.json")
         menuList.appendChild(item);
         i += 1;
       })
+      if (productsArray.length != 4) {
+        if (mediaQueryMax.matches) {
+          indexLastShownItem = 3;
+        }
+        else {
+          indexLastShownItem = 7;
+        }
+      }
+      else {
+        indexLastShownItem = 3;
+      }
+      if (!document.querySelector('.menu__refresh')) {                            // необходимо для того чтобы при переключении категорий заново не рисовалась кнопка
+        const refreshButtonElement = createRefreshButton(productsArray.length);
+        menu.appendChild(refreshButtonElement);
+        refreshButton = document.querySelector('.menu__refresh')
+        refreshButton.addEventListener('click', function() {
+          showItems();
+          console.log(indexLastShownItem);
+          console.log(productsArray.length - 1);
+          if (indexLastShownItem == productsArray.length - 1) {
+            refreshButton.style.display = 'none';
+          }
+        })
+      }
+      if (indexLastShownItem == productsArray.length - 1) {
+        refreshButton.style.display = 'none';
+      }
+      if (indexLastShownItem !== productsArray.length - 1) {
+        refreshButton.style.display = 'flex';
+      }
     }   
-
     updateMenu(category);
+    function handleTabletChangeMax(e) {
+      if (e.matches) {
+        menuList.innerHTML = '';
+        updateMenu(category);
+      }
+    }
+    mediaQueryMax.addListener(handleTabletChangeMax)
+    handleTabletChangeMax(mediaQueryMax)
+    function handleTabletChangeMin(e) {
+      if (e.matches) {
+        menuList.innerHTML = '';
+        updateMenu(category);
+      }
+    }
+    mediaQueryMin.addListener(handleTabletChangeMin)
+    handleTabletChangeMin(mediaQueryMin)
 });
