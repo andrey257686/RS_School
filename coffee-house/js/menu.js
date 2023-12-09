@@ -55,6 +55,8 @@ fetch("./js/products.json")
       modalWindow.innerHTML = '';
       overlay.style.display = 'none';
       modalWindow.style.display = 'none';
+      priceAdditivies = 0;
+      priceSize = 0;
     })
 
     const createCardItem = function (product, id) {
@@ -175,6 +177,7 @@ fetch("./js/products.json")
         additiviesButton.appendChild(additiviesText);
         additiviesItem.appendChild(additiviesButton);
         additiviesVariants.appendChild(additiviesItem);
+        k +=1;
       }
       additiviesBlock.appendChild(additiviesTitle);
       additiviesBlock.appendChild(additiviesVariants);
@@ -246,16 +249,92 @@ fetch("./js/products.json")
       indexLastShownItem = i - 1;
     }
 
+    let priceFinished;
+    let priceSize = 0;
+    let priceAdditivies = 0;
+    const changePrice = function(product, option, type) {
+      let priceInitial = Number(product.price);
+      let priceDelta;
+      switch (type) {
+        case ('size'):
+          priceDelta = Number(product.sizes[option]['add-price']);
+          priceSize = priceInitial + priceDelta;
+          break;
+        case ('additivies'):
+          priceDelta = option === 'asc' ? 0.50 : -0.50;
+          priceAdditivies += priceDelta;
+      }
+      priceSize = priceSize === 0 ? Number(product.price) : priceSize;
+      priceFinished = priceSize + priceAdditivies;
+      const priceElement = document.querySelector('.modal__price--amount');
+      priceElement.textContent = "$" + priceFinished.toFixed(2);
+    }
+
+    const handleClickSize = function(product) {
+      const sizeButtonList = document.querySelectorAll('.size__button');
+      for (let i = 0; i < sizeButtonList.length; i++) {
+        sizeButtonList[i].addEventListener('click', function() {
+          switch (i) {
+            case 0:
+              sizeButtonList[0].classList.add('size__active');
+              changePrice(product, 's', 'size');
+              sizeButtonList[1].classList.remove('size__active');
+              sizeButtonList[2].classList.remove('size__active');
+              break;
+            case (1):
+              sizeButtonList[0].classList.remove('size__active');
+              sizeButtonList[1].classList.add('size__active');
+              changePrice(product, 'm', 'size');
+              sizeButtonList[2].classList.remove('size__active');
+              break;
+            case (2):
+              sizeButtonList[0].classList.remove('size__active');
+              sizeButtonList[1].classList.remove('size__active');
+              sizeButtonList[2].classList.add('size__active');
+              changePrice(product, 'l', 'size');
+              break;
+          }
+        })
+      }
+    }
+
+    const handleClickAdditivies = function(product) {
+      const additiviesButtonList = document.querySelectorAll('.additivies__button');
+      for (let i = 0; i < additiviesButtonList.length; i++) {
+        additiviesButtonList[i].addEventListener('click', function() {
+          switch (i) {
+            case 0:
+              additiviesButtonList[0].classList.toggle('additivies__active');
+              additiviesButtonList[0].classList.contains('additivies__active') ? changePrice(product, 'asc', 'additivies') : changePrice(product, 'desc', 'additivies');
+              break;
+            case (1):
+              additiviesButtonList[1].classList.toggle('additivies__active');
+              additiviesButtonList[1].classList.contains('additivies__active') ? changePrice(product, 'asc', 'additivies') : changePrice(product, 'desc', 'additivies');
+              break;
+            case (2):
+              additiviesButtonList[2].classList.toggle('additivies__active');
+              additiviesButtonList[2].classList.contains('additivies__active') ? changePrice(product, 'asc', 'additivies') : changePrice(product, 'desc', 'additivies');
+              break;
+          }
+        })
+      }
+    }
+
     let productsArray = [];
     let refreshButton = "";
     const updateMenu = function(category) {
       productsArray = products.filter((product) => product.category === category);
       let i = 0;
+      priceAdditivies = 0;
+      priceSize = 0;
       productsArray.forEach((product) => {
         let item = createCardItem(product, i);
         item.addEventListener('click', function(event) {
           event.preventDefault();
           createModalWindow(product);
+          document.querySelector('.size__button--small').classList.add("size__active");
+          handleClickSize(product);
+          handleClickAdditivies(product);
           overlay.style.display = 'block';
           modalWindow.style.display = 'flex';
         })
@@ -279,8 +358,6 @@ fetch("./js/products.json")
         refreshButton = document.querySelector('.menu__refresh')
         refreshButton.addEventListener('click', function() {
           showItems();
-          console.log(indexLastShownItem);
-          console.log(productsArray.length - 1);
           if (indexLastShownItem == productsArray.length - 1) {
             refreshButton.style.display = 'none';
           }
