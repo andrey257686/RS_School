@@ -55,6 +55,7 @@ fetch("./js/products.json")
       modalWindow.innerHTML = '';
       overlay.style.display = 'none';
       modalWindow.style.display = 'none';
+      document.body.style.overflow = '';
       priceAdditivies = 0;
       priceSize = 0;
     })
@@ -210,6 +211,7 @@ fetch("./js/products.json")
         modalWindow.innerHTML = '';
         overlay.style.display = 'none';
         modalWindow.style.display = 'none';
+        document.body.style.overflow = '';
         priceAdditivies = 0;
         priceSize = 0;
       })
@@ -338,6 +340,7 @@ fetch("./js/products.json")
         let item = createCardItem(product, i);
         item.addEventListener('click', function(event) {
           event.preventDefault();
+          document.body.style.overflow = 'hidden';
           createModalWindow(product);
           document.querySelector('.size__button--small').classList.add("size__active");
           handleClickSize(product);

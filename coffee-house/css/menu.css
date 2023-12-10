@@ -483,13 +483,11 @@ h1 {
   right: 0;
   z-index: 60;
   background: rgba(64, 63, 61, 0.80);
+  overflow-y: hidden;
 }
 
 .modal__container {
   position: fixed;
-  /* top: 25%; */
-  /* right: 50%; */
-  /* left: 50%; */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -503,6 +501,7 @@ h1 {
   gap: 20px;
   border-radius: 40px;
   background: #E1D4C9;
+  overflow: hidden;
 }
 
 .modal__image--box {
