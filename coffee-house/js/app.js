@@ -32,6 +32,14 @@ let offset = 0;
 let offsetResolution = window.screen.width < 768 ? 348 : 480;
 const sliderLine = document.querySelector('.slide__line');
 const sliderControls = document.querySelectorAll('.favorites__control--progress');
+let isPaused = false;
+const slideContainer = document.querySelector('.slide__container')
+slideContainer.addEventListener('mouseover', function() {
+  isPaused = true;
+})
+slideContainer.addEventListener('mouseout', function() {
+  isPaused = false;
+})
 
 
 let changeControls = function(offset) {
@@ -73,26 +81,30 @@ let autoTimer = function () {
   let autoTimerControls = function () {
     clearInterval(timerControls);
     timerControls = setInterval(function() {
-      widthOffset = widthOffset + 1;
-      if (widthOffset > 100) {
-        widthOffset = 0;
-      } 
-      progressBar.style.width = widthOffset + '%';
+      if (!isPaused) {
+        widthOffset = widthOffset + 1;
+        if (widthOffset > 100) {
+          widthOffset = 0;
+        } 
+        progressBar.style.width = widthOffset + '%';
+      }
     } ,50)
   }
   autoTimerControls();
 
   timerSlide = setInterval(function() {
-    offset = offset + offsetResolution;
-    if (offset > offsetResolution*2) {
-      offset = 0;
+    if (!isPaused) {
+      offset = offset + offsetResolution;
+      if (offset > offsetResolution*2) {
+        offset = 0;
+      }
+      changeSlide(offset);
+      changeControls(offset);
+      progressBar.style.width = 0;
+      widthOffset = 0;
+      progressBar = document.querySelector('.favorites__control--active');
+      autoTimerControls();
     }
-    changeSlide(offset);
-    changeControls(offset);
-    progressBar.style.width = 0;
-    widthOffset = 0;
-    progressBar = document.querySelector('.favorites__control--active');
-    autoTimerControls();
   }, 5000)
 }
 
@@ -111,7 +123,7 @@ document.querySelector('.favorites__button--right').addEventListener('click', fu
 });
 
 document.querySelector('.favorites__button--left').addEventListener('click', function () {
-  offset = offset - offsetResolution*2;
+  offset = offset - offsetResolution;
   if (offset < 0) {
     offset = offsetResolution*2;
   }
