@@ -1,6 +1,7 @@
 const word = "солнце";
 const hint = "Звезда, освещающая Землю и обеспечивающая тепло.";
-const container = document.querySelector(".container");
+let wrongTry = 0;
+const body = document.querySelector(".body");
 const mapSVG = new Map([
   [1, "head.svg"],
   [2, "body.svg"],
@@ -9,6 +10,26 @@ const mapSVG = new Map([
   [5, "leg-one.svg"],
   [6, "leg-two.svg"],
 ]);
+
+// ================================ ПРОВЕРКА БУКВЫ  =============================================
+
+const checkLetter = function (buttonElem, letter) {
+  const listLetterElem = document.querySelectorAll(".field__word_letter");
+  const fieldGuessElem = document.querySelector(".field__guess");
+  const gallowImg = document.querySelector(".gallows__img");
+  buttonElem.disabled = true;
+  if (word.toUpperCase().includes(letter)) {
+    let index = word.toUpperCase().indexOf(letter);
+    listLetterElem[index].innerText = letter;
+  } else {
+    wrongTry = wrongTry + 1;
+    fieldGuessElem.innerHTML = `Неправильные попытки: <b>${wrongTry} / 6</b>`;
+    console.log(mapSVG.get(wrongTry));
+    gallowImg.src = `./img/${mapSVG.get(wrongTry)}`;
+  }
+};
+
+// ================================ РЕНДЕР HTML  =============================================
 
 const createFieldWord = function () {
   const fieldWordElem = document.createElement("ul");
@@ -19,20 +40,6 @@ const createFieldWord = function () {
     fieldWordElem.appendChild(wordLetter);
   }
   return fieldWordElem;
-};
-
-const checkLetter = function (buttonElem, letter) {
-  const listLetterElem = document.querySelectorAll(".field__word_letter");
-  if (word.toUpperCase().includes(letter)) {
-    buttonElem.disabled = true;
-    let index = word.toUpperCase().indexOf(letter);
-    listLetterElem[index].innerText = letter;
-  } else {
-    wrongTry = wrongTry + 1;
-    fieldGuessElem.innerHTML = `Неправильные попытки: <b>${wrongTry} / 6</b>`;
-    console.log(mapSVG.get(wrongTry));
-    gallowImg.src = `./img/${mapSVG.get(wrongTry)}`;
-  }
 };
 
 const createKeyboard = function () {
@@ -91,8 +98,35 @@ const createField = function () {
   return fieldElem;
 };
 
-container.appendChild(createField());
+const createGallows = function () {
+  const gallowsElem = document.createElement("section");
+  gallowsElem.className = "gallows";
+  const gallowsImg = document.createElement("img");
+  gallowsImg.className = "gallows__img";
+  gallowsImg.src = "./img/gallows.svg";
+  gallowsImg.alt = "gallows";
+  gallowsElem.appendChild(gallowsImg);
+  return gallowsElem;
+};
 
-let wrongTry = 0;
-const fieldGuessElem = document.querySelector(".field__guess");
-const gallowImg = document.querySelector(".gallows__img");
+const renderHTML = function () {
+  // ----------------------------  header   -------------------------------
+  const headerElem = document.createElement("header");
+  headerElem.className = "header";
+  const h1TitleElem = document.createElement("h1");
+  h1TitleElem.className = "title";
+  h1TitleElem.innerText = "HANGMAN GAME";
+  headerElem.appendChild(h1TitleElem);
+  // ----------------------------  main   -------------------------------
+  const mainElem = document.createElement("main");
+  mainElem.className = "main";
+  const containerElem = document.createElement("div");
+  containerElem.className = "container";
+  containerElem.appendChild(createGallows());
+  containerElem.appendChild(createField());
+  mainElem.appendChild(containerElem);
+  body.appendChild(headerElem);
+  body.appendChild(mainElem);
+};
+
+renderHTML();
