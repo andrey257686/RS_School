@@ -10,6 +10,12 @@ const mapSVG = new Map([
   [5, "leg-one.svg"],
   [6, "leg-two.svg"],
 ]);
+let letters = [];
+for (let i = 1040; i <= 1071; i++) {
+  letters.push(String.fromCharCode(i));
+}
+letters.splice(6, 0, "Ё");
+let bannedLetters = [];
 
 // ================================ ПРОВЕРКА БУКВЫ  =============================================
 
@@ -18,6 +24,7 @@ const checkLetter = function (buttonElem, letter) {
   const fieldGuessElem = document.querySelector(".field__guess");
   const gallowImg = document.querySelector(".gallows__img");
   buttonElem.disabled = true;
+  bannedLetters.push(letter);
   if (word.toUpperCase().includes(letter)) {
     let index = word.toUpperCase().indexOf(letter);
     listLetterElem[index].innerText = letter;
@@ -43,11 +50,6 @@ const createFieldWord = function () {
 };
 
 const createKeyboard = function () {
-  let letters = [];
-  for (let i = 1040; i <= 1071; i++) {
-    letters.push(String.fromCharCode(i));
-  }
-  letters.splice(6, 0, "Ё");
   const keyboardField = document.createElement("div");
   keyboardField.className = "field__keyboard";
   const keyboardLine1 = document.createElement("div");
@@ -61,6 +63,7 @@ const createKeyboard = function () {
     const buttonKey = document.createElement("button");
     buttonKey.innerText = letters[i];
     buttonKey.className = "field__keyboard_key";
+    buttonKey.id = `key_${i}`;
     buttonKey.addEventListener("click", function (event) {
       checkLetter(event.target, letters[i]);
     });
@@ -130,3 +133,31 @@ const renderHTML = function () {
 };
 
 renderHTML();
+
+// ================================ СОБЫТИЯ КЛАВИТУРЫ  =========================================
+
+document.addEventListener("keydown", (event) => {
+  const keyboardButton = event.key;
+  const regexp = /[а-яёА-ЯЁ]/;
+  console.log(bannedLetters);
+  if (regexp.test(keyboardButton)) {
+    if (!bannedLetters.includes(keyboardButton.toUpperCase())) {
+      const index = letters.indexOf(keyboardButton.toUpperCase());
+      const buttonKeyElem = document.getElementById(`key_${index}`);
+      checkLetter(buttonKeyElem, keyboardButton.toUpperCase());
+    }
+  } else {
+    if (
+      !(
+        keyboardButton === "Shift" ||
+        keyboardButton === "Control" ||
+        keyboardButton === "Meta" ||
+        keyboardButton === "Alt" ||
+        keyboardButton === "CapsLock" ||
+        keyboardButton === " "
+      )
+    ) {
+      alert("Игра работает только на русском языке!");
+    }
+  }
+});
