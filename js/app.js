@@ -1,7 +1,5 @@
-const word = "солнце";
-const hint = "Звезда, освещающая Землю и обеспечивающая тепло.";
-const wordLength = word.length;
-let wrongTry = 0;
+import data from "./words.js";
+
 const body = document.querySelector(".body");
 const mapSVG = new Map([
   [1, "head.svg"],
@@ -19,6 +17,16 @@ letters.splice(6, 0, "Ё");
 let bannedLetters = [];
 let rightLetters = [];
 
+const getRandowmWord = function () {
+  return data[Math.floor(Math.random() * data.length)];
+};
+const randomData = getRandowmWord();
+const word = randomData.word;
+const hint = randomData.question;
+console.log(word);
+const wordLength = word.length;
+let wrongTry = 0;
+
 // ================================ ПРОВЕРКА БУКВЫ  =============================================
 
 const checkLetter = function (buttonElem, letter) {
@@ -32,9 +40,18 @@ const checkLetter = function (buttonElem, letter) {
   buttonElem.disabled = true;
   bannedLetters.push(letter);
   if (word.toUpperCase().includes(letter)) {
-    let index = word.toUpperCase().indexOf(letter);
-    listLetterElem[index].innerText = letter;
-    rightLetters.push(letter);
+    let index1 = word.toUpperCase().indexOf(letter);
+    let indexArr = [];
+    indexArr.push(index1);
+    while (index1 !== -1) {
+      index1 = word.toUpperCase().indexOf(letter, index1 + 1);
+      indexArr.push(index1);
+    }
+    indexArr.pop();
+    for (let i = 0; i < indexArr.length; i++) {
+      listLetterElem[indexArr[i]].innerText = letter;
+      rightLetters.push(letter);
+    }
     if (rightLetters.length === wordLength) {
       modalResult.innerText = "Вы угадали слово!";
       modalWord.innerText = word.toUpperCase();
@@ -114,7 +131,7 @@ const createField = function () {
   fieldElem.appendChild(fieldHintElem);
   const fieldGuessElem = document.createElement("p");
   fieldGuessElem.className = "field__guess";
-  fieldGuessElem.innerHTML = `Неправильные попытки: <b>0 / ${word.length}</b>`;
+  fieldGuessElem.innerHTML = `Неправильные попытки: <b>0 / 6</b>`;
   fieldElem.appendChild(fieldGuessElem);
   fieldElem.appendChild(createKeyboard());
   return fieldElem;
