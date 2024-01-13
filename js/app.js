@@ -1,5 +1,6 @@
 const word = "солнце";
 const hint = "Звезда, освещающая Землю и обеспечивающая тепло.";
+const wordLength = word.length;
 let wrongTry = 0;
 const body = document.querySelector(".body");
 const mapSVG = new Map([
@@ -16,6 +17,7 @@ for (let i = 1040; i <= 1071; i++) {
 }
 letters.splice(6, 0, "Ё");
 let bannedLetters = [];
+let rightLetters = [];
 
 // ================================ ПРОВЕРКА БУКВЫ  =============================================
 
@@ -23,16 +25,34 @@ const checkLetter = function (buttonElem, letter) {
   const listLetterElem = document.querySelectorAll(".field__word_letter");
   const fieldGuessElem = document.querySelector(".field__guess");
   const gallowImg = document.querySelector(".gallows__img");
+  const modal = document.querySelector(".modal");
+  const modalResult = document.querySelector(".modal__result");
+  const modalWord = document.querySelector(".modal__word");
+  const overlay = document.querySelector(".overlay");
   buttonElem.disabled = true;
   bannedLetters.push(letter);
   if (word.toUpperCase().includes(letter)) {
     let index = word.toUpperCase().indexOf(letter);
     listLetterElem[index].innerText = letter;
+    rightLetters.push(letter);
+    if (rightLetters.length === wordLength) {
+      modalResult.innerText = "Вы угадали слово!";
+      modalWord.innerText = word.toUpperCase();
+      modal.style.display = "flex";
+      overlay.style.display = "block";
+      document.removeEventListener("keydown", handleKeyboard);
+    }
   } else {
     wrongTry = wrongTry + 1;
-    fieldGuessElem.innerHTML = `Неправильные попытки: <b>${wrongTry} / 6</b>`;
-    console.log(mapSVG.get(wrongTry));
     gallowImg.src = `./img/${mapSVG.get(wrongTry)}`;
+    fieldGuessElem.innerHTML = `Неправильные попытки: <b>${wrongTry} / 6</b>`;
+    if (wrongTry === 6) {
+      modalResult.innerText = "Вы не угадали слово :с";
+      modalWord.innerText = word.toUpperCase();
+      modal.style.display = "flex";
+      overlay.style.display = "block";
+      document.removeEventListener("keydown", handleKeyboard);
+    }
   }
 };
 
@@ -81,7 +101,6 @@ const createKeyboard = function () {
   keyboardField.appendChild(keyboardLine1);
   keyboardField.appendChild(keyboardLine2);
   keyboardField.appendChild(keyboardLine3);
-  console.log(keyboardField);
   return keyboardField;
 };
 
@@ -112,34 +131,35 @@ const createGallows = function () {
   return gallowsElem;
 };
 
-const renderHTML = function () {
-  // ----------------------------  header   -------------------------------
-  const headerElem = document.createElement("header");
-  headerElem.className = "header";
-  const h1TitleElem = document.createElement("h1");
-  h1TitleElem.className = "title";
-  h1TitleElem.innerText = "HANGMAN GAME";
-  headerElem.appendChild(h1TitleElem);
-  // ----------------------------  main   -------------------------------
-  const mainElem = document.createElement("main");
-  mainElem.className = "main";
-  const containerElem = document.createElement("div");
-  containerElem.className = "container";
-  containerElem.appendChild(createGallows());
-  containerElem.appendChild(createField());
-  mainElem.appendChild(containerElem);
-  body.appendChild(headerElem);
-  body.appendChild(mainElem);
+const createModal = function () {
+  const modalElem = document.createElement("div");
+  modalElem.className = "modal";
+  const modalResultElem = document.createElement("p");
+  modalResultElem.className = "modal__result";
+  const modalWordElem = document.createElement("p");
+  modalWordElem.className = "modal__word";
+  const modalButtonElem = document.createElement("button");
+  modalButtonElem.className = "modal__button";
+  modalButtonElem.innerText = "Начать заново";
+  modalButtonElem.addEventListener("click", () => {
+    // body.innerHTML = "";
+    // bannedLetters = [];
+    // rightLetters = [];
+    // wrongTry = 0;
+    // renderHTML();
+    location.reload();
+  });
+  modalElem.appendChild(modalResultElem);
+  modalElem.appendChild(modalWordElem);
+  modalElem.appendChild(modalButtonElem);
+  return modalElem;
 };
-
-renderHTML();
 
 // ================================ СОБЫТИЯ КЛАВИТУРЫ  =========================================
 
-document.addEventListener("keydown", (event) => {
+const handleKeyboard = function (event) {
   const keyboardButton = event.key;
   const regexp = /[а-яёА-ЯЁ]/;
-  console.log(bannedLetters);
   if (regexp.test(keyboardButton)) {
     if (!bannedLetters.includes(keyboardButton.toUpperCase())) {
       const index = letters.indexOf(keyboardButton.toUpperCase());
@@ -160,4 +180,31 @@ document.addEventListener("keydown", (event) => {
       alert("Игра работает только на русском языке!");
     }
   }
-});
+};
+
+const renderHTML = function () {
+  // ----------------------------  header   -------------------------------
+  const headerElem = document.createElement("header");
+  headerElem.className = "header";
+  const h1TitleElem = document.createElement("h1");
+  h1TitleElem.className = "title";
+  h1TitleElem.innerText = "HANGMAN GAME";
+  headerElem.appendChild(h1TitleElem);
+  // ----------------------------  main   -------------------------------
+  const mainElem = document.createElement("main");
+  mainElem.className = "main";
+  const containerElem = document.createElement("div");
+  containerElem.className = "container";
+  containerElem.appendChild(createGallows());
+  containerElem.appendChild(createField());
+  mainElem.appendChild(containerElem);
+  body.appendChild(headerElem);
+  body.appendChild(mainElem);
+  const overlayElem = document.createElement("div");
+  overlayElem.className = "overlay";
+  body.appendChild(overlayElem);
+  body.appendChild(createModal());
+  document.addEventListener("keydown", handleKeyboard);
+};
+
+renderHTML();
