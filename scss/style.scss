@@ -31,9 +31,24 @@ dd {
 }
 
 .container {
+  width: 80%;
+  padding-top: 50px;
+  margin: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 50px;
+  }
+}
+
+.gallows {
+  min-width: 370px;
+}
+
+.right {
+  border-bottom: none !important;
 }
 
 .field {
@@ -54,12 +69,23 @@ dd {
       text-align: center;
       font-size: 3rem;
       font-weight: 700;
+      @media (max-width: 768px) {
+        width: 40px;
+        height: 40px;
+        font-size: 2.5rem;
+      }
     }
   }
   &__hint {
     text-align: center;
     font-size: 2rem;
     font-weight: 400;
+    @media (max-width: 768px) {
+      display: inline-block;
+      max-width: 768px;
+      // word-break: break-all;
+      hyphens: auto;
+    }
   }
   &__guess {
     text-align: center;
@@ -85,7 +111,7 @@ dd {
       border: none;
       border-radius: 10px;
       height: 40px;
-      width: 60px;
+      width: 50px;
     }
     &_key:hover {
       background-color: #7b71b3;

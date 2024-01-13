@@ -50,6 +50,7 @@ const checkLetter = function (buttonElem, letter) {
     indexArr.pop();
     for (let i = 0; i < indexArr.length; i++) {
       listLetterElem[indexArr[i]].innerText = letter;
+      listLetterElem[indexArr[i]].classList.add("right");
       rightLetters.push(letter);
     }
     if (rightLetters.length === wordLength) {
