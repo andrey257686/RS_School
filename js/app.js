@@ -21,7 +21,8 @@ const getRandowmWord = function () {
   return data[Math.floor(Math.random() * data.length)];
 };
 const randomData = getRandowmWord();
-const word = randomData.word;
+// const word = randomData.word;
+const word = "изобретение";
 const hint = randomData.question;
 console.log(word);
 const wordLength = word.length;

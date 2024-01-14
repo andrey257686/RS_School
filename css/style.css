@@ -89,7 +89,7 @@ dd {
   margin: 0;
   list-style: none;
 }
-@media (max-width: 480px) {
+@media (max-width: 650px) {
   .field__word {
     gap: 5px;
   }
@@ -102,11 +102,18 @@ dd {
   font-size: 3rem;
   font-weight: 700;
 }
-@media (max-width: 768px) {
+@media (max-width: 1440px) {
   .field__word_letter {
     width: 40px;
     height: 40px;
     font-size: 2.5rem;
+  }
+}
+@media (max-width: 650px) {
+  .field__word_letter {
+    width: 20px;
+    height: 25px;
+    font-size: 1.3rem;
   }
 }
 @media (max-width: 480px) {
