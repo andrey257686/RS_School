@@ -65,7 +65,7 @@ const checkLetter = function (buttonElem, letter) {
     gallowImg.src = `./img/${mapSVG.get(wrongTry)}`;
     fieldGuessElem.innerHTML = `Неправильные попытки: <b>${wrongTry} / 6</b>`;
     if (wrongTry === 6) {
-      modalResult.innerText = "Вы не угадали слово :с";
+      modalResult.innerText = "Вы не угадали слово";
       modalWord.innerText = word.toUpperCase();
       modal.style.display = "flex";
       overlay.style.display = "block";

@@ -33,18 +33,32 @@ dd {
 .container {
   width: 80%;
   padding-top: 50px;
+  padding-bottom: 50px;
   margin: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  @media (max-width: 768px) {
+  @media (max-width: 1280px) {
+    flex-direction: column;
+    gap: 50px;
+  }
+  @media (max-width: 360px) {
+    width: 90%;
     flex-direction: column;
     gap: 50px;
   }
 }
 
 .gallows {
-  min-width: 370px;
+  width: 370px;
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+  &__img {
+    @media (max-width: 480px) {
+      width: 100%;
+    }
+  }
 }
 
 .right {
@@ -57,11 +71,17 @@ dd {
   flex-direction: column;
   align-items: center;
   gap: 30px;
+  @media (max-width: 360px) {
+    width: 100%;
+  }
   &__word {
     display: flex;
     gap: 20px;
     margin: 0;
     list-style: none;
+    @media (max-width: 480px) {
+      gap: 5px;
+    }
     &_letter {
       width: 60px;
       height: 60px;
@@ -74,6 +94,16 @@ dd {
         height: 40px;
         font-size: 2.5rem;
       }
+      @media (max-width: 480px) {
+        width: 20px;
+        height: 25px;
+        font-size: 1.3rem;
+      }
+      @media (max-width: 360px) {
+        width: 20px;
+        height: 25px;
+        font-size: 1.3rem;
+      }
     }
   }
   &__hint {
@@ -83,7 +113,18 @@ dd {
     @media (max-width: 768px) {
       display: inline-block;
       max-width: 768px;
-      // word-break: break-all;
+      hyphens: auto;
+    }
+    @media (max-width: 480px) {
+      display: inline-block;
+      font-size: 1.5rem;
+      max-width: 100%;
+      hyphens: auto;
+    }
+    @media (max-width: 360px) {
+      font-size: 1.5rem;
+      display: inline-block;
+      max-width: 100%;
       hyphens: auto;
     }
   }
@@ -91,6 +132,9 @@ dd {
     text-align: center;
     font-size: 2rem;
     font-weight: 400;
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+    }
   }
   &__keyboard {
     display: flex;
@@ -100,6 +144,9 @@ dd {
       display: flex;
       justify-content: center;
       gap: 10px;
+      @media (max-width: 650px) {
+        gap: 5px;
+      }
     }
     &_key {
       color: #fff;
@@ -112,6 +159,23 @@ dd {
       border-radius: 10px;
       height: 40px;
       width: 50px;
+      @media (max-width: 767px) {
+        height: 40px;
+        width: 40px;
+      }
+      @media (max-width: 650px) {
+        font-size: 1.3rem;
+        height: 40px;
+        width: 30px;
+      }
+      @media (max-width: 480px) {
+        border-radius: 5px;
+        height: 40px;
+        width: 22px;
+      }
+      @media (max-width: 360px) {
+        width: 22px;
+      }
     }
     &_key:hover {
       background-color: #7b71b3;
@@ -151,11 +215,17 @@ dd {
   border-radius: 40px;
   background: #7b71b3;
   overflow: hidden;
+  @media (max-width: 1280px) {
+    width: 90%;
+  }
   &__result {
     font-size: 3rem;
     font-weight: 500;
     line-height: 150%;
     color: #d8d5e9;
+    @media (max-width: 650px) {
+      font-size: 2rem;
+    }
   }
   &__word {
     font-size: 3rem;
@@ -168,11 +238,15 @@ dd {
     width: 100%;
     border-radius: 40px;
     background: #d8d5e9;
+    color: #554d85;
     cursor: pointer;
     outline: none;
     border: none;
     font-size: 3rem;
     font-weight: 500;
     line-height: 150%;
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
   }
 }
