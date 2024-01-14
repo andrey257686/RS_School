@@ -160,11 +160,6 @@ const createModal = function () {
   modalButtonElem.className = "modal__button";
   modalButtonElem.innerText = "Начать заново";
   modalButtonElem.addEventListener("click", () => {
-    // body.innerHTML = "";
-    // bannedLetters = [];
-    // rightLetters = [];
-    // wrongTry = 0;
-    // renderHTML();
     location.reload();
   });
   modalElem.appendChild(modalResultElem);
