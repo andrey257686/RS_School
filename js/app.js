@@ -190,7 +190,7 @@ const handleKeyboard = function (event) {
         keyboardButton === " "
       )
     ) {
-      alert("Игра работает только на русском языке!");
+      alert("Используйте русский язык");
     }
   }
 };
