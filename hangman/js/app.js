@@ -9,6 +9,19 @@ const mapSVG = new Map([
   [5, "leg-one.svg"],
   [6, "leg-two.svg"],
 ]);
+
+const reload = function () {
+  bannedLetters = [];
+  rightLetters = [];
+  randomData = getRandowmWord();
+  word = randomData.word;
+  hint = randomData.question;
+  console.log(word);
+  wordLength = word.length;
+  wrongTry = 0;
+  body.innerHTML = "";
+  renderHTML();
+}
 let letters = [];
 for (let i = 1040; i <= 1071; i++) {
   letters.push(String.fromCharCode(i));
@@ -20,11 +33,11 @@ let rightLetters = [];
 const getRandowmWord = function () {
   return data[Math.floor(Math.random() * data.length)];
 };
-const randomData = getRandowmWord();
-const word = randomData.word;
-const hint = randomData.question;
+let randomData = getRandowmWord();
+let word = randomData.word;
+let hint = randomData.question;
 console.log(word);
-const wordLength = word.length;
+let wordLength = word.length;
 let wrongTry = 0;
 
 // ================================ ПРОВЕРКА БУКВЫ  =============================================
@@ -160,7 +173,7 @@ const createModal = function () {
   modalButtonElem.className = "modal__button";
   modalButtonElem.innerText = "Начать заново";
   modalButtonElem.addEventListener("click", () => {
-    location.reload();
+    reload();
   });
   modalElem.appendChild(modalResultElem);
   modalElem.appendChild(modalWordElem);
