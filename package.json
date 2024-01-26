@@ -1,0 +1,24 @@
+{
+  "name": "andrey257686-jsfe2023q4",
+  "version": "1.0.0",
+  "description": "Nonograms task for RS School",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolling-scopes-school/andrey257686-JSFE2023Q4.git"
+  },
+  "author": "andrey257686",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rolling-scopes-school/andrey257686-JSFE2023Q4/issues"
+  },
+  "homepage": "https://github.com/rolling-scopes-school/andrey257686-JSFE2023Q4#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "3.2.4"
+  }
+}
