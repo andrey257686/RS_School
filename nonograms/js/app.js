@@ -26,6 +26,61 @@ const sample = {
   ],
 };
 
+// const sample = {
+//   up: {
+//     rows: 3,
+//     cols: 15,
+//     nums: [
+//       [null, null, null, null, null, 7, null, 1, 1, null, null, null, null, null, null],
+//       [null, 2, 1, 2, 2, 1, 3, 4, 2, 7, 5, 2, 1, 2, null],
+//       [5, 2, 1, 2, 5, 2, 1, 1, 1, 1, 2, 5, 2, 3, 7],
+//     ],
+//   },
+//   left: {
+//     rows: 15,
+//     cols: 4,
+//     nums: [
+//       [null, null, null, 3],
+//       [null, null, 2, 1],
+//       [null, null, null, 6],
+//       [null, null, 1, 4],
+//       [null, 1, 1, 2],
+//       [null, 2, 1, 2],
+//       [null, null, 3, 3],
+//       [3, 1, 1, 3],
+//       [null, null, 2, 2],
+//       [null, 1, 1, 1],
+//       [1, 1, 1, 1],
+//       [1, 1, 1, 1],
+//       [2, 1, 1, 2],
+//       [null, null, 5, 5],
+//       [null, null, null, 12],
+//     ],
+//   },
+//   table: [
+//     [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0],
+//     [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+//     [0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0],
+//     [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+//     [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+//     [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+//     [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+//     [1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
+//     [0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+//     [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+//   ],
+// };
+
+const playerTable = new Array(sample.table.length).fill(0).map((el, index) => {
+  const arr = new Array(sample.table.length).fill(0);
+  return arr;
+});
+
 const fieldUpCells = ["nothing", "clues"];
 const fieldDownCells = ["clues", "game"];
 const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells };
@@ -100,6 +155,11 @@ const generateInnerTable = function (table, figure) {
         cell.innerText = cellValue;
       }
       cell.className = cellClassName;
+      if (tableType === "game") {
+        cell.addEventListener("click", (event) => {
+          handleCellClick(event, i, j, figure);
+        });
+      }
       row.appendChild(cell);
     }
     tableEl.appendChild(row);
@@ -120,3 +180,23 @@ const renderHTML = function () {
 };
 
 renderHTML();
+
+function handleCellClick(event, i, j, figure) {
+  if (playerTable[i - 1][j - 1] === 0) {
+    playerTable[i - 1][j - 1] = 1;
+  } else if (playerTable[i - 1][j - 1] === 1) {
+    playerTable[i - 1][j - 1] = 0;
+  }
+  let win = true;
+  event.target.classList.toggle("game__cell_black");
+  for (let i = 0; i < playerTable.length; i++) {
+    for (let j = 0; j < playerTable.length; j++) {
+      if (playerTable[i][j] !== figure.table[i][j]) {
+        win = false;
+      }
+    }
+  }
+  if (win) {
+    console.log("solved nonogram");
+  }
+}
