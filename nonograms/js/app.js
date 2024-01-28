@@ -1,9 +1,62 @@
 const container = document.querySelector(".container");
 
+const sample = {
+  up: {
+    rows: 1,
+    cols: 5,
+    nums: [[4, 3, 4, 1, 1]],
+  },
+  left: {
+    rows: 5,
+    cols: 2,
+    nums: [
+      [null, 1],
+      [3, 1],
+      [null, 4],
+      [1, 1],
+      [1, 1],
+    ],
+  },
+  table: [
+    [0, 1, 0, 0, 0],
+    [1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 0],
+    [1, 0, 1, 0, 0],
+    [1, 0, 1, 0, 0],
+  ],
+};
+
 const fieldUpCells = ["nothing", "clues"];
 const fieldDownCells = ["clues", "game"];
-const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells, iterable: false };
+const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells };
 const fieldTableObj = { class: "field", rows: fieldTableRowObj };
+
+const cluesTableUpCellObj = { nums: sample.up.cols, class: "cell clues__cell clues__cell_up" };
+const cluesTableUpRowObj = {
+  nums: sample.up.rows,
+  class: "clues__row clues__row_up",
+  cells: cluesTableUpCellObj,
+};
+const cluesTableUpObj = { class: "clues", rows: cluesTableUpRowObj, type: "up" };
+
+const cluesTableLeftCellObj = {
+  nums: sample.left.cols,
+  class: "cell clues__cell clues__cell_left",
+};
+const cluesTableLeftRowObj = {
+  nums: sample.left.rows,
+  class: "clues__row clues__row_left",
+  cells: cluesTableLeftCellObj,
+};
+const cluesTableLeftObj = { class: "clues", rows: cluesTableLeftRowObj, type: "left" };
+
+const gameTableCellObj = { nums: sample.table.length, class: "cell game__cell game__cell_" };
+const gameTableRowObj = {
+  nums: sample.table.length,
+  class: "game__row game__row_",
+  cells: gameTableCellObj,
+};
+const gameTableObj = { class: "game", rows: gameTableRowObj, type: "game" };
 
 const generateMainTable = function (table) {
   const tableClass = table.class;
@@ -23,8 +76,6 @@ const generateMainTable = function (table) {
   }
   return tableEl;
 };
-
-container.appendChild(generateMainTable(fieldTableObj));
 
 const generateInnerTable = function (table, figure) {
   const tableType = table.type;
@@ -56,57 +107,16 @@ const generateInnerTable = function (table, figure) {
   return tableEl;
 };
 
-const sample = {
-  up: { rows: 1, cols: 5, nums: [[4, 3, 4, 1, 1]] },
-  left: {
-    rows: 5,
-    cols: 2,
-    nums: [
-      [null, 1],
-      [3, 1],
-      [null, 4],
-      [1, 1],
-      [1, 1],
-    ],
-  },
-  table: [
-    [0, 1, 0, 0, 0],
-    [1, 1, 1, 0, 1],
-    [1, 1, 1, 1, 0],
-    [1, 0, 1, 0, 0],
-    [1, 0, 1, 0, 0],
-  ],
+const renderHTML = function () {
+  container.appendChild(generateMainTable(fieldTableObj));
+  const fieldUpCluesEl = document.querySelector(".field__up_clues");
+  fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj, sample));
+
+  const fieldDownCluesEl = document.querySelector(".field__down_clues");
+  fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj, sample));
+
+  const fieldDownGameEl = document.querySelector(".field__down_game");
+  fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
 };
 
-const cluesTableUpCellObj = { nums: 5, class: "cell clues__cell clues__cell_up" };
-const cluesTableUpRowObj = {
-  nums: 1,
-  class: "clues__row clues__row_up",
-  cells: cluesTableUpCellObj,
-};
-const cluesTableUpObj = { class: "clues", rows: cluesTableUpRowObj, type: "up" };
-
-const fieldUpCluesEl = document.querySelector(".field__up_clues");
-fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj, sample));
-
-const cluesTableLeftCellObj = { nums: 2, class: "cell clues__cell clues__cell_left" };
-const cluesTableLeftRowObj = {
-  nums: 5,
-  class: "clues__row clues__row_left",
-  cells: cluesTableLeftCellObj,
-};
-const cluesTableLeftObj = { class: "clues", rows: cluesTableLeftRowObj, type: "left" };
-
-const fieldDownCluesEl = document.querySelector(".field__down_clues");
-fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj, sample));
-
-const gameTableCellObj = { nums: 5, class: "cell game__cell game__cell_" };
-const gameTableRowObj = {
-  nums: 5,
-  class: "game__row game__row_",
-  cells: gameTableCellObj,
-};
-const gameTableObj = { class: "game", rows: gameTableRowObj, type: "game" };
-
-const fieldDownGameEl = document.querySelector(".field__down_game");
-fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
+renderHTML();
