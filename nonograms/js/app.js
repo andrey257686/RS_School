@@ -1,18 +1,5 @@
 const container = document.querySelector(".container");
 
-// const generateMainTable = function () {
-//   const field = document.createElement("table");
-//   field.className = "field";
-//   const fieldUp = document.createElement("tr");
-//   fieldUp.className = "field__up";
-//   const fieldUpNothing = document.createElement("td");
-//   fieldUpNothing.className = "field__up_nothing";
-//   const fieldUpClues = document.createElement("td");
-//   fieldUpClues.className = "field__up_clues";
-//   const cluesUp = document.createElement;
-//   const fieldDown = document.createElement("tr");
-//   fieldDown.className = "field__down";
-// };
 const fieldUpCells = ["nothing", "clues"];
 const fieldDownCells = ["clues", "game"];
 const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells, iterable: false };
@@ -39,7 +26,8 @@ const generateMainTable = function (table) {
 
 container.appendChild(generateMainTable(fieldTableObj));
 
-const generateInnerTable = function (table) {
+const generateInnerTable = function (table, figure) {
+  const tableType = table.type;
   const tableClass = table.class;
   const tableRows = table.rows;
   const tableEl = document.createElement("table");
@@ -52,6 +40,14 @@ const generateInnerTable = function (table) {
     for (let j = 1; j <= rowCells.nums; j++) {
       const cell = document.createElement("td");
       const cellClassName = `${rowCells.class}${i}${j}`;
+      if (tableType === "left") {
+        const cellValue = figure.left.nums[i - 1][j - 1];
+        cell.innerText = cellValue;
+      }
+      if (tableType === "up") {
+        const cellValue = figure.up.nums[i - 1][j - 1];
+        cell.innerText = cellValue;
+      }
       cell.className = cellClassName;
       row.appendChild(cell);
     }
@@ -60,16 +56,38 @@ const generateInnerTable = function (table) {
   return tableEl;
 };
 
+const sample = {
+  up: { rows: 1, cols: 5, nums: [[4, 3, 4, 1, 1]] },
+  left: {
+    rows: 5,
+    cols: 2,
+    nums: [
+      [null, 1],
+      [3, 1],
+      [null, 4],
+      [1, 1],
+      [1, 1],
+    ],
+  },
+  table: [
+    [0, 1, 0, 0, 0],
+    [1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 0],
+    [1, 0, 1, 0, 0],
+    [1, 0, 1, 0, 0],
+  ],
+};
+
 const cluesTableUpCellObj = { nums: 5, class: "cell clues__cell clues__cell_up" };
 const cluesTableUpRowObj = {
   nums: 1,
   class: "clues__row clues__row_up",
   cells: cluesTableUpCellObj,
 };
-const cluesTableUpObj = { class: "clues", rows: cluesTableUpRowObj };
+const cluesTableUpObj = { class: "clues", rows: cluesTableUpRowObj, type: "up" };
 
 const fieldUpCluesEl = document.querySelector(".field__up_clues");
-fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj));
+fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj, sample));
 
 const cluesTableLeftCellObj = { nums: 2, class: "cell clues__cell clues__cell_left" };
 const cluesTableLeftRowObj = {
@@ -77,10 +95,10 @@ const cluesTableLeftRowObj = {
   class: "clues__row clues__row_left",
   cells: cluesTableLeftCellObj,
 };
-const cluesTableLeftObj = { class: "clues", rows: cluesTableLeftRowObj };
+const cluesTableLeftObj = { class: "clues", rows: cluesTableLeftRowObj, type: "left" };
 
 const fieldDownCluesEl = document.querySelector(".field__down_clues");
-fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj));
+fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj, sample));
 
 const gameTableCellObj = { nums: 5, class: "cell game__cell game__cell_" };
 const gameTableRowObj = {
@@ -88,7 +106,7 @@ const gameTableRowObj = {
   class: "game__row game__row_",
   cells: gameTableCellObj,
 };
-const gameTableObj = { class: "game", rows: gameTableRowObj };
+const gameTableObj = { class: "game", rows: gameTableRowObj, type: "game" };
 
 const fieldDownGameEl = document.querySelector(".field__down_game");
-fieldDownGameEl.appendChild(generateInnerTable(gameTableObj));
+fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
