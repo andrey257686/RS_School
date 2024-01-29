@@ -105,6 +105,19 @@ h1 {
 .game__cell_black {
   background-color: black;
 }
+.game__cell_cross:before, .game__cell_cross:after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 4px;
+  background: black;
+}
+.game__cell_cross:before {
+  transform: translate(-50%) rotate(45deg);
+}
+.game__cell_cross:after {
+  transform: translate(-50%) rotate(-45deg);
+}
 .game__row:nth-child(5n) {
   border-bottom: 3px solid #606060;
 }

@@ -159,6 +159,11 @@ const generateInnerTable = function (table, figure) {
         cell.addEventListener("click", (event) => {
           handleCellClick(event, i, j, figure);
         });
+        cell.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+          event.target.classList.remove("game__cell_black");
+          event.target.classList.toggle("game__cell_cross");
+        });
       }
       row.appendChild(cell);
     }
@@ -261,6 +266,7 @@ function handleCellClick(event, i, j, figure) {
   }
   let win = true;
   event.target.classList.toggle("game__cell_black");
+  event.target.classList.remove("game__cell_cross");
   for (let i = 0; i < playerTable.length; i++) {
     for (let j = 0; j < playerTable.length; j++) {
       if (playerTable[i][j] !== figure.table[i][j]) {

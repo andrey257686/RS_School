@@ -72,6 +72,22 @@ h1 {
     &_black {
       background-color: black;
     }
+    &_cross {
+      &:before,
+      &:after {
+        content: "";
+        position: absolute;
+        width: 50px;
+        height: 4px;
+        background: black;
+      }
+      &:before {
+        transform: translate(-50%) rotate(45deg);
+      }
+      &:after {
+        transform: translate(-50%) rotate(-45deg);
+      }
+    }
   }
   &__row {
     &:nth-child(5n) {
