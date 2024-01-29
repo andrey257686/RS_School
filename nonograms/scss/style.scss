@@ -6,6 +6,10 @@ table {
   margin: 0;
 }
 
+h1 {
+  font-size: 3rem;
+}
+
 .container {
   width: 80%;
   padding-top: 50px;
@@ -83,4 +87,14 @@ table {
   border-collapse: collapse;
   text-align: center;
   font-size: 2rem;
+}
+
+.selection {
+  &__list {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    font-size: 2rem;
+    gap: 50px;
+  }
 }
