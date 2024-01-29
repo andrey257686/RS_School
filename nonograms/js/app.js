@@ -1,4 +1,4 @@
-const container = document.querySelector(".container");
+const body = document.querySelector(".body");
 import figures from "./figures.js";
 
 let sample = figures[0];
@@ -190,7 +190,7 @@ function renderSelection() {
 
 function handleSelectionButtonClick(index) {
   sample = figures[index];
-  container.innerHTML = "";
+  body.innerHTML = "";
   playerTable = new Array(sample.table.length).fill(0).map((el, index) => {
     const arr = new Array(sample.table.length).fill(0);
     return arr;
@@ -229,7 +229,17 @@ const renderHTML = function () {
   };
   const gameTableObj = { class: "game", rows: gameTableRowObj, type: "game" };
   const mainTable = generateMainTable(fieldTableObj);
-  container.appendChild(mainTable);
+  const mainEl = document.createElement("main");
+  mainEl.className = "main";
+  const containerEl = document.createElement("div");
+  containerEl.className = "container";
+  const titleEl = document.createElement("h1");
+  titleEl.className = "title";
+  titleEl.innerText = "Nonograms Game";
+  containerEl.appendChild(titleEl);
+  containerEl.appendChild(mainTable);
+  mainEl.appendChild(containerEl);
+  body.appendChild(mainEl);
   const fieldUpCluesEl = document.querySelector(".field__up_clues");
   fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj, sample));
 
@@ -238,7 +248,7 @@ const renderHTML = function () {
 
   const fieldDownGameEl = document.querySelector(".field__down_game");
   fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
-  container.insertBefore(renderSelection(), mainTable);
+  containerEl.insertBefore(renderSelection(), mainTable);
 };
 
 renderHTML();
