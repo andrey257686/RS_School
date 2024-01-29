@@ -44,6 +44,16 @@ table {
   border-collapse: collapse;
   &__cell {
     background-color: darkgray;
+    &_up {
+      &:nth-child(5n) {
+        border-right-width: 3px;
+      }
+    }
+  }
+  &__left {
+    &:nth-child(5n) {
+      border-bottom: 3px solid #606060;
+    }
   }
 }
 
@@ -52,8 +62,16 @@ table {
   border-collapse: collapse;
   &__cell {
     cursor: pointer;
+    &:nth-child(5n) {
+      border-right-width: 3px;
+    }
     &_black {
       background-color: black;
+    }
+  }
+  &__row {
+    &:nth-child(5n) {
+      border-bottom: 3px solid #606060;
     }
   }
 }

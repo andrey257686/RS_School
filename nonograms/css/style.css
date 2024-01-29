@@ -81,6 +81,12 @@ table {
 .clues__cell {
   background-color: darkgray;
 }
+.clues__cell_up:nth-child(5n) {
+  border-right-width: 3px;
+}
+.clues__left:nth-child(5n) {
+  border-bottom: 3px solid #606060;
+}
 
 .game {
   border: 0;
@@ -89,8 +95,14 @@ table {
 .game__cell {
   cursor: pointer;
 }
+.game__cell:nth-child(5n) {
+  border-right-width: 3px;
+}
 .game__cell_black {
   background-color: black;
+}
+.game__row:nth-child(5n) {
+  border-bottom: 3px solid #606060;
 }
 
 .cell {
