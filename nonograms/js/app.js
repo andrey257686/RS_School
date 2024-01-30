@@ -2,6 +2,10 @@ const body = document.querySelector(".body");
 import figures from "./figures.js";
 
 let sample = figures[0];
+let timerId = 0;
+let seconds = 0;
+let minutes = 0;
+let timerFlag = false;
 
 // function parserFigure(matrix) {
 //   let resultMatrix = [];
@@ -199,6 +203,7 @@ function handleSelectionButtonClick(index) {
     const arr = new Array(sample.table.length).fill(0);
     return arr;
   });
+  resetTimer();
   renderHTML();
 }
 
@@ -263,14 +268,49 @@ const renderHTML = function () {
       const arr = new Array(sample.table.length).fill(0);
       return arr;
     });
+    resetTimer();
     renderHTML();
   });
   containerEl.appendChild(restartButtonEl);
+  const timerEl = document.createElement("div");
+  timerEl.className = "timer";
+  const timerMinutesEl = document.createElement("div");
+  timerMinutesEl.className = "timer__minutes";
+  timerMinutesEl.innerText = "00";
+  const timerSecondsEl = document.createElement("div");
+  timerSecondsEl.className = "timer__seconds";
+  timerSecondsEl.innerText = "00";
+  timerEl.appendChild(timerMinutesEl);
+  timerEl.appendChild(timerSecondsEl);
+  containerEl.insertBefore(timerEl, mainTable);
 };
 
 renderHTML();
 
+function resetTimer() {
+  clearInterval(timerId);
+  seconds = 0;
+  minutes = 0;
+  timerFlag = false;
+}
+
+function countdownTimer() {
+  seconds++;
+  if (seconds === 60) {
+    minutes++;
+    seconds = 0;
+  }
+  const timerMinutesEl = document.querySelector(".timer__minutes");
+  const timerSecondsEl = document.querySelector(".timer__seconds");
+  timerSecondsEl.innerText = String(seconds).padStart(2, "0");
+  timerMinutesEl.innerText = String(minutes).padStart(2, "0");
+}
+
 function handleCellClick(event, i, j, figure) {
+  if (!timerFlag) {
+    timerId = setInterval(countdownTimer, 1000);
+    timerFlag = true;
+  }
   if (playerTable[i - 1][j - 1] === 0) {
     playerTable[i - 1][j - 1] = 1;
   } else if (playerTable[i - 1][j - 1] === 1) {
@@ -287,6 +327,9 @@ function handleCellClick(event, i, j, figure) {
     }
   }
   if (win) {
-    console.log("solved nonogram");
+    console.log(
+      `solved nonogram - time is ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
+    );
+    resetTimer();
   }
 }

@@ -144,3 +144,14 @@ h1 {
   height: 50px;
   font-size: 2rem;
 }
+
+.timer {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 2rem;
+}
+.timer__minutes:after {
+  content: ":";
+  position: absolute;
+}
