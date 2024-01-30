@@ -12,6 +12,16 @@ const blackAudio = new Audio("./assets/sounds/black.mp3");
 const whiteAudio = new Audio("./assets/sounds/white.mp3");
 const crossAudio = new Audio("./assets/sounds/cross.mp3");
 
+let playerTable = new Array(sample.table.length).fill(0).map(() => {
+  const arr = new Array(sample.table.length).fill(0);
+  return arr;
+});
+
+const fieldUpCells = ["nothing", "clues"];
+const fieldDownCells = ["clues", "game"];
+const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells };
+const fieldTableObj = { class: "field", rows: fieldTableRowObj };
+
 function soundHandler(cell) {
   if (cell.classList.contains("game__cell_black")) {
     if (blackAudio.paused) {
@@ -84,16 +94,6 @@ function soundHandler(cell) {
 //     [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 //   ],
 // };
-
-let playerTable = new Array(sample.table.length).fill(0).map(() => {
-  const arr = new Array(sample.table.length).fill(0);
-  return arr;
-});
-
-const fieldUpCells = ["nothing", "clues"];
-const fieldDownCells = ["clues", "game"];
-const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells };
-const fieldTableObj = { class: "field", rows: fieldTableRowObj };
 
 const generateMainTable = function (table) {
   const tableClass = table.class;
@@ -187,6 +187,58 @@ function renderSelection() {
   return selectionEl;
 }
 
+function resetTimer() {
+  clearInterval(timerId);
+  seconds = 0;
+  minutes = 0;
+  timerFlag = false;
+}
+
+function countdownTimer() {
+  seconds++;
+  if (seconds === 60) {
+    minutes++;
+    seconds = 0;
+  }
+  const timerMinutesEl = document.querySelector(".timer__minutes");
+  const timerSecondsEl = document.querySelector(".timer__seconds");
+  timerSecondsEl.innerText = String(seconds).padStart(2, "0");
+  timerMinutesEl.innerText = String(minutes).padStart(2, "0");
+}
+
+function handleCellClick(event, i, j, figure) {
+  if (!timerFlag) {
+    timerId = setInterval(countdownTimer, 1000);
+    timerFlag = true;
+  }
+  if (playerTable[i - 1][j - 1] === 0 || playerTable[i - 1][j - 1] === 2) {
+    playerTable[i - 1][j - 1] = 1;
+  } else if (playerTable[i - 1][j - 1] === 1) {
+    playerTable[i - 1][j - 1] = 0;
+  }
+  console.log("palyerTable " + playerTable);
+  console.log("sampleTable " + sample.table);
+  let win = true;
+  event.target.classList.toggle("game__cell_black");
+  event.target.classList.remove("game__cell_cross");
+  soundHandler(event.target);
+  for (let i = 0; i < playerTable.length; i++) {
+    for (let j = 0; j < playerTable.length; j++) {
+      const tmpValue = playerTable[i][j] === 2 ? 0 : playerTable[i][j];
+      if (tmpValue !== figure.table[i][j]) {
+        win = false;
+      }
+    }
+  }
+  if (win) {
+    winAudio.play();
+    console.log(
+      `solved nonogram - time is ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
+    );
+    resetTimer();
+  }
+}
+
 function handleSelectionButtonClick(index) {
   sample = figures[index];
   body.innerHTML = "";
@@ -256,10 +308,8 @@ const renderHTML = function () {
   body.appendChild(mainEl);
   const fieldUpCluesEl = document.querySelector(".field__up_clues");
   fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj, sample));
-
   const fieldDownCluesEl = document.querySelector(".field__down_clues");
   fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj, sample));
-
   const fieldDownGameEl = document.querySelector(".field__down_game");
   fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
   containerEl.insertBefore(renderSelection(), mainTable);
@@ -305,55 +355,3 @@ const renderHTML = function () {
 };
 
 renderHTML();
-
-function resetTimer() {
-  clearInterval(timerId);
-  seconds = 0;
-  minutes = 0;
-  timerFlag = false;
-}
-
-function countdownTimer() {
-  seconds++;
-  if (seconds === 60) {
-    minutes++;
-    seconds = 0;
-  }
-  const timerMinutesEl = document.querySelector(".timer__minutes");
-  const timerSecondsEl = document.querySelector(".timer__seconds");
-  timerSecondsEl.innerText = String(seconds).padStart(2, "0");
-  timerMinutesEl.innerText = String(minutes).padStart(2, "0");
-}
-
-function handleCellClick(event, i, j, figure) {
-  if (!timerFlag) {
-    timerId = setInterval(countdownTimer, 1000);
-    timerFlag = true;
-  }
-  if (playerTable[i - 1][j - 1] === 0 || playerTable[i - 1][j - 1] === 2) {
-    playerTable[i - 1][j - 1] = 1;
-  } else if (playerTable[i - 1][j - 1] === 1) {
-    playerTable[i - 1][j - 1] = 0;
-  }
-  console.log("palyerTable " + playerTable);
-  console.log("sampleTable " + sample.table);
-  let win = true;
-  event.target.classList.toggle("game__cell_black");
-  event.target.classList.remove("game__cell_cross");
-  soundHandler(event.target);
-  for (let i = 0; i < playerTable.length; i++) {
-    for (let j = 0; j < playerTable.length; j++) {
-      const tmpValue = playerTable[i][j] === 2 ? 0 : playerTable[i][j];
-      if (tmpValue !== figure.table[i][j]) {
-        win = false;
-      }
-    }
-  }
-  if (win) {
-    winAudio.play();
-    console.log(
-      `solved nonogram - time is ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
-    );
-    resetTimer();
-  }
-}
