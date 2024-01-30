@@ -137,7 +137,6 @@ const generateInnerTable = function (table, figure) {
   const tableRows = table.rows;
   const tableEl = document.createElement("table");
   tableEl.className = tableClass;
-  console.log(tableRows.nums);
   for (let i = 1; i <= tableRows.nums; i++) {
     const row = document.createElement("tr");
     const rowClassName = `${tableRows.class}${i}`;
@@ -254,6 +253,19 @@ const renderHTML = function () {
   const fieldDownGameEl = document.querySelector(".field__down_game");
   fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
   containerEl.insertBefore(renderSelection(), mainTable);
+  const restartButtonEl = document.createElement("button");
+  restartButtonEl.className = "restart";
+  restartButtonEl.innerText = "Restart game";
+  restartButtonEl.addEventListener("click", (event) => {
+    event.preventDefault();
+    body.innerHTML = "";
+    playerTable = new Array(sample.table.length).fill(0).map((el, index) => {
+      const arr = new Array(sample.table.length).fill(0);
+      return arr;
+    });
+    renderHTML();
+  });
+  containerEl.appendChild(restartButtonEl);
 };
 
 renderHTML();
