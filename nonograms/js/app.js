@@ -7,6 +7,23 @@ let seconds = 0;
 let minutes = 0;
 let timerFlag = false;
 
+const winAudio = new Audio("./assets/sounds/win.mp3");
+const blackAudio = new Audio("./assets/sounds/black.mp3");
+const whiteAudio = new Audio("./assets/sounds/white.mp3");
+const crossAudio = new Audio("./assets/sounds/cross.mp3");
+
+function soundHandler(cell) {
+  if (cell.classList.contains("game__cell_black")) {
+    blackAudio.play();
+    return 0;
+  } else if (cell.classList.contains("game__cell_cross")) {
+    crossAudio.play();
+    return 0;
+  }
+  whiteAudio.play();
+  // console.log(Array(cell.classList));
+}
+
 // function parserFigure(matrix) {
 //   let resultMatrix = [];
 //   let cluesLeftMatrix = [];
@@ -166,6 +183,7 @@ const generateInnerTable = function (table, figure) {
           event.preventDefault();
           event.target.classList.remove("game__cell_black");
           event.target.classList.toggle("game__cell_cross");
+          soundHandler(event.target);
         });
       }
       row.appendChild(cell);
@@ -319,6 +337,7 @@ function handleCellClick(event, i, j, figure) {
   let win = true;
   event.target.classList.toggle("game__cell_black");
   event.target.classList.remove("game__cell_cross");
+  soundHandler(event.target);
   for (let i = 0; i < playerTable.length; i++) {
     for (let j = 0; j < playerTable.length; j++) {
       if (playerTable[i][j] !== figure.table[i][j]) {
@@ -327,6 +346,7 @@ function handleCellClick(event, i, j, figure) {
     }
   }
   if (win) {
+    winAudio.play();
     console.log(
       `solved nonogram - time is ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
     );
