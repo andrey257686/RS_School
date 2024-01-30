@@ -14,64 +14,26 @@ const crossAudio = new Audio("./assets/sounds/cross.mp3");
 
 function soundHandler(cell) {
   if (cell.classList.contains("game__cell_black")) {
-    blackAudio.play();
+    if (blackAudio.paused) {
+      blackAudio.play();
+    } else {
+      blackAudio.currentTime = 0;
+    }
     return 0;
   } else if (cell.classList.contains("game__cell_cross")) {
-    crossAudio.play();
+    if (crossAudio.paused) {
+      crossAudio.play();
+    } else {
+      crossAudio.currentTime = 0;
+    }
     return 0;
   }
-  whiteAudio.play();
-  // console.log(Array(cell.classList));
+  if (whiteAudio.paused) {
+    whiteAudio.play();
+  } else {
+    whiteAudio.currentTime = 0;
+  }
 }
-
-// function parserFigure(matrix) {
-//   let resultMatrix = [];
-//   let cluesLeftMatrix = [];
-//   for (let i = 0; i < matrix.length; i++) {
-//     let resNums = [];
-//     matrix[i].reduce((acc, el, index, matrixNums) => {
-//       if (el === 1) {
-//         acc = acc + 1;
-//       } else {
-//         acc = 0;
-//       }
-//       resNums.push(acc);
-//       if (index === matrix[i].length - 1) {
-//         cluesLeftMatrix.push(resNums);
-//       }
-//       return acc;
-//     }, 0);
-//   }
-//   console.log(cluesLeftMatrix);
-// }
-
-// const sample = {
-//   up: {
-//     rows: 1,
-//     cols: 5,
-//     nums: [[4, 3, 4, 1, 1]],
-//   },
-//   left: {
-//     rows: 5,
-//     cols: 2,
-//     nums: [
-//       [null, 1],
-//       [3, 1],
-//       [null, 4],
-//       [1, 1],
-//       [1, 1],
-//     ],
-//   },
-//   table: [
-//     [0, 1, 0, 0, 0],
-//     [1, 1, 1, 0, 1],
-//     [1, 1, 1, 1, 0],
-//     [1, 0, 1, 0, 0],
-//     [1, 0, 1, 0, 0],
-//   ],
-// };
-
-// parserFigure(sample.table);
 
 // const sample = {
 //   up: {
@@ -123,7 +85,7 @@ function soundHandler(cell) {
 //   ],
 // };
 
-let playerTable = new Array(sample.table.length).fill(0).map((el, index) => {
+let playerTable = new Array(sample.table.length).fill(0).map(() => {
   const arr = new Array(sample.table.length).fill(0);
   return arr;
 });
@@ -217,7 +179,7 @@ function renderSelection() {
 function handleSelectionButtonClick(index) {
   sample = figures[index];
   body.innerHTML = "";
-  playerTable = new Array(sample.table.length).fill(0).map((el, index) => {
+  playerTable = new Array(sample.table.length).fill(0).map(() => {
     const arr = new Array(sample.table.length).fill(0);
     return arr;
   });
@@ -282,7 +244,7 @@ const renderHTML = function () {
   restartButtonEl.addEventListener("click", (event) => {
     event.preventDefault();
     body.innerHTML = "";
-    playerTable = new Array(sample.table.length).fill(0).map((el, index) => {
+    playerTable = new Array(sample.table.length).fill(0).map(() => {
       const arr = new Array(sample.table.length).fill(0);
       return arr;
     });
@@ -301,6 +263,13 @@ const renderHTML = function () {
   timerEl.appendChild(timerMinutesEl);
   timerEl.appendChild(timerSecondsEl);
   containerEl.insertBefore(timerEl, mainTable);
+  const saveButtonEl = document.createElement("button");
+  saveButtonEl.className = "restart";
+  saveButtonEl.innerText = "Save game";
+  saveButtonEl.addEventListener("click", (event) => {
+    console.log("saveButton click");
+  });
+  containerEl.appendChild(saveButtonEl);
 };
 
 renderHTML();
