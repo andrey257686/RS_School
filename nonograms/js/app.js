@@ -138,11 +138,22 @@ const generateInnerTable = function (table, figure) {
       }
       cell.className = cellClassName;
       if (tableType === "game") {
+        if (playerTable[i - 1][j - 1] === 1) {
+          cell.classList.add("game__cell_black");
+        }
+        if (playerTable[i - 1][j - 1] === 2) {
+          cell.classList.add("game__cell_cross");
+        }
         cell.addEventListener("click", (event) => {
           handleCellClick(event, i, j, figure);
         });
         cell.addEventListener("contextmenu", (event) => {
           event.preventDefault();
+          if (playerTable[i - 1][j - 1] === 0 || playerTable[i - 1][j - 1] === 1) {
+            playerTable[i - 1][j - 1] = 2;
+          } else if (playerTable[i - 1][j - 1] === 2) {
+            playerTable[i - 1][j - 1] = 0;
+          }
           event.target.classList.remove("game__cell_black");
           event.target.classList.toggle("game__cell_cross");
           soundHandler(event.target);
@@ -183,6 +194,20 @@ function handleSelectionButtonClick(index) {
     const arr = new Array(sample.table.length).fill(0);
     return arr;
   });
+  resetTimer();
+  renderHTML();
+}
+
+function handleSaveButton() {
+  localStorage.setItem("sample", JSON.stringify(sample));
+  localStorage.setItem("playerTable", JSON.stringify(playerTable));
+}
+
+function handleResumeButton() {
+  sample = JSON.parse(localStorage.getItem("sample"));
+  playerTable = JSON.parse(localStorage.getItem("playerTable"));
+  console.log(playerTable);
+  body.innerHTML = "";
   resetTimer();
   renderHTML();
 }
@@ -239,7 +264,7 @@ const renderHTML = function () {
   fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
   containerEl.insertBefore(renderSelection(), mainTable);
   const restartButtonEl = document.createElement("button");
-  restartButtonEl.className = "restart";
+  restartButtonEl.className = "button restart";
   restartButtonEl.innerText = "Restart game";
   restartButtonEl.addEventListener("click", (event) => {
     event.preventDefault();
@@ -263,11 +288,18 @@ const renderHTML = function () {
   timerEl.appendChild(timerMinutesEl);
   timerEl.appendChild(timerSecondsEl);
   containerEl.insertBefore(timerEl, mainTable);
+  const resumeButtonEl = document.createElement("button");
+  resumeButtonEl.className = "button resume";
+  resumeButtonEl.innerText = "Продолжить последнюю игру";
+  resumeButtonEl.addEventListener("click", (event) => {
+    handleResumeButton();
+  });
+  containerEl.appendChild(resumeButtonEl);
   const saveButtonEl = document.createElement("button");
-  saveButtonEl.className = "restart";
-  saveButtonEl.innerText = "Save game";
+  saveButtonEl.className = "button save";
+  saveButtonEl.innerText = "Сохранить игру";
   saveButtonEl.addEventListener("click", (event) => {
-    console.log("saveButton click");
+    handleSaveButton();
   });
   containerEl.appendChild(saveButtonEl);
 };
@@ -298,18 +330,21 @@ function handleCellClick(event, i, j, figure) {
     timerId = setInterval(countdownTimer, 1000);
     timerFlag = true;
   }
-  if (playerTable[i - 1][j - 1] === 0) {
+  if (playerTable[i - 1][j - 1] === 0 || playerTable[i - 1][j - 1] === 2) {
     playerTable[i - 1][j - 1] = 1;
   } else if (playerTable[i - 1][j - 1] === 1) {
     playerTable[i - 1][j - 1] = 0;
   }
+  console.log("palyerTable " + playerTable);
+  console.log("sampleTable " + sample.table);
   let win = true;
   event.target.classList.toggle("game__cell_black");
   event.target.classList.remove("game__cell_cross");
   soundHandler(event.target);
   for (let i = 0; i < playerTable.length; i++) {
     for (let j = 0; j < playerTable.length; j++) {
-      if (playerTable[i][j] !== figure.table[i][j]) {
+      const tmpValue = playerTable[i][j] === 2 ? 0 : playerTable[i][j];
+      if (tmpValue !== figure.table[i][j]) {
         win = false;
       }
     }
