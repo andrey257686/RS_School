@@ -40,7 +40,8 @@ select {
 }
 
 td,
-table {
+table,
+ul {
   padding: 0;
   margin: 0;
 }
@@ -137,6 +138,7 @@ h1 {
   list-style: none;
   font-size: 2rem;
   gap: 50px;
+  flex-wrap: wrap;
 }
 
 .button {
