@@ -137,6 +137,62 @@ function renderSelection() {
   return selectionEl;
 }
 
+function renderSelection2() {
+  const selectionEl = document.createElement("div");
+  selectionEl.className = "selection";
+  const selectionListEasyEl = document.createElement("div");
+  selectionListEasyEl.className = "selection__list selection__list_easy";
+  const selectionListMediumEl = document.createElement("div");
+  selectionListMediumEl.className = "selection__list selection__list_medium";
+  const selectionListHardEl = document.createElement("div");
+  selectionListHardEl.className = "selection__list selection__list_hard";
+  const selectionListFiguresEasyEl = document.createElement("ul");
+  selectionListFiguresEasyEl.className = "selection__list_figures";
+  const selectionListFiguresMediumEl = document.createElement("ul");
+  selectionListFiguresMediumEl.className = "selection__list_figures";
+  const selectionListFiguresHardEl = document.createElement("ul");
+  selectionListFiguresHardEl.className = "selection__list_figures";
+  const selectionListTagEasyEl = document.createElement("p");
+  selectionListTagEasyEl.className = "selection__list_tag";
+  selectionListTagEasyEl.innerText = "Easy Level";
+  selectionListEasyEl.appendChild(selectionListTagEasyEl);
+  const selectionListTagMediumEl = document.createElement("p");
+  selectionListTagMediumEl.className = "selection__list_tag";
+  selectionListTagMediumEl.innerText = "Medium Level";
+  selectionListMediumEl.appendChild(selectionListTagMediumEl);
+  const selectionListTagHardEl = document.createElement("p");
+  selectionListTagHardEl.className = "selection__list_tag";
+  selectionListTagHardEl.innerText = "Hard Level";
+  selectionListHardEl.appendChild(selectionListTagHardEl);
+  for (let i = 0; i < figures.length; i++) {
+    const selectionListItemEl = document.createElement("li");
+    selectionListItemEl.className = "selection__list_item";
+    const selectionListButtonEl = document.createElement("button");
+    selectionListButtonEl.className = "selection__list_button";
+    selectionListButtonEl.innerText = figures[i].description;
+    selectionListButtonEl.addEventListener("click", () => {
+      handleSelectionButtonClick(i);
+    });
+    selectionListItemEl.appendChild(selectionListButtonEl);
+    if (figures[i].size === "easy") {
+      selectionListFiguresEasyEl.appendChild(selectionListItemEl);
+      selectionListEasyEl.appendChild(selectionListFiguresEasyEl);
+    }
+    if (figures[i].size === "medium") {
+      selectionListFiguresMediumEl.appendChild(selectionListItemEl);
+      selectionListMediumEl.appendChild(selectionListFiguresMediumEl);
+    }
+    if (figures[i].size === "hard") {
+      selectionListFiguresHardEl.appendChild(selectionListItemEl);
+      selectionListHardEl.appendChild(selectionListFiguresHardEl);
+    }
+  }
+  selectionEl.appendChild(selectionListEasyEl);
+  selectionEl.appendChild(selectionListMediumEl);
+  selectionEl.appendChild(selectionListHardEl);
+  return selectionEl;
+}
+
 function resetTimer() {
   clearInterval(timerId);
   seconds = 0;
@@ -262,7 +318,7 @@ const renderHTML = function () {
   fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj, sample));
   const fieldDownGameEl = document.querySelector(".field__down_game");
   fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
-  containerEl.insertBefore(renderSelection(), mainTable);
+  containerEl.insertBefore(renderSelection2(), mainTable);
   const restartButtonEl = document.createElement("button");
   restartButtonEl.className = "button restart";
   restartButtonEl.innerText = "Restart game";

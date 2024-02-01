@@ -107,13 +107,27 @@ h1 {
 }
 
 .selection {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
   &__list {
     display: flex;
-    flex-direction: row;
-    list-style: none;
-    font-size: 2rem;
-    gap: 50px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
+    &_tag {
+      font-size: 2rem;
+    }
+    &_figures {
+      display: flex;
+      list-style: none;
+      font-size: 30px;
+      gap: 50px;
+      flex-wrap: wrap;
+      list-style: none;
+      justify-content: space-between;
+      padding: 10px;
+      border: 1px solid darkgray;
+    }
   }
 }
 

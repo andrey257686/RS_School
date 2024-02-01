@@ -132,13 +132,29 @@ h1 {
   font-size: 2rem;
 }
 
+.selection {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
 .selection__list {
   display: flex;
-  flex-direction: row;
-  list-style: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.selection__list_tag {
   font-size: 2rem;
+}
+.selection__list_figures {
+  display: flex;
+  list-style: none;
+  font-size: 30px;
   gap: 50px;
   flex-wrap: wrap;
+  list-style: none;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid darkgray;
 }
 
 .button {
