@@ -151,3 +151,9 @@ h1 {
 .name {
   font-size: 2rem;
 }
+
+.result {
+  &__cell {
+    border: 1px solid black;
+  }
+}

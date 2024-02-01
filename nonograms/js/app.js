@@ -45,6 +45,32 @@ function soundHandler(cell) {
   }
 }
 
+function generateResultTable() {
+  const tableResultEl = document.createElement("table");
+  tableResultEl.className = "results";
+  const tableResultLineEl = document.createElement("tr");
+  tableResultLineEl.className = "result__line";
+  for (let j = 0; j < 3; j += 1) {
+    const tableResultCellEl = document.createElement("th");
+    tableResultCellEl.className = "result__cell";
+    tableResultCellEl.innerText = "testH";
+    tableResultLineEl.appendChild(tableResultCellEl);
+  }
+  tableResultEl.appendChild(tableResultLineEl);
+  for (let i = 0; i < 5; i += 1) {
+    const tableResultLineEl = document.createElement("tr");
+    tableResultLineEl.className = "result__line";
+    for (let j = 0; j < 3; j += 1) {
+      const tableResultCellEl = document.createElement("td");
+      tableResultCellEl.className = "result__cell";
+      tableResultCellEl.innerText = "test";
+      tableResultLineEl.appendChild(tableResultCellEl);
+    }
+    tableResultEl.appendChild(tableResultLineEl);
+  }
+  return tableResultEl;
+}
+
 const generateMainTable = function (table) {
   const tableClass = table.class;
   const tableRows = table.rows;
@@ -394,6 +420,7 @@ const renderHTML = function () {
   figureNameEl.className = "name";
   figureNameEl.innerText = sample.description;
   containerEl.insertBefore(figureNameEl, timerEl);
+  containerEl.insertBefore(generateResultTable(), restartButtonEl);
 };
 
 renderHTML();
