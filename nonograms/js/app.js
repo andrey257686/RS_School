@@ -116,26 +116,26 @@ const generateInnerTable = function (table, figure) {
   return tableEl;
 };
 
-function renderSelection() {
-  const selectionEl = document.createElement("div");
-  selectionEl.className = "selection";
-  const selectionListEl = document.createElement("ul");
-  selectionListEl.className = "selection__list";
-  for (let i = 0; i < figures.length; i++) {
-    const selectionListItemEl = document.createElement("li");
-    selectionListItemEl.className = "selection__list_item";
-    const selectionListButtonEl = document.createElement("button");
-    selectionListButtonEl.className = "selection__list_button";
-    selectionListButtonEl.innerText = figures[i].description;
-    selectionListButtonEl.addEventListener("click", () => {
-      handleSelectionButtonClick(i);
-    });
-    selectionListItemEl.appendChild(selectionListButtonEl);
-    selectionListEl.appendChild(selectionListItemEl);
-  }
-  selectionEl.appendChild(selectionListEl);
-  return selectionEl;
-}
+// function renderSelection() {
+//   const selectionEl = document.createElement("div");
+//   selectionEl.className = "selection";
+//   const selectionListEl = document.createElement("ul");
+//   selectionListEl.className = "selection__list";
+//   for (let i = 0; i < figures.length; i++) {
+//     const selectionListItemEl = document.createElement("li");
+//     selectionListItemEl.className = "selection__list_item";
+//     const selectionListButtonEl = document.createElement("button");
+//     selectionListButtonEl.className = "selection__list_button";
+//     selectionListButtonEl.innerText = figures[i].description;
+//     selectionListButtonEl.addEventListener("click", () => {
+//       handleSelectionButtonClick(i);
+//     });
+//     selectionListItemEl.appendChild(selectionListButtonEl);
+//     selectionListEl.appendChild(selectionListItemEl);
+//   }
+//   selectionEl.appendChild(selectionListEl);
+//   return selectionEl;
+// }
 
 function renderSelection2() {
   const selectionEl = document.createElement("div");
@@ -270,6 +270,17 @@ function handleResumeButton() {
   renderHTML();
 }
 
+function handleRandomButton() {
+  sample = figures[Math.floor(Math.random() * figures.length)];
+  body.innerHTML = "";
+  playerTable = new Array(sample.table.length).fill(0).map(() => {
+    const arr = new Array(sample.table.length).fill(0);
+    return arr;
+  });
+  resetTimer();
+  renderHTML();
+}
+
 const renderHTML = function () {
   const cluesTableUpCellObj = {
     nums: sample.up.cols,
@@ -358,6 +369,17 @@ const renderHTML = function () {
     handleSaveButton();
   });
   containerEl.appendChild(saveButtonEl);
+  const randomButtonEl = document.createElement("button");
+  randomButtonEl.className = "button random";
+  randomButtonEl.innerText = "Случайная фигура";
+  randomButtonEl.addEventListener("click", (event) => {
+    handleRandomButton();
+  });
+  containerEl.appendChild(randomButtonEl);
+  const figureNameEl = document.createElement("p");
+  figureNameEl.className = "name";
+  figureNameEl.innerText = sample.description;
+  containerEl.insertBefore(figureNameEl, timerEl);
 };
 
 renderHTML();

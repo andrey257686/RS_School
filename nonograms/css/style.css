@@ -173,3 +173,7 @@ h1 {
   content: ":";
   position: absolute;
 }
+
+.name {
+  font-size: 2rem;
+}
