@@ -264,7 +264,6 @@ function handleSaveButton() {
 function handleResumeButton() {
   sample = JSON.parse(localStorage.getItem("sample"));
   playerTable = JSON.parse(localStorage.getItem("playerTable"));
-  console.log(playerTable);
   body.innerHTML = "";
   resetTimer();
   renderHTML();
@@ -277,6 +276,14 @@ function handleRandomButton() {
     const arr = new Array(sample.table.length).fill(0);
     return arr;
   });
+  resetTimer();
+  renderHTML();
+}
+
+function handleSolutionButton() {
+  // sample = sample;
+  playerTable = sample.table;
+  body.innerHTML = "";
   resetTimer();
   renderHTML();
 }
@@ -376,6 +383,13 @@ const renderHTML = function () {
     handleRandomButton();
   });
   containerEl.appendChild(randomButtonEl);
+  const solutionButtonEl = document.createElement("button");
+  solutionButtonEl.className = "button solution";
+  solutionButtonEl.innerText = "Решение";
+  solutionButtonEl.addEventListener("click", (event) => {
+    handleSolutionButton();
+  });
+  containerEl.appendChild(solutionButtonEl);
   const figureNameEl = document.createElement("p");
   figureNameEl.className = "name";
   figureNameEl.innerText = sample.description;
