@@ -148,6 +148,13 @@ body {
   width: 200px;
   height: 30px;
   font-size: 20px;
+  background-color: darkgray;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: #d8d8d8;
 }
 
 .timer {
@@ -192,20 +199,27 @@ body {
   position: relative;
   display: inline-block;
   border: 1px solid black;
+  height: 30px;
+  border-radius: 15px;
 }
 .size__button {
   display: flex;
   align-items: center;
   gap: 10px;
+  border-radius: 15px;
   cursor: pointer;
   border: none;
   background-color: #d8d8d8;
+  height: 100%;
 }
 .size:hover .size__variants {
   display: block;
 }
 .size__variants {
   display: none;
+  border: 1px solid black;
+  border-radius: 15px;
+  overflow: hidden;
   position: absolute;
   min-width: 200px;
   z-index: 1;
@@ -218,7 +232,7 @@ body {
   cursor: pointer;
 }
 .size__variant:hover {
-  background-color: grey;
+  background-color: darkgray;
 }
 
 .figures__list {
@@ -227,8 +241,14 @@ body {
   gap: 20px;
 }
 .figures__list_button {
+  cursor: pointer;
   background-color: #d8d8d8;
   border: 1px solid black;
+  height: 30px;
+  border-radius: 15px;
+}
+.figures__list_button:hover {
+  background-color: darkgray;
 }
 
 .arrow {

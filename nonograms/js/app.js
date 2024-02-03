@@ -488,6 +488,11 @@ const renderHTML = function () {
     handleSolutionButton();
   });
   buttonsFieldEl.appendChild(solutionButtonEl);
+  // ------------------------   генерация кнопки Смена цвета   ---------------------------
+  const colorButtonEl = document.createElement("button");
+  colorButtonEl.className = "button color";
+  colorButtonEl.innerText = "Цвет";
+  buttonsFieldEl.appendChild(colorButtonEl);
   mainEl.appendChild(containerEl);
   body.appendChild(mainEl);
   const fieldUpCluesEl = document.querySelector(".field__up_clues");

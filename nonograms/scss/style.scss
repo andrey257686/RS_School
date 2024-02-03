@@ -122,6 +122,13 @@ body {
   width: 200px;
   height: 30px;
   font-size: 20px;
+  background-color: darkgray;
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  &:hover {
+    background-color: #d8d8d8;
+  }
 }
 
 .timer {
@@ -166,19 +173,26 @@ body {
   position: relative;
   display: inline-block;
   border: 1px solid black;
+  height: 30px;
+  border-radius: 15px;
   &__button {
     display: flex;
     align-items: center;
     gap: 10px;
+    border-radius: 15px;
     cursor: pointer;
     border: none;
     background-color: #d8d8d8;
+    height: 100%;
   }
   &:hover &__variants {
     display: block;
   }
   &__variants {
     display: none;
+    border: 1px solid black;
+    border-radius: 15px;
+    overflow: hidden;
     position: absolute;
     min-width: 200px;
     z-index: 1;
@@ -190,7 +204,7 @@ body {
     display: block;
     cursor: pointer;
     &:hover {
-      background-color: grey;
+      background-color: darkgray;
     }
   }
 }
@@ -201,8 +215,14 @@ body {
     display: flex;
     gap: 20px;
     &_button {
+      &:hover {
+        background-color: darkgray;
+      }
+      cursor: pointer;
       background-color: #d8d8d8;
       border: 1px solid black;
+      height: 30px;
+      border-radius: 15px;
     }
   }
 }
