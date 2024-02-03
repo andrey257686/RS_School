@@ -7,6 +7,8 @@ let seconds = 0;
 let minutes = 0;
 let timerFlag = false;
 let winArr = JSON.parse(localStorage.getItem("resultTable")) || [];
+let selectedSize = "easy";
+const mapSelectedSize = { 0: "easy", 1: "medium", 2: "hard" };
 
 const winAudio = new Audio("./assets/sounds/win.mp3");
 const blackAudio = new Audio("./assets/sounds/black.mp3");
@@ -21,7 +23,7 @@ let playerTable = new Array(sample.table.length).fill(0).map(() => {
 const fieldUpCells = ["nothing", "clues"];
 const fieldDownCells = ["clues", "game"];
 const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells };
-const fieldTableObj = { class: "field", rows: fieldTableRowObj };
+const fieldTableObj = { class: "gamifield__play field", rows: fieldTableRowObj };
 
 function soundHandler(cell) {
   if (cell.classList.contains("game__cell_black")) {
@@ -48,12 +50,12 @@ function soundHandler(cell) {
 
 function generateResultTable() {
   const tableResultEl = document.createElement("table");
-  tableResultEl.className = "results";
+  tableResultEl.className = "bestResults__table results";
   const tableResultLineEl = document.createElement("tr");
-  tableResultLineEl.className = "result__line";
+  tableResultLineEl.className = "results__line";
   for (let j = 0; j < 3; j += 1) {
     const tableResultCellEl = document.createElement("th");
-    tableResultCellEl.className = "result__cell";
+    tableResultCellEl.className = "results__cell";
     switch (j) {
       case 0:
         tableResultCellEl.innerText = "Название";
@@ -70,10 +72,10 @@ function generateResultTable() {
   tableResultEl.appendChild(tableResultLineEl);
   for (let i = 0; i < 5; i += 1) {
     const tableResultLineEl = document.createElement("tr");
-    tableResultLineEl.className = "result__line";
+    tableResultLineEl.className = "results__line";
     for (let j = 0; j < 3; j += 1) {
       const tableResultCellEl = document.createElement("td");
-      tableResultCellEl.className = "result__cell";
+      tableResultCellEl.className = "results__cell";
       switch (j) {
         case 0:
           if (winArr && winArr[i] !== undefined) {
@@ -175,80 +177,65 @@ const generateInnerTable = function (table, figure) {
   return tableEl;
 };
 
-// function renderSelection() {
-//   const selectionEl = document.createElement("div");
-//   selectionEl.className = "selection";
-//   const selectionListEl = document.createElement("ul");
-//   selectionListEl.className = "selection__list";
-//   for (let i = 0; i < figures.length; i++) {
-//     const selectionListItemEl = document.createElement("li");
-//     selectionListItemEl.className = "selection__list_item";
-//     const selectionListButtonEl = document.createElement("button");
-//     selectionListButtonEl.className = "selection__list_button";
-//     selectionListButtonEl.innerText = figures[i].description;
-//     selectionListButtonEl.addEventListener("click", () => {
-//       handleSelectionButtonClick(i);
-//     });
-//     selectionListItemEl.appendChild(selectionListButtonEl);
-//     selectionListEl.appendChild(selectionListItemEl);
-//   }
-//   selectionEl.appendChild(selectionListEl);
-//   return selectionEl;
-// }
-
-function renderSelection2() {
+function renderSelection3() {
   const selectionEl = document.createElement("div");
   selectionEl.className = "selection";
-  const selectionListEasyEl = document.createElement("div");
-  selectionListEasyEl.className = "selection__list selection__list_easy";
-  const selectionListMediumEl = document.createElement("div");
-  selectionListMediumEl.className = "selection__list selection__list_medium";
-  const selectionListHardEl = document.createElement("div");
-  selectionListHardEl.className = "selection__list selection__list_hard";
-  const selectionListFiguresEasyEl = document.createElement("ul");
-  selectionListFiguresEasyEl.className = "selection__list_figures";
-  const selectionListFiguresMediumEl = document.createElement("ul");
-  selectionListFiguresMediumEl.className = "selection__list_figures";
-  const selectionListFiguresHardEl = document.createElement("ul");
-  selectionListFiguresHardEl.className = "selection__list_figures";
-  const selectionListTagEasyEl = document.createElement("p");
-  selectionListTagEasyEl.className = "selection__list_tag";
-  selectionListTagEasyEl.innerText = "Easy Level";
-  selectionListEasyEl.appendChild(selectionListTagEasyEl);
-  const selectionListTagMediumEl = document.createElement("p");
-  selectionListTagMediumEl.className = "selection__list_tag";
-  selectionListTagMediumEl.innerText = "Medium Level";
-  selectionListMediumEl.appendChild(selectionListTagMediumEl);
-  const selectionListTagHardEl = document.createElement("p");
-  selectionListTagHardEl.className = "selection__list_tag";
-  selectionListTagHardEl.innerText = "Hard Level";
-  selectionListHardEl.appendChild(selectionListTagHardEl);
-  for (let i = 0; i < figures.length; i++) {
-    const selectionListItemEl = document.createElement("li");
-    selectionListItemEl.className = "selection__list_item";
-    const selectionListButtonEl = document.createElement("button");
-    selectionListButtonEl.className = "selection__list_button";
-    selectionListButtonEl.innerText = figures[i].description;
-    selectionListButtonEl.addEventListener("click", () => {
-      handleSelectionButtonClick(i);
+  const sizeEl = document.createElement("div");
+  sizeEl.className = "selection__size size";
+  const sizeButtonEl = document.createElement("button");
+  sizeButtonEl.className = "size__button";
+  sizeButtonEl.innerHTML = `Выберите уровень <img class="arrow" src='./assets/img/arrow.svg'></img>`;
+  const sizeVariantsEl = document.createElement("div");
+  sizeVariantsEl.className = "size__variants";
+  for (let i = 0; i < 3; i += 1) {
+    const sizeVariantEl = document.createElement("p");
+    sizeVariantEl.className = "size__variant";
+    if (i === 0) {
+      sizeVariantEl.innerText = "5x5";
+    }
+    if (i === 1) {
+      sizeVariantEl.innerText = "10x10";
+    }
+    if (i === 2) {
+      sizeVariantEl.innerText = "15x15";
+    }
+    sizeVariantEl.addEventListener("click", () => {
+      handleClickSizeVariant(i);
     });
-    selectionListItemEl.appendChild(selectionListButtonEl);
-    if (figures[i].size === "easy") {
-      selectionListFiguresEasyEl.appendChild(selectionListItemEl);
-      selectionListEasyEl.appendChild(selectionListFiguresEasyEl);
-    }
-    if (figures[i].size === "medium") {
-      selectionListFiguresMediumEl.appendChild(selectionListItemEl);
-      selectionListMediumEl.appendChild(selectionListFiguresMediumEl);
-    }
-    if (figures[i].size === "hard") {
-      selectionListFiguresHardEl.appendChild(selectionListItemEl);
-      selectionListHardEl.appendChild(selectionListFiguresHardEl);
-    }
+    sizeVariantsEl.appendChild(sizeVariantEl);
   }
-  selectionEl.appendChild(selectionListEasyEl);
-  selectionEl.appendChild(selectionListMediumEl);
-  selectionEl.appendChild(selectionListHardEl);
+  const figuresEl = document.createElement("div");
+  figuresEl.className = "selection__figures figures";
+  const figuresListEl = document.createElement("ul");
+  figuresListEl.className = "figures__list";
+  const selectedFigures = figures.filter((figure) => {
+    return figure.size === selectedSize;
+  });
+  for (let i = 0; i < selectedFigures.length; i += 1) {
+    const figuresListItemEl = document.createElement("li");
+    figuresListItemEl.className = "figures__list_item";
+    const figuresListButtonEl = document.createElement("button");
+    figuresListButtonEl.className = "figures__list_button";
+    figuresListButtonEl.innerText = selectedFigures[i].description;
+    figuresListButtonEl.addEventListener("click", () => {
+      if (selectedSize === "easy") {
+        handleSelectionButtonClick(i);
+      }
+      if (selectedSize === "medium") {
+        handleSelectionButtonClick(i + 5);
+      }
+      if (selectedSize === "hard") {
+        handleSelectionButtonClick(i + 10);
+      }
+    });
+    figuresListItemEl.appendChild(figuresListButtonEl);
+    figuresListEl.appendChild(figuresListItemEl);
+  }
+  figuresEl.appendChild(figuresListEl);
+  sizeEl.appendChild(sizeButtonEl);
+  sizeEl.appendChild(sizeVariantsEl);
+  selectionEl.appendChild(sizeEl);
+  selectionEl.appendChild(figuresEl);
   return selectionEl;
 }
 
@@ -269,6 +256,21 @@ function countdownTimer() {
   const timerSecondsEl = document.querySelector(".timer__seconds");
   timerSecondsEl.innerText = String(seconds).padStart(2, "0");
   timerMinutesEl.innerText = String(minutes).padStart(2, "0");
+}
+
+function handleClickSizeVariant(i) {
+  selectedSize = mapSelectedSize[i];
+  const selectedFigures = figures.filter((figure) => {
+    return figure.size === selectedSize;
+  });
+  sample = selectedFigures[0];
+  body.innerHTML = "";
+  playerTable = new Array(sample.table.length).fill(0).map(() => {
+    const arr = new Array(sample.table.length).fill(0);
+    return arr;
+  });
+  resetTimer();
+  renderHTML();
 }
 
 function handleCellClick(event, i, j, figure) {
@@ -296,7 +298,6 @@ function handleCellClick(event, i, j, figure) {
   if (win) {
     winAudio.play();
     const winResult = createWinObject();
-    console.log(winResult);
     if (winArr.length === 0) {
       winArr.push(winResult);
       localStorage.setItem("resultTable", JSON.stringify(winArr));
@@ -309,11 +310,7 @@ function handleCellClick(event, i, j, figure) {
     let resultsTableEl = document.querySelector(".results");
     resultsTableEl.remove();
     const containerEl = document.querySelector(".container");
-    const restartButtonEl = document.querySelector(".restart");
-    containerEl.insertBefore(generateResultTable(), restartButtonEl);
-    console.log(
-      `solved nonogram - time is ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
-    );
+    containerEl.appendChild(generateResultTable());
     resetTimer();
   }
 }
@@ -423,30 +420,16 @@ const renderHTML = function () {
   titleEl.className = "title";
   titleEl.innerText = "Nonograms Game";
   containerEl.appendChild(titleEl);
-  containerEl.appendChild(mainTable);
-  mainEl.appendChild(containerEl);
-  body.appendChild(mainEl);
-  const fieldUpCluesEl = document.querySelector(".field__up_clues");
-  fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj, sample));
-  const fieldDownCluesEl = document.querySelector(".field__down_clues");
-  fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj, sample));
-  const fieldDownGameEl = document.querySelector(".field__down_game");
-  fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
-  containerEl.insertBefore(renderSelection2(), mainTable);
-  const restartButtonEl = document.createElement("button");
-  restartButtonEl.className = "button restart";
-  restartButtonEl.innerText = "Restart game";
-  restartButtonEl.addEventListener("click", (event) => {
-    event.preventDefault();
-    body.innerHTML = "";
-    playerTable = new Array(sample.table.length).fill(0).map(() => {
-      const arr = new Array(sample.table.length).fill(0);
-      return arr;
-    });
-    resetTimer();
-    renderHTML();
-  });
-  containerEl.appendChild(restartButtonEl);
+  containerEl.appendChild(renderSelection3());
+  const gameFieldEl = document.createElement("div");
+  gameFieldEl.className = "gamefield";
+  gameFieldEl.appendChild(mainTable);
+  containerEl.appendChild(gameFieldEl);
+  // ========================   Генерация блока с кнопками   =========================
+  const buttonsFieldEl = document.createElement("div");
+  buttonsFieldEl.className = "gamefield__buttons";
+  gameFieldEl.appendChild(buttonsFieldEl);
+  // ------------------------   генерация таймера   ---------------------------
   const timerEl = document.createElement("div");
   timerEl.className = "timer";
   const timerMinutesEl = document.createElement("div");
@@ -457,40 +440,70 @@ const renderHTML = function () {
   timerSecondsEl.innerText = "00";
   timerEl.appendChild(timerMinutesEl);
   timerEl.appendChild(timerSecondsEl);
-  containerEl.insertBefore(timerEl, mainTable);
+  buttonsFieldEl.appendChild(timerEl);
+  // ------------------------   генерация кнопки Рестарт   ---------------------------
+  const restartButtonEl = document.createElement("button");
+  restartButtonEl.className = "button restart";
+  restartButtonEl.innerText = "Начать заново";
+  restartButtonEl.addEventListener("click", (event) => {
+    event.preventDefault();
+    body.innerHTML = "";
+    playerTable = new Array(sample.table.length).fill(0).map(() => {
+      const arr = new Array(sample.table.length).fill(0);
+      return arr;
+    });
+    resetTimer();
+    renderHTML();
+  });
+  buttonsFieldEl.appendChild(restartButtonEl);
+  // ------------------------   генерация кнопки Продолжить   ---------------------------
   const resumeButtonEl = document.createElement("button");
   resumeButtonEl.className = "button resume";
-  resumeButtonEl.innerText = "Продолжить последнюю игру";
-  resumeButtonEl.addEventListener("click", (event) => {
+  resumeButtonEl.innerText = "Продолжить игру";
+  resumeButtonEl.addEventListener("click", () => {
     handleResumeButton();
   });
-  containerEl.appendChild(resumeButtonEl);
+  buttonsFieldEl.appendChild(resumeButtonEl);
+  // ------------------------   генерация кнопки Сохранить   ---------------------------
   const saveButtonEl = document.createElement("button");
   saveButtonEl.className = "button save";
   saveButtonEl.innerText = "Сохранить игру";
   saveButtonEl.addEventListener("click", (event) => {
     handleSaveButton();
   });
-  containerEl.appendChild(saveButtonEl);
+  buttonsFieldEl.appendChild(saveButtonEl);
+  // ------------------------   генерация кнопки Случайная фигура   ---------------------------
   const randomButtonEl = document.createElement("button");
   randomButtonEl.className = "button random";
   randomButtonEl.innerText = "Случайная фигура";
   randomButtonEl.addEventListener("click", (event) => {
     handleRandomButton();
   });
-  containerEl.appendChild(randomButtonEl);
+  buttonsFieldEl.appendChild(randomButtonEl);
+  // ------------------------   генерация кнопки Решение   ---------------------------
   const solutionButtonEl = document.createElement("button");
   solutionButtonEl.className = "button solution";
   solutionButtonEl.innerText = "Решение";
   solutionButtonEl.addEventListener("click", (event) => {
     handleSolutionButton();
   });
-  containerEl.appendChild(solutionButtonEl);
-  const figureNameEl = document.createElement("p");
-  figureNameEl.className = "name";
-  figureNameEl.innerText = sample.description;
-  containerEl.insertBefore(figureNameEl, timerEl);
-  containerEl.insertBefore(generateResultTable(), restartButtonEl);
+  buttonsFieldEl.appendChild(solutionButtonEl);
+  mainEl.appendChild(containerEl);
+  body.appendChild(mainEl);
+  const fieldUpCluesEl = document.querySelector(".field__up_clues");
+  fieldUpCluesEl.appendChild(generateInnerTable(cluesTableUpObj, sample));
+  const fieldDownCluesEl = document.querySelector(".field__down_clues");
+  fieldDownCluesEl.appendChild(generateInnerTable(cluesTableLeftObj, sample));
+  const fieldDownGameEl = document.querySelector(".field__down_game");
+  fieldDownGameEl.appendChild(generateInnerTable(gameTableObj, sample));
+  const bestResultsEl = document.createElement("div");
+  bestResultsEl.className = "bestResults";
+  const bestResultsTagEl = document.createElement("p");
+  bestResultsTagEl.innerText = "Лучшие результаты";
+  bestResultsTagEl.className = "bestResults__tag";
+  bestResultsEl.appendChild(bestResultsTagEl);
+  bestResultsEl.appendChild(generateResultTable());
+  containerEl.appendChild(bestResultsEl);
 };
 
 renderHTML();
