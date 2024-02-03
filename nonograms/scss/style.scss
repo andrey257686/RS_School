@@ -11,6 +11,11 @@ h1 {
   font-size: 3rem;
 }
 
+body {
+  background: url(../assets/img/background.jpg) no-repeat center top fixed;
+  background-size: cover;
+}
+
 .container {
   width: 80%;
   padding-top: 50px;
@@ -110,31 +115,13 @@ h1 {
   display: flex;
   gap: 20px;
   flex-direction: column;
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    &_tag {
-      font-size: 2rem;
-    }
-    &_figures {
-      display: flex;
-      list-style: none;
-      font-size: 30px;
-      gap: 50px;
-      flex-wrap: wrap;
-      list-style: none;
-      justify-content: space-between;
-      padding: 10px;
-      border: 1px solid darkgray;
-    }
-  }
+  align-items: center;
 }
 
 .button {
-  width: 300px;
-  height: 100px;
-  font-size: 2rem;
+  width: 200px;
+  height: 30px;
+  font-size: 20px;
 }
 
 .timer {
@@ -142,6 +129,7 @@ h1 {
   flex-direction: row;
   gap: 10px;
   font-size: 2rem;
+  align-self: center;
   &__minutes:after {
     content: ":";
     position: absolute;
@@ -152,8 +140,87 @@ h1 {
   font-size: 2rem;
 }
 
-.result {
+.results {
+  font-size: 20px;
   &__cell {
+    width: 200;
+    padding: 5px;
     border: 1px solid black;
+  }
+}
+
+.gamefield {
+  display: flex;
+  gap: 50px;
+  padding: 20px;
+  background-color: #d8d8d8;
+  border-radius: 20px;
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.size {
+  position: relative;
+  display: inline-block;
+  border: 1px solid black;
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #d8d8d8;
+  }
+  &:hover &__variants {
+    display: block;
+  }
+  &__variants {
+    display: none;
+    position: absolute;
+    min-width: 200px;
+    z-index: 1;
+  }
+  &__variant {
+    color: black;
+    background-color: #d8d8d8;
+    padding: 5px 5px;
+    display: block;
+    cursor: pointer;
+    &:hover {
+      background-color: grey;
+    }
+  }
+}
+
+.figures {
+  &__list {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+    &_button {
+      background-color: #d8d8d8;
+      border: 1px solid black;
+    }
+  }
+}
+
+.arrow {
+  width: 15px;
+}
+
+.bestResults {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  background-color: #d8d8d8;
+  border-radius: 20px;
+  &__tag {
+    font-size: 20px;
+    font-weight: 600;
   }
 }
