@@ -6,6 +6,7 @@ let timerId = 0;
 let seconds = 0;
 let minutes = 0;
 let timerFlag = false;
+let winArr = JSON.parse(localStorage.getItem("resultTable")) || [];
 
 const winAudio = new Audio("./assets/sounds/win.mp3");
 const blackAudio = new Audio("./assets/sounds/black.mp3");
@@ -53,7 +54,17 @@ function generateResultTable() {
   for (let j = 0; j < 3; j += 1) {
     const tableResultCellEl = document.createElement("th");
     tableResultCellEl.className = "result__cell";
-    tableResultCellEl.innerText = "testH";
+    switch (j) {
+      case 0:
+        tableResultCellEl.innerText = "Название";
+        break;
+      case 1:
+        tableResultCellEl.innerText = "Сложность";
+        break;
+      case 2:
+        tableResultCellEl.innerText = "Время";
+        break;
+    }
     tableResultLineEl.appendChild(tableResultCellEl);
   }
   tableResultEl.appendChild(tableResultLineEl);
@@ -63,7 +74,29 @@ function generateResultTable() {
     for (let j = 0; j < 3; j += 1) {
       const tableResultCellEl = document.createElement("td");
       tableResultCellEl.className = "result__cell";
-      tableResultCellEl.innerText = "test";
+      switch (j) {
+        case 0:
+          if (winArr && winArr[i] !== undefined) {
+            tableResultCellEl.innerText = `${winArr[i].name}`;
+          } else {
+            tableResultCellEl.innerText = "";
+          }
+          break;
+        case 1:
+          if (winArr && winArr[i] !== undefined) {
+            tableResultCellEl.innerText = `${winArr[i].difficulty}`;
+          } else {
+            tableResultCellEl.innerText = "";
+          }
+          break;
+        case 2:
+          if (winArr && winArr[i] !== undefined) {
+            tableResultCellEl.innerText = `${winArr[i].time}`;
+          } else {
+            tableResultCellEl.innerText = "";
+          }
+          break;
+      }
       tableResultLineEl.appendChild(tableResultCellEl);
     }
     tableResultEl.appendChild(tableResultLineEl);
@@ -248,8 +281,6 @@ function handleCellClick(event, i, j, figure) {
   } else if (playerTable[i - 1][j - 1] === 1) {
     playerTable[i - 1][j - 1] = 0;
   }
-  console.log("palyerTable " + playerTable);
-  console.log("sampleTable " + sample.table);
   let win = true;
   event.target.classList.toggle("game__cell_black");
   event.target.classList.remove("game__cell_cross");
@@ -264,11 +295,51 @@ function handleCellClick(event, i, j, figure) {
   }
   if (win) {
     winAudio.play();
+    const winResult = createWinObject();
+    console.log(winResult);
+    if (winArr.length === 0) {
+      winArr.push(winResult);
+      localStorage.setItem("resultTable", JSON.stringify(winArr));
+    } else {
+      winArr = JSON.parse(localStorage.getItem("resultTable"));
+      winArr.push(winResult);
+      const sortedWinArr = sortWinArr(winArr);
+      localStorage.setItem("resultTable", JSON.stringify(sortedWinArr));
+    }
+    let resultsTableEl = document.querySelector(".results");
+    resultsTableEl.remove();
+    const containerEl = document.querySelector(".container");
+    const restartButtonEl = document.querySelector(".restart");
+    containerEl.insertBefore(generateResultTable(), restartButtonEl);
     console.log(
       `solved nonogram - time is ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
     );
     resetTimer();
   }
+}
+
+function sortWinArr(arr) {
+  arr.sort((a, b) => {
+    const timeA = a.minutes + a.seconds;
+    const timeB = b.minutes + b.seconds;
+    return timeA - timeB;
+  });
+  return arr.slice(0, 5);
+}
+
+function createWinObject() {
+  const winName = sample.description;
+  const winMinutes = minutes;
+  const winSeconds = seconds;
+  const winDifficulty = sample.size;
+  const winResult = {
+    name: winName,
+    minutes: winMinutes,
+    seconds: winSeconds,
+    time: `${String(winMinutes).padStart(2, "0")}:${String(winSeconds).padStart(2, "0")}`,
+    difficulty: winDifficulty,
+  };
+  return winResult;
 }
 
 function handleSelectionButtonClick(index) {
@@ -307,7 +378,6 @@ function handleRandomButton() {
 }
 
 function handleSolutionButton() {
-  // sample = sample;
   playerTable = sample.table;
   body.innerHTML = "";
   resetTimer();
