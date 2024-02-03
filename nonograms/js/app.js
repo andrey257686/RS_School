@@ -309,8 +309,8 @@ function handleCellClick(event, i, j, figure) {
     }
     let resultsTableEl = document.querySelector(".results");
     resultsTableEl.remove();
-    const containerEl = document.querySelector(".container");
-    containerEl.appendChild(generateResultTable());
+    const bestResultsEl = document.querySelector(".bestResults");
+    bestResultsEl.appendChild(generateResultTable());
     resetTimer();
   }
 }
@@ -492,6 +492,31 @@ const renderHTML = function () {
   const colorButtonEl = document.createElement("button");
   colorButtonEl.className = "button color";
   colorButtonEl.innerText = "Цвет";
+  colorButtonEl.addEventListener("click", () => {
+    const colorScheme = document.body.getAttribute("dark");
+    console.log(colorScheme);
+    if (!colorScheme) {
+      document.body.setAttribute("dark", "true");
+    } else {
+      document.body.removeAttribute("dark");
+    }
+    body.classList.toggle("body__dark");
+    // gameFieldEl.classList.toggle("gamefield__dark");
+    // restartButtonEl.classList.toggle("button__dark");
+    // resumeButtonEl.classList.toggle("button__dark");
+    // saveButtonEl.classList.toggle("button__dark");
+    // randomButtonEl.classList.toggle("button__dark");
+    // solutionButtonEl.classList.toggle("button__dark");
+    // colorButtonEl.classList.toggle("button__dark");
+    // body.classList.toggle("body__dark");
+    // containerEl.classList.toggle("container__dark");
+    // document.querySelector(".field__up_nothing").classList.toggle("field__up_nothing_dark");
+    // document.querySelector(".title").classList.toggle("title__dark");
+    // const cluesCells = document.querySelectorAll(".clues__cell");
+    // cluesCells.forEach((cell) => {
+    //   cell.classList.toggle("clues__cell_dark");
+    // });
+  });
   buttonsFieldEl.appendChild(colorButtonEl);
   mainEl.appendChild(containerEl);
   body.appendChild(mainEl);

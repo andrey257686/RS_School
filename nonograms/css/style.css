@@ -39,6 +39,20 @@ select {
   font: inherit;
 }
 
+:root {
+  --lightMain: #d8d8d8;
+  --lightText: #1c1c1c;
+  --lightButton: #b1b1b1;
+  --lightLighter: #ebebeb;
+}
+
+[dark] {
+  --lightMain: #505050;
+  --lightText: #e8e8e8;
+  --lightButton: #858585;
+  --lightLighter: #2e2e2e;
+}
+
 td,
 table,
 ul {
@@ -46,12 +60,17 @@ ul {
   margin: 0;
 }
 
-h1 {
+.title {
   font-size: 3rem;
+  color: var(--lightText);
 }
 
-body {
+.body {
   background: url(../assets/img/background.jpg) no-repeat center top fixed;
+  background-size: cover;
+}
+.body__dark {
+  background: url(../assets/img/background-darken.jpg) no-repeat center top fixed;
   background-size: cover;
 }
 
@@ -65,23 +84,24 @@ body {
   gap: 50px;
   align-items: center;
   justify-content: center;
+  color: var(--lightText);
 }
 
 .field {
-  border: 2px solid black;
+  border: 2px solid var(--lightText);
   border-collapse: collapse;
 }
 .field__up_nothing {
-  background-color: darkgray;
+  background-color: var(--lightLighter);
 }
 .field__up_clues {
-  border: 1px solid black;
+  border: 1px solid var(--lightText);
 }
 .field__down_clues {
-  border: 1px solid black;
+  border: 1px solid var(--lightText);
 }
 .field__down_game {
-  border: 1px solid black;
+  border: 1px solid var(--lightText);
 }
 
 .clues {
@@ -89,7 +109,7 @@ body {
   border-collapse: collapse;
 }
 .clues__cell {
-  background-color: darkgray;
+  background-color: var(--lightLighter);
 }
 .clues__cell_up:nth-child(5n) {
   border-right-width: 3px;
@@ -109,14 +129,14 @@ body {
   border-right-width: 3px;
 }
 .game__cell_black {
-  background-color: black;
+  background-color: #1c1c1c;
 }
 .game__cell_cross:before, .game__cell_cross:after {
   content: "";
   position: absolute;
   width: 50px;
   height: 4px;
-  background: black;
+  background: var(--lightText);
 }
 .game__cell_cross:before {
   transform: translate(-50%) rotate(45deg);
@@ -148,13 +168,14 @@ body {
   width: 200px;
   height: 30px;
   font-size: 20px;
-  background-color: darkgray;
-  border: 1px solid black;
+  background-color: var(--lightButton);
+  color: var(--lightText);
+  border: 1px solid var(--lightText);
   border-radius: 15px;
   cursor: pointer;
 }
 .button:hover {
-  background-color: #d8d8d8;
+  background-color: var(--lightMain);
 }
 
 .timer {
@@ -179,14 +200,14 @@ body {
 .results__cell {
   width: 200;
   padding: 5px;
-  border: 1px solid black;
+  border: 1px solid var(--lightText);
 }
 
 .gamefield {
   display: flex;
   gap: 50px;
   padding: 20px;
-  background-color: #d8d8d8;
+  background-color: var(--lightMain);
   border-radius: 20px;
 }
 .gamefield__buttons {
@@ -194,11 +215,14 @@ body {
   flex-direction: column;
   gap: 10px;
 }
+.gamefield__dark {
+  background-color: #505050;
+}
 
 .size {
   position: relative;
   display: inline-block;
-  border: 1px solid black;
+  border: 1px solid var(--lightText);
   height: 30px;
   border-radius: 15px;
 }
@@ -209,7 +233,8 @@ body {
   border-radius: 15px;
   cursor: pointer;
   border: none;
-  background-color: #d8d8d8;
+  background-color: var(--lightButton);
+  color: var(--lightText);
   height: 100%;
 }
 .size:hover .size__variants {
@@ -217,7 +242,7 @@ body {
 }
 .size__variants {
   display: none;
-  border: 1px solid black;
+  border: 1px solid var(--lightText);
   border-radius: 15px;
   overflow: hidden;
   position: absolute;
@@ -225,14 +250,13 @@ body {
   z-index: 1;
 }
 .size__variant {
-  color: black;
-  background-color: #d8d8d8;
+  background-color: var(--lightButton);
   padding: 5px 5px;
   display: block;
   cursor: pointer;
 }
 .size__variant:hover {
-  background-color: darkgray;
+  background-color: var(--lightMain);
 }
 
 .figures__list {
@@ -241,14 +265,15 @@ body {
   gap: 20px;
 }
 .figures__list_button {
+  color: var(--lightText);
   cursor: pointer;
-  background-color: #d8d8d8;
-  border: 1px solid black;
+  background-color: var(--lightButton);
+  border: 1px solid var(--lightText);
   height: 30px;
   border-radius: 15px;
 }
 .figures__list_button:hover {
-  background-color: darkgray;
+  background-color: var(--lightMain);
 }
 
 .arrow {
@@ -261,7 +286,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 20px;
-  background-color: #d8d8d8;
+  background-color: var(--lightMain);
   border-radius: 20px;
 }
 .bestResults__tag {

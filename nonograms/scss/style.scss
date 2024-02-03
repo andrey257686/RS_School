@@ -1,5 +1,19 @@
 @import "./reset";
 
+:root {
+  --lightMain: #d8d8d8;
+  --lightText: #1c1c1c;
+  --lightButton: #b1b1b1;
+  --lightLighter: #ebebeb;
+}
+
+[dark] {
+  --lightMain: #505050;
+  --lightText: #e8e8e8;
+  --lightButton: #858585;
+  --lightLighter: #2e2e2e;
+}
+
 td,
 table,
 ul {
@@ -7,13 +21,21 @@ ul {
   margin: 0;
 }
 
-h1 {
+.title {
   font-size: 3rem;
+  color: var(--lightText);
+  // &__dark {
+  //   color: $darkText;
+  // }
 }
 
-body {
+.body {
   background: url(../assets/img/background.jpg) no-repeat center top fixed;
   background-size: cover;
+  &__dark {
+    background: url(../assets/img/background-darken.jpg) no-repeat center top fixed;
+    background-size: cover;
+  }
 }
 
 .container {
@@ -26,25 +48,32 @@ body {
   gap: 50px;
   align-items: center;
   justify-content: center;
+  color: var(--lightText);
+  // &__dark {
+  //   color: $darkText;
+  // }
 }
 
 .field {
-  border: 2px solid black;
+  border: 2px solid var(--lightText);
   border-collapse: collapse;
   &__up {
     &_nothing {
-      background-color: darkgray;
+      background-color: var(--lightLighter);
+      // &_dark {
+      //   background-color: $darkDarker; // менять
+      // }
     }
     &_clues {
-      border: 1px solid black;
+      border: 1px solid var(--lightText);
     }
   }
   &__down {
     &_clues {
-      border: 1px solid black;
+      border: 1px solid var(--lightText);
     }
     &_game {
-      border: 1px solid black;
+      border: 1px solid var(--lightText);
     }
   }
 }
@@ -53,12 +82,16 @@ body {
   border: 0;
   border-collapse: collapse;
   &__cell {
-    background-color: darkgray;
+    background-color: var(--lightLighter);
     &_up {
       &:nth-child(5n) {
         border-right-width: 3px;
       }
     }
+    // &_dark {
+    //   color: $darkText;
+    //   background-color: $darkDarker; //менять
+    // }
   }
   &__left {
     &:nth-child(5n) {
@@ -76,7 +109,7 @@ body {
       border-right-width: 3px;
     }
     &_black {
-      background-color: black;
+      background-color: #1c1c1c;
     }
     &_cross {
       &:before,
@@ -85,7 +118,7 @@ body {
         position: absolute;
         width: 50px;
         height: 4px;
-        background: black;
+        background: var(--lightText);
       }
       &:before {
         transform: translate(-50%) rotate(45deg);
@@ -122,13 +155,22 @@ body {
   width: 200px;
   height: 30px;
   font-size: 20px;
-  background-color: darkgray;
-  border: 1px solid black;
+  background-color: var(--lightButton);
+  color: var(--lightText);
+  border: 1px solid var(--lightText);
   border-radius: 15px;
   cursor: pointer;
   &:hover {
-    background-color: #d8d8d8;
+    background-color: var(--lightMain);
   }
+  // &__dark {
+  //   background-color: $darkButton;
+  //   color: $darkText;
+  //   // border-color: $darkText;
+  //   &:hover {
+  //     background-color: $darkMain;
+  //   }
+  // }
 }
 
 .timer {
@@ -152,7 +194,7 @@ body {
   &__cell {
     width: 200;
     padding: 5px;
-    border: 1px solid black;
+    border: 1px solid var(--lightText);
   }
 }
 
@@ -160,19 +202,22 @@ body {
   display: flex;
   gap: 50px;
   padding: 20px;
-  background-color: #d8d8d8;
+  background-color: var(--lightMain);
   border-radius: 20px;
   &__buttons {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
+  &__dark {
+    background-color: #505050;
+  }
 }
 
 .size {
   position: relative;
   display: inline-block;
-  border: 1px solid black;
+  border: 1px solid var(--lightText);
   height: 30px;
   border-radius: 15px;
   &__button {
@@ -182,7 +227,8 @@ body {
     border-radius: 15px;
     cursor: pointer;
     border: none;
-    background-color: #d8d8d8;
+    background-color: var(--lightButton);
+    color: var(--lightText);
     height: 100%;
   }
   &:hover &__variants {
@@ -190,7 +236,7 @@ body {
   }
   &__variants {
     display: none;
-    border: 1px solid black;
+    border: 1px solid var(--lightText);
     border-radius: 15px;
     overflow: hidden;
     position: absolute;
@@ -198,13 +244,12 @@ body {
     z-index: 1;
   }
   &__variant {
-    color: black;
-    background-color: #d8d8d8;
+    background-color: var(--lightButton);
     padding: 5px 5px;
     display: block;
     cursor: pointer;
     &:hover {
-      background-color: darkgray;
+      background-color: var(--lightMain);
     }
   }
 }
@@ -216,11 +261,12 @@ body {
     gap: 20px;
     &_button {
       &:hover {
-        background-color: darkgray;
+        background-color: var(--lightMain);
       }
+      color: var(--lightText);
       cursor: pointer;
-      background-color: #d8d8d8;
-      border: 1px solid black;
+      background-color: var(--lightButton);
+      border: 1px solid var(--lightText);
       height: 30px;
       border-radius: 15px;
     }
@@ -237,7 +283,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 20px;
-  background-color: #d8d8d8;
+  background-color: var(--lightMain);
   border-radius: 20px;
   &__tag {
     font-size: 20px;
