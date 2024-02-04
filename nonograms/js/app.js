@@ -317,8 +317,18 @@ function handleCellClick(event, i, j, figure) {
     resultsTableEl.remove();
     const bestResultsEl = document.querySelector(".bestResults");
     bestResultsEl.appendChild(generateResultTable());
+    setTimeout(showModal, 500, minutes, seconds);
     resetTimer();
   }
+}
+
+function showModal(minutes, seconds) {
+  const overlayEl = document.querySelector(".overlay");
+  const modalEl = document.querySelector(".modal");
+  const modalTimeEl = document.querySelector(".modal__time");
+  modalTimeEl.innerText = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  modalEl.style.display = "flex";
+  overlayEl.style.display = "block";
 }
 
 function sortWinArr(arr) {
@@ -343,6 +353,16 @@ function createWinObject() {
     difficulty: winDifficulty,
   };
   return winResult;
+}
+function handleModalButtonClick() {
+  // sample = sample;
+  body.innerHTML = "";
+  playerTable = new Array(sample.table.length).fill(0).map(() => {
+    const arr = new Array(sample.table.length).fill(0);
+    return arr;
+  });
+  resetTimer();
+  renderHTML();
 }
 
 function handleSelectionButtonClick(index) {
@@ -532,6 +552,27 @@ const renderHTML = function () {
   bestResultsEl.appendChild(bestResultsTagEl);
   bestResultsEl.appendChild(generateResultTable());
   containerEl.appendChild(bestResultsEl);
+  // ------------------------   генерация модального окна   ---------------------------
+  const overlayEl = document.createElement("div");
+  overlayEl.className = "overlay";
+  containerEl.appendChild(overlayEl);
+  const modalEl = document.createElement("div");
+  modalEl.className = "modal";
+  const modalMessageEl = document.createElement("p");
+  modalMessageEl.className = "modal__message";
+  modalMessageEl.innerText = "Поздравялем! Вы решили нонограмму!";
+  const modalTimeEl = document.createElement("p");
+  modalTimeEl.className = "modal__time";
+  const modalButtonEl = document.createElement("button");
+  modalButtonEl.className = "modal__button";
+  modalButtonEl.innerText = "Начать заново";
+  modalButtonEl.addEventListener("click", (event) => {
+    handleModalButtonClick();
+  });
+  modalEl.appendChild(modalMessageEl);
+  modalEl.appendChild(modalTimeEl);
+  modalEl.appendChild(modalButtonEl);
+  containerEl.appendChild(modalEl);
 };
 
 renderHTML();
