@@ -214,6 +214,20 @@ ul {
   // }
 }
 
+.color {
+  background-color: transparent;
+  border: none;
+  width: fit-content;
+  align-self: center;
+}
+
+.sound {
+  background-color: transparent;
+  border: none;
+  width: fit-content;
+  align-self: center;
+}
+
 .timer {
   display: flex;
   flex-direction: row;
