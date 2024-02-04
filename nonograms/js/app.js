@@ -9,6 +9,7 @@ let timerFlag = false;
 let winArr = JSON.parse(localStorage.getItem("resultTable")) || [];
 let selectedSize = "easy";
 const mapSelectedSize = { 0: "easy", 1: "medium", 2: "hard" };
+let isSoundOn = true;
 
 const winAudio = new Audio("./assets/sounds/win.mp3");
 const blackAudio = new Audio("./assets/sounds/black.mp3");
@@ -26,6 +27,9 @@ const fieldTableRowObj = { up: fieldUpCells, down: fieldDownCells };
 const fieldTableObj = { class: "gamifield__play field", rows: fieldTableRowObj };
 
 function soundHandler(cell) {
+  if (!isSoundOn) {
+    return 0;
+  }
   if (cell.classList.contains("game__cell_black")) {
     if (blackAudio.paused) {
       blackAudio.play();
@@ -296,7 +300,9 @@ function handleCellClick(event, i, j, figure) {
     }
   }
   if (win) {
-    winAudio.play();
+    if (isSoundOn) {
+      winAudio.play();
+    }
     const winResult = createWinObject();
     if (winArr.length === 0) {
       winArr.push(winResult);
@@ -494,30 +500,22 @@ const renderHTML = function () {
   colorButtonEl.innerText = "Цвет";
   colorButtonEl.addEventListener("click", () => {
     const colorScheme = document.body.getAttribute("dark");
-    console.log(colorScheme);
     if (!colorScheme) {
       document.body.setAttribute("dark", "true");
     } else {
       document.body.removeAttribute("dark");
     }
     body.classList.toggle("body__dark");
-    // gameFieldEl.classList.toggle("gamefield__dark");
-    // restartButtonEl.classList.toggle("button__dark");
-    // resumeButtonEl.classList.toggle("button__dark");
-    // saveButtonEl.classList.toggle("button__dark");
-    // randomButtonEl.classList.toggle("button__dark");
-    // solutionButtonEl.classList.toggle("button__dark");
-    // colorButtonEl.classList.toggle("button__dark");
-    // body.classList.toggle("body__dark");
-    // containerEl.classList.toggle("container__dark");
-    // document.querySelector(".field__up_nothing").classList.toggle("field__up_nothing_dark");
-    // document.querySelector(".title").classList.toggle("title__dark");
-    // const cluesCells = document.querySelectorAll(".clues__cell");
-    // cluesCells.forEach((cell) => {
-    //   cell.classList.toggle("clues__cell_dark");
-    // });
   });
   buttonsFieldEl.appendChild(colorButtonEl);
+  // ------------------------   генерация кнопки вкл/выкл Звук   ---------------------------
+  const soundButtonEl = document.createElement("button");
+  soundButtonEl.className = "button sound";
+  soundButtonEl.innerText = "Звук";
+  soundButtonEl.addEventListener("click", (event) => {
+    isSoundOn = isSoundOn === true ? false : true;
+  });
+  buttonsFieldEl.appendChild(soundButtonEl);
   mainEl.appendChild(containerEl);
   body.appendChild(mainEl);
   const fieldUpCluesEl = document.querySelector(".field__up_clues");

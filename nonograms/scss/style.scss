@@ -109,7 +109,7 @@ ul {
       border-right-width: 3px;
     }
     &_black {
-      background-color: #1c1c1c;
+      background-color: var(--lightText);
     }
     &_cross {
       &:before,

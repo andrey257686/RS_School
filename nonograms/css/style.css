@@ -129,7 +129,7 @@ ul {
   border-right-width: 3px;
 }
 .game__cell_black {
-  background-color: #1c1c1c;
+  background-color: var(--lightText);
 }
 .game__cell_cross:before, .game__cell_cross:after {
   content: "";
