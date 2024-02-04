@@ -24,9 +24,9 @@ ul {
 .title {
   font-size: 3rem;
   color: var(--lightText);
-  // &__dark {
-  //   color: $darkText;
-  // }
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
 }
 
 .body {
@@ -39,7 +39,7 @@ ul {
 }
 
 .container {
-  width: 80%;
+  width: 95%;
   padding-top: 50px;
   padding-bottom: 50px;
   margin: auto;
@@ -120,6 +120,18 @@ ul {
         width: 50px;
         height: 4px;
         background: var(--lightText);
+        @media (max-width: 1440px) {
+          width: 30px;
+          height: 3px;
+        }
+        @media (max-width: 992px) {
+          width: 25px;
+          height: 2px;
+        }
+        @media (max-width: 576px) {
+          width: 20px;
+          // height: 4 px;
+        }
       }
       &:before {
         transform: translate(-50%) rotate(45deg);
@@ -143,6 +155,26 @@ ul {
   border-collapse: collapse;
   text-align: center;
   font-size: 2rem;
+  @media (max-width: 1440px) {
+    width: 30px;
+    height: 30px;
+    font-size: 24px;
+  }
+  @media (max-width: 992px) {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+  }
+  @media (max-width: 576px) {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+  @media (max-width: 480px) {
+    width: 15px;
+    height: 15px;
+    font-size: 10px;
+  }
 }
 
 .selection {
@@ -164,6 +196,14 @@ ul {
   &:hover {
     background-color: var(--lightMain);
   }
+  @media (max-width: 992px) {
+    font-size: 16px;
+    width: 100px;
+    height: 45px;
+  }
+  @media (max-width: 768px) {
+    flex-basis: 18%;
+  }
   // &__dark {
   //   background-color: $darkButton;
   //   color: $darkText;
@@ -183,6 +223,10 @@ ul {
   &__minutes:after {
     content: ":";
     position: absolute;
+  }
+  @media (max-width: 768px) {
+    flex-basis: 100%;
+    justify-content: center;
   }
 }
 
@@ -205,13 +249,23 @@ ul {
   padding: 20px;
   background-color: var(--lightMain);
   border-radius: 20px;
+  align-items: center;
   &__buttons {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    @media (max-width: 768px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
   }
   &__dark {
     background-color: #505050;
+  }
+  @media (max-width: 768px) {
+    gap: 20px;
+    flex-direction: column;
   }
 }
 
@@ -260,6 +314,9 @@ ul {
     list-style-type: none;
     display: flex;
     gap: 20px;
+    @media (max-width: 480px) {
+      gap: 5px;
+    }
     &_button {
       &:hover {
         background-color: var(--lightMain);
@@ -270,6 +327,9 @@ ul {
       border: 1px solid var(--lightText);
       height: 30px;
       border-radius: 15px;
+      @media (max-width: 480px) {
+        height: 40px;
+      }
     }
   }
 }
@@ -320,6 +380,9 @@ ul {
   border-radius: 40px;
   background: var(--lightMain);
   overflow: hidden;
+  @media (max-width: 992px) {
+    width: 80%;
+  }
   &__message {
     font-size: 32px;
     font-weight: 600;

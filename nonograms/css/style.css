@@ -64,6 +64,11 @@ ul {
   font-size: 3rem;
   color: var(--lightText);
 }
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+}
 
 .body {
   background: url(../assets/img/background.jpg) no-repeat center top fixed;
@@ -75,7 +80,7 @@ ul {
 }
 
 .container {
-  width: 80%;
+  width: 95%;
   padding-top: 50px;
   padding-bottom: 50px;
   margin: auto;
@@ -140,6 +145,23 @@ ul {
   height: 4px;
   background: var(--lightText);
 }
+@media (max-width: 1440px) {
+  .game__cell_cross:before, .game__cell_cross:after {
+    width: 30px;
+    height: 3px;
+  }
+}
+@media (max-width: 992px) {
+  .game__cell_cross:before, .game__cell_cross:after {
+    width: 25px;
+    height: 2px;
+  }
+}
+@media (max-width: 576px) {
+  .game__cell_cross:before, .game__cell_cross:after {
+    width: 20px;
+  }
+}
 .game__cell_cross:before {
   transform: translate(-50%) rotate(45deg);
 }
@@ -157,6 +179,34 @@ ul {
   border-collapse: collapse;
   text-align: center;
   font-size: 2rem;
+}
+@media (max-width: 1440px) {
+  .cell {
+    width: 30px;
+    height: 30px;
+    font-size: 24px;
+  }
+}
+@media (max-width: 992px) {
+  .cell {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+  }
+}
+@media (max-width: 576px) {
+  .cell {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+}
+@media (max-width: 480px) {
+  .cell {
+    width: 15px;
+    height: 15px;
+    font-size: 10px;
+  }
 }
 
 .selection {
@@ -179,6 +229,18 @@ ul {
 .button:hover {
   background-color: var(--lightMain);
 }
+@media (max-width: 992px) {
+  .button {
+    font-size: 16px;
+    width: 100px;
+    height: 45px;
+  }
+}
+@media (max-width: 768px) {
+  .button {
+    flex-basis: 18%;
+  }
+}
 
 .timer {
   display: flex;
@@ -190,6 +252,12 @@ ul {
 .timer__minutes:after {
   content: ":";
   position: absolute;
+}
+@media (max-width: 768px) {
+  .timer {
+    flex-basis: 100%;
+    justify-content: center;
+  }
 }
 
 .name {
@@ -211,14 +279,28 @@ ul {
   padding: 20px;
   background-color: var(--lightMain);
   border-radius: 20px;
+  align-items: center;
 }
 .gamefield__buttons {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+@media (max-width: 768px) {
+  .gamefield__buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
 .gamefield__dark {
   background-color: #505050;
+}
+@media (max-width: 768px) {
+  .gamefield {
+    gap: 20px;
+    flex-direction: column;
+  }
 }
 
 .size {
@@ -266,6 +348,11 @@ ul {
   display: flex;
   gap: 20px;
 }
+@media (max-width: 480px) {
+  .figures__list {
+    gap: 5px;
+  }
+}
 .figures__list_button {
   color: var(--lightText);
   cursor: pointer;
@@ -276,6 +363,11 @@ ul {
 }
 .figures__list_button:hover {
   background-color: var(--lightMain);
+}
+@media (max-width: 480px) {
+  .figures__list_button {
+    height: 40px;
+  }
 }
 
 .arrow {
@@ -323,6 +415,11 @@ ul {
   border-radius: 40px;
   background: var(--lightMain);
   overflow: hidden;
+}
+@media (max-width: 992px) {
+  .modal {
+    width: 80%;
+  }
 }
 .modal__message {
   font-size: 32px;
