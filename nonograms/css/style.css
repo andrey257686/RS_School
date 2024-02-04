@@ -90,6 +90,8 @@ ul {
 .field {
   border: 2px solid var(--lightText);
   border-collapse: collapse;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 .field__up_nothing {
   background-color: var(--lightLighter);

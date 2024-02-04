@@ -57,6 +57,7 @@ ul {
 .field {
   border: 2px solid var(--lightText);
   border-collapse: collapse;
+  height: fit-content;
   &__up {
     &_nothing {
       background-color: var(--lightLighter);
