@@ -10,6 +10,7 @@ let winArr = JSON.parse(localStorage.getItem("resultTable")) || [];
 let selectedSize = "easy";
 const mapSelectedSize = { 0: "easy", 1: "medium", 2: "hard" };
 let isSoundOn = true;
+let isSolutionShowed = false;
 
 const winAudio = new Audio("./assets/sounds/win.mp3");
 const blackAudio = new Audio("./assets/sounds/black.mp3");
@@ -278,6 +279,10 @@ function handleClickSizeVariant(i) {
 }
 
 function handleCellClick(event, i, j, figure) {
+  if (isSolutionShowed) {
+    alert("Начните заново!!!");
+    return 0;
+  }
   if (!timerFlag) {
     timerId = setInterval(countdownTimer, 1000);
     timerFlag = true;
@@ -405,9 +410,11 @@ function handleSolutionButton() {
   body.innerHTML = "";
   resetTimer();
   renderHTML();
+  isSolutionShowed = true;
 }
 
 const renderHTML = function () {
+  isSolutionShowed = false;
   const cluesTableUpCellObj = {
     nums: sample.up.cols,
     class: "cell clues__cell clues__cell_up clues__cell_",
