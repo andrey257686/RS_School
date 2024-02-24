@@ -8,7 +8,7 @@ class News {
         const fragment = document.createDocumentFragment() as DocumentFragment;
         const newsItemTemp = document.querySelector('#newsItemTemp') as HTMLTemplateElement;
 
-        news.forEach((item, idx) => {
+        news.forEach((item: IArticle, idx: number) => {
             const newsClone = newsItemTemp.content.cloneNode(true) as HTMLDivElement;
 
             if (idx % 2) (newsClone.querySelector('.news__item') as HTMLDivElement).classList.add('alt');
