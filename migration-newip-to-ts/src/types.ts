@@ -52,3 +52,8 @@ export enum Errors {
     Unauthorized = 401,
     NotFound = 404,
 }
+
+export enum Endpoints {
+    Everything = 'everything',
+    Sources = 'sources',
+}
