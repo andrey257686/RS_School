@@ -38,3 +38,17 @@ export interface IError {
     code: string;
     message: string;
 }
+
+export interface IOptions {
+    [key: string]: string;
+}
+
+export interface IResp {
+    endpoint: string;
+    options: IOptions;
+}
+
+export enum Errors {
+    Unauthorized = 401,
+    NotFound = 404,
+}
