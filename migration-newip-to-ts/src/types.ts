@@ -45,7 +45,7 @@ export interface IOptions {
 
 export interface IResp {
     endpoint: string;
-    options: IOptions;
+    options?: IOptions;
 }
 
 export enum Errors {
