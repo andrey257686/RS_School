@@ -2,14 +2,14 @@ import './news.css';
 import { IArticle } from '../../../types';
 
 class News {
-    draw(data: IArticle[]) {
+    draw(data: IArticle[]): void {
         const news: IArticle[] = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
 
-        const fragment = document.createDocumentFragment() as DocumentFragment;
-        const newsItemTemp = document.querySelector('#newsItemTemp') as HTMLTemplateElement;
+        const fragment: DocumentFragment = document.createDocumentFragment() as DocumentFragment;
+        const newsItemTemp: HTMLTemplateElement = document.querySelector('#newsItemTemp') as HTMLTemplateElement;
 
         news.forEach((item: IArticle, idx: number) => {
-            const newsClone = newsItemTemp.content.cloneNode(true) as HTMLDivElement;
+            const newsClone: HTMLDivElement = newsItemTemp.content.cloneNode(true) as HTMLDivElement;
 
             if (idx % 2) (newsClone.querySelector('.news__item') as HTMLDivElement).classList.add('alt');
 
