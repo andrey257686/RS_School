@@ -5,26 +5,31 @@
     height: 120px;
     overflow: auto;
     align-items: center;
-    font: 300 1em 'Fira Sans', sans-serif;
+    font:
+        300 1em 'Fira Sans',
+        sans-serif;
 }
 
 .source__item {
     background: none;
-    border: 2px solid #30c5ff;
+    border: 2px solid rgb(255, 190, 200);
     font: inherit;
     line-height: 1;
     margin: 0.5em;
     padding: 1em 2em;
-    color: #70d6ff;
+    color: rgb(255, 190, 200);
+    text-shadow: 0 0 10px rgb(255, 190, 200);
+    -moz-text-shadow: 0 0 10px rgb(255, 190, 200);
+    -webkit-text-shadow: 0 0 10px rgb(255, 190, 200);
     transition: 0.25s;
     cursor: pointer;
 }
 
 .source__item:hover,
 .source__item:focus {
-    border-color: #3fcc59;
-    color: #69db7e;
-    box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
+    border-color: #ffe4c4;
+    color: #ffe4c4;
+    box-shadow: 0 0.5em 0.5em -0.4em #ffe4c4;
     transform: translateY(-0.25em);
 }
 

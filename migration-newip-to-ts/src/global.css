@@ -1,16 +1,24 @@
 body {
     color: #fff;
     background: #17181c;
+    background: linear-gradient(rgb(5, 5, 72), rgb(255, 190, 200));
+    min-height: 100vh;
     font-family: sans-serif;
 }
 
 header {
     padding: 10px 30px;
+    display: flex;
+    justify-content: center;
 }
 
 header h1 {
     font-size: 40px;
     font-weight: 800;
+    color: rgb(255, 190, 200);
+    text-shadow: 0 0 20px rgb(255, 190, 200);
+    -moz-text-shadow: 0 0 20px rgb(255, 190, 200);
+    -webkit-text-shadow: 0 0 20px rgb(255, 190, 200);
 }
 
 footer {
