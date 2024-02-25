@@ -15,6 +15,11 @@ class App {
             this.controller.getNews(e, (data) => this.view.drawNews(data))
         );
         this.controller.getSources((data) => this.view.drawSources(data));
+        (document.querySelector('.keyboard') as HTMLDivElement).addEventListener('click', (e) => {
+            e.preventDefault();
+            const letter: string = (e.target as HTMLButtonElement).textContent as string;
+            this.controller.getSources((data) => this.view.drawSources(data, letter));
+        });
     }
 }
 

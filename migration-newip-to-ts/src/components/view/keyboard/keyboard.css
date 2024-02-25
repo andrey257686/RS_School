@@ -1,0 +1,28 @@
+.keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.keyboard__key {
+    background: none;
+    border: 2px solid #ffe4c4;
+    font: inherit;
+    line-height: 1;
+    padding: 1em 1em;
+    color: #ffe4c4;
+    text-shadow: 0 0 10px #ffe4c4;
+    -moz-text-shadow: 0 0 10px #ffe4c4;
+    -webkit-text-shadow: 0 0 10px #ffe4c4;
+    transition: 0.25s;
+    cursor: pointer;
+}
+
+.keyboard__key:hover,
+.keyboard__key:focus {
+    border-color: #ffe4c4;
+    color: #ffe4c4;
+    box-shadow: 0 0.5em 0.5em -0.4em #ffe4c4;
+    transform: translateY(-0.25em);
+}
