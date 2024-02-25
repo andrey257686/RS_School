@@ -14,10 +14,11 @@ export interface ISourceData {
 }
 
 export interface IArticle {
-    source: {
-        id: string;
-        name: string;
-    };
+    // source: {
+    //     id: string;
+    //     name: string;
+    // };
+    source: Pick<ISource, 'id' | 'name'>;
     author: string;
     title: string;
     description: string;
