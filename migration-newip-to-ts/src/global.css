@@ -1,7 +1,7 @@
 body {
     color: #fff;
     background: #17181c;
-    background: linear-gradient(rgb(5, 5, 72), rgb(255, 190, 200));
+    background: linear-gradient(rgb(5, 5, 72), rgb(255, 136, 154));
     min-height: 100vh;
     font-family: sans-serif;
 }
@@ -52,4 +52,24 @@ footer .year {
 .rsschool {
     width: 100px;
     height: 50px;
+}
+
+@media (max-width: 640px) {
+    header h1 {
+        font-size: 30px;
+        font-weight: 800;
+    }
+    footer {
+        gap: 20px;
+    }
+    footer .copyright {
+        font-size: 10px;
+    }
+    footer .year {
+        font-size: 10px;
+    }
+    .rsschool {
+        width: 50px;
+        height: 25px;
+    }
 }

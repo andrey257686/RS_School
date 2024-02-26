@@ -19,7 +19,7 @@ export class AppView {
         this.news.draw(values);
     }
 
-    public drawSources(data: ISourceData, letter: string = 'A') {
+    public drawSources(data: ISourceData, letter: string = 'ALL') {
         const values = data?.sources ? data?.sources : [];
         this.sources.draw(values, letter);
         this.keyboard.draw();

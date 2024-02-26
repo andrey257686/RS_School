@@ -1,4 +1,6 @@
 .keyboard {
+    margin-right: auto;
+    margin-left: auto;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -25,4 +27,14 @@
     color: #ffe4c4;
     box-shadow: 0 0.5em 0.5em -0.4em #ffe4c4;
     transform: translateY(-0.25em);
+}
+
+@media (max-width: 1600px) {
+    .keyboard {
+        width: 95%;
+    }
+    .keyboard__key {
+        max-width: 65px;
+        flex: 1 0 10%;
+    }
 }
