@@ -18,6 +18,10 @@ const baseConfig = {
                 test: /\.ts$/i,
                 use: 'ts-loader',
             },
+            {
+                test: /\.html$/i,
+                loader: 'html-loader',
+            },
         ],
     },
     resolve: {
