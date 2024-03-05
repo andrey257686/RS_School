@@ -1,7 +1,7 @@
 import News from './news/news';
 import Sources from './sources/sources';
 import Keyboard from './keyboard/keyboard';
-import { IArticleData, ISourceData } from '../../types';
+import { ArticleData, SourceData } from '../../types';
 
 export class AppView {
     private news: News;
@@ -14,12 +14,12 @@ export class AppView {
         this.keyboard = new Keyboard();
     }
 
-    public drawNews(data: IArticleData) {
+    public drawNews(data: ArticleData) {
         const values = data?.articles ? data?.articles : [];
         this.news.draw(values);
     }
 
-    public drawSources(data: ISourceData, letter: string = 'ALL') {
+    public drawSources(data: SourceData, letter: string = 'ALL') {
         const values = data?.sources ? data?.sources : [];
         this.sources.draw(values, letter);
         this.keyboard.draw();

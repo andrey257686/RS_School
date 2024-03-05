@@ -1,16 +1,16 @@
-import { IOptions, IResp, Errors } from '../../types';
+import { Options, Resp, Errors, SourceData, ArticleData } from '../../types';
 
 class Loader {
     private baseLink: string;
-    private options: IOptions;
+    private options: Options;
 
-    constructor(baseLink: string, options: IOptions) {
+    constructor(baseLink: string, options: Options) {
         this.baseLink = baseLink;
         this.options = options;
     }
 
-    public getResp<T>(
-        { endpoint, options = {} }: IResp,
+    public getResp<T extends SourceData | ArticleData>(
+        { endpoint, options = {} }: Resp,
         callback: (data: T) => void = () => {
             console.error('No callback for GET response');
         }
@@ -28,7 +28,7 @@ class Loader {
         return res;
     }
 
-    public makeUrl(options: IOptions, endpoint: string) {
+    public makeUrl(options: Options, endpoint: string) {
         const urlOptions = { ...this.options, ...options };
         let url = `${this.baseLink}${endpoint}?`;
 
@@ -39,7 +39,12 @@ class Loader {
         return url.slice(0, -1);
     }
 
-    private load<T>(method: string, endpoint: string, callback: (data: T) => void, options: IOptions = {}) {
+    private load<T extends SourceData | ArticleData>(
+        method: string,
+        endpoint: string,
+        callback: (data: T) => void,
+        options: Options = {}
+    ) {
         fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res) => res.json())

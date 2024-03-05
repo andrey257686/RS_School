@@ -1,8 +1,8 @@
 import AppLoader from './appLoader';
-import { IArticleData, ISourceData, Endpoints } from '../../types';
+import { ArticleData, SourceData, Endpoints } from '../../types';
 
 class AppController extends AppLoader {
-    public getSources(callback: (data: ISourceData) => void) {
+    public getSources(callback: (data: SourceData) => void) {
         super.getResp(
             {
                 endpoint: Endpoints.Sources,
@@ -11,28 +11,33 @@ class AppController extends AppLoader {
         );
     }
 
-    public getNews(e: Event, callback: (data: IArticleData) => void) {
-        let target = e.target as HTMLElement;
-        const newsContainer = e.currentTarget as HTMLElement;
+    public getNews(e: Event, callback: (data: ArticleData) => void) {
+        let target = e.target;
+        const newsContainer = e.currentTarget;
 
         while (target !== newsContainer) {
-            if (target.classList.contains('source__item')) {
-                const sourceId = target.getAttribute('data-source-id') as string;
-                if (newsContainer.getAttribute('data-source') !== sourceId) {
-                    newsContainer.setAttribute('data-source', sourceId);
-                    super.getResp(
-                        {
-                            endpoint: Endpoints.Everything,
-                            options: {
-                                sources: sourceId,
+            if (target instanceof HTMLElement) {
+                if (target.classList.contains('source__item')) {
+                    const sourceId = target.getAttribute('data-source-id') ?? '';
+                    if (
+                        newsContainer instanceof HTMLElement &&
+                        newsContainer.getAttribute('data-source') !== sourceId
+                    ) {
+                        newsContainer.setAttribute('data-source', sourceId);
+                        super.getResp(
+                            {
+                                endpoint: Endpoints.Everything,
+                                options: {
+                                    sources: sourceId,
+                                },
                             },
-                        },
-                        callback
-                    );
+                            callback
+                        );
+                    }
+                    return;
                 }
-                return;
+                target = target?.parentNode;
             }
-            target = target.parentNode as HTMLDivElement;
         }
     }
 }

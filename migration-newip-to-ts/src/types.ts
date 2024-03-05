@@ -1,4 +1,4 @@
-export interface ISource {
+export interface Source {
     id: string;
     name: string;
     description: string;
@@ -8,17 +8,17 @@ export interface ISource {
     country: string;
 }
 
-export interface ISourceData {
+export interface SourceData {
     status: string;
-    sources: ISource[];
+    sources: Source[];
 }
 
-export interface IArticle {
+export interface Article {
     // source: {
     //     id: string;
     //     name: string;
     // };
-    source: Pick<ISource, 'id' | 'name'>;
+    source: Pick<Source, 'id' | 'name'>;
     author: string;
     title: string;
     description: string;
@@ -28,25 +28,25 @@ export interface IArticle {
     content: string;
 }
 
-export interface IArticleData {
+export interface ArticleData {
     status: string;
     totalResults: number;
-    articles: IArticle[];
+    articles: Article[];
 }
 
-export interface IError {
+export interface Error {
     status: string;
     code: string;
     message: string;
 }
 
-export interface IOptions {
+export interface Options {
     [key: string]: string;
 }
 
-export interface IResp {
+export interface Resp {
     endpoint: string;
-    options?: IOptions;
+    options?: Options;
 }
 
 export enum Errors {

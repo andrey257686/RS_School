@@ -1,14 +1,14 @@
 import './sources.css';
-import { ISource } from '../../../types';
+import { Source } from '../../../types';
 
 class Sources {
-    draw(data: ISource[], letter: string): void {
-        const fragment: DocumentFragment = document.createDocumentFragment() as DocumentFragment;
-        const sourceItemTemp: HTMLTemplateElement = document.querySelector('#sourceItemTemp') as HTMLTemplateElement;
+    draw(data: Source[], letter: string): void {
+        const fragment = document.createDocumentFragment();
+        const sourceItemTemp: HTMLTemplateElement | null = document.querySelector('#sourceItemTemp');
 
-        data.forEach((item: ISource) => {
+        data.forEach((item: Source) => {
             if (letter === 'ALL') {
-                const sourceClone: HTMLDivElement = sourceItemTemp.content.cloneNode(true) as HTMLDivElement;
+                const sourceClone: HTMLDivElement = sourceItemTemp!.content.cloneNode(true) as HTMLDivElement;
 
                 (sourceClone.querySelector('.source__item-name') as HTMLSpanElement).textContent = item.name;
                 (sourceClone.querySelector('.source__item') as HTMLDivElement).setAttribute('data-source-id', item.id);
@@ -16,7 +16,7 @@ class Sources {
                 fragment.append(sourceClone);
             } else {
                 if (item.name[0] === letter) {
-                    const sourceClone: HTMLDivElement = sourceItemTemp.content.cloneNode(true) as HTMLDivElement;
+                    const sourceClone: HTMLDivElement = sourceItemTemp!.content.cloneNode(true) as HTMLDivElement;
 
                     (sourceClone.querySelector('.source__item-name') as HTMLSpanElement).textContent = item.name;
                     (sourceClone.querySelector('.source__item') as HTMLDivElement).setAttribute(
