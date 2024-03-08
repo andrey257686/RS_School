@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier', 'airbnb-base'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'airbnb-base', 'prettier'],
   overrides: [
     {
       env: {
@@ -12,6 +12,12 @@ module.exports = {
       files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
         sourceType: 'script',
+      },
+    },
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        'no-undef': 'off',
       },
     },
   ],
@@ -23,6 +29,10 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': ['error'],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
   },
   noInlineConfig: true,
 };
