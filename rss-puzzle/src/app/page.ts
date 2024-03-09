@@ -1,5 +1,6 @@
-import Form from './components/form/form.ts';
+// import Form from './components/form/form.ts';
 import Component from './components/base-component.ts';
+import LoginPage from './pages/login/login.ts';
 
 class ContainerComponent extends Component {
   constructor() {
@@ -7,7 +8,7 @@ class ContainerComponent extends Component {
       {
         className: 'container',
       },
-      Form.bind(null)(),
+      LoginPage.bind(null)(),
     );
   }
 }

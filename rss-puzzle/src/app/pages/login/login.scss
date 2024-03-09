@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
   padding: 50px 25px;
   background: rgba(145, 143, 128, 0.6);
   border-radius: 40px;
@@ -11,6 +11,7 @@
   &__surname {
     display: flex;
     flex-direction: column;
+    position: relative;
     gap: 10px;
   }
 
@@ -31,9 +32,21 @@
     font-weight: 400;
     color: #333333;
 
-    &:focus {
-      outline: 1px solid #333333;
+    &--invalid {
+      outline: 1px solid red !important;
     }
+
+    &:focus {
+      // outline: 1px solid #333333;
+      outline: none;
+    }
+  }
+
+  &__error {
+    // position: absolute;
+    font-size: 16px;
+    font-weight: 400;
+    color: red;
   }
 
   &__button {
@@ -46,9 +59,21 @@
     cursor: pointer;
     font-size: 20px;
     font-weight: 400;
+    &--disabled {
+      opacity: 0.5;
+      cursor: default;
+      &:hover {
+        background: rgba(248, 246, 255, 0.776) !important;
+        color: #333333 !important;
+      }
+    }
     &:hover {
       background: #333333;
       color: rgba(248, 246, 255, 0.776);
     }
   }
+}
+
+.invisible {
+  display: none;
 }
