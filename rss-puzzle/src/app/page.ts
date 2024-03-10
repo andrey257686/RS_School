@@ -1,18 +1,15 @@
 import Component from './components/base-component.ts';
-import LoginPage from './pages/login/login.ts';
-// import StartPage from './pages/start/start.ts';
 
 class ContainerComponent extends Component {
-  constructor() {
+  constructor(page: Component) {
     super(
       {
         className: 'container',
       },
-      LoginPage.bind(null)(),
-      // StartPage.bind(null)(),
+      page,
     );
   }
 }
-const Container = () => new ContainerComponent();
+const Container = (page: Component) => new ContainerComponent(page);
 
 export default Container;

@@ -1,6 +1,8 @@
 import Component from '../../components/base-component.ts';
 import { label, input, button, span, div } from '../../components/tags.ts';
 import LoginService from '../../services/login.service.ts';
+import StartPage from '../start/start.ts';
+import app from '../../app.ts';
 import './login.scss';
 
 class LoginPageComponent extends Component {
@@ -116,6 +118,7 @@ class LoginPageComponent extends Component {
       surname,
     });
     localStorage.setItem('userData', data);
+    app.changePage(StartPage());
   }
 }
 
