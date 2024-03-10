@@ -1,7 +1,9 @@
 import type Component from './components/base-component.ts';
-import LoginPage from './pages/login/login.ts';
+import Controller from './controller/controller.ts';
 
 import Container from './page.ts';
+
+const controller = new Controller();
 
 class App {
   private readonly rootElement: HTMLElement;
@@ -14,6 +16,7 @@ class App {
   }
 
   public start(): void {
+    controller.isAuthorized();
     this.rootElement.append(this.pageWrapper.getNode());
   }
 
@@ -23,8 +26,9 @@ class App {
     this.rootElement.append(this.pageWrapper.getNode());
   }
 }
-const app = new App(Container(LoginPage()), document.querySelector<HTMLDivElement>('.body')!);
 
-export default app;
+const app = new App(Container(controller.currentPage), document.querySelector<HTMLDivElement>('.body')!);
+
+export { controller, app };
 
 app.start();
