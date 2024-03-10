@@ -75,11 +75,11 @@ export default class Component<T extends HTMLElement = HTMLElement> implements C
     }
   }
 
-  addListener(event: string, listener: EventListener, options: boolean) {
+  addListener(event: string, listener: EventListener, options = false) {
     this.node.addEventListener(event, listener, options);
   }
 
-  removeListener(event: string, listener: EventListener, options: boolean) {
+  removeListener(event: string, listener: EventListener, options = false) {
     this.node.removeEventListener(event, listener, options);
   }
 

@@ -18,6 +18,7 @@ class LoginPageComponent extends Component {
 
   constructor() {
     super({ tag: 'form', className: 'login' });
+    this.addListener('submit', this.onSubmit.bind(this));
     this.submitButton = button({
       className: 'button login__button login__button--disabled',
       textContent: 'Login',
@@ -104,6 +105,17 @@ class LoginPageComponent extends Component {
       ),
       this.submitButton,
     ]);
+  }
+
+  private onSubmit(event: Event): void {
+    event.preventDefault();
+    const name = this.nameInput.getNode().value;
+    const surname = this.surnameInput.getNode().value;
+    const data = JSON.stringify({
+      name,
+      surname,
+    });
+    localStorage.setItem('userData', data);
   }
 }
 
