@@ -21,3 +21,6 @@ export const h1 = (props: ComponentOptionsInterface & Partial<HTMLHeadingElement
 
 export const div = (props: ComponentOptionsInterface & Partial<HTMLDivElement>, ...children: Component[]) =>
   new Component(props, ...children);
+
+export const canvas = (props: ComponentOptionsInterface & Partial<HTMLCanvasElement>) =>
+  new Component<HTMLCanvasElement>({ ...props, tag: 'canvas' });

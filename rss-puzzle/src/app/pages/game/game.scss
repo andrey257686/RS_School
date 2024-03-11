@@ -1,0 +1,12 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  &__play-field {
+    border: 2px solid black;
+  }
+  &__words-field {
+    border: 2px solid red;
+  }
+}
