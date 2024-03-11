@@ -1,4 +1,5 @@
 import Component from '../../components/base-component.ts';
+import GamePage from '../game/game.ts';
 import { p, button, h1 } from '../../components/tags.ts';
 import { controller } from '../../app.ts';
 import './start.scss';
@@ -26,6 +27,9 @@ class StartPageComponent extends Component {
     this.submitButton = button({
       className: 'button start-page__button',
       innerHTML: 'Start',
+      onclick: () => {
+        controller.changePage(GamePage());
+      },
     });
     this.logOutButton = button({
       className: 'button start-page__button start-page__logout',
