@@ -36,6 +36,13 @@ export default class Component<T extends HTMLElement = HTMLElement> implements C
     }
   }
 
+  prepend(child: Component<T>) {
+    this.children.unshift(child);
+    if (this.node instanceof HTMLElement) {
+      this.node.prepend(child.getNode());
+    }
+  }
+
   setTextContent(content: string) {
     this.node.textContent = content;
   }

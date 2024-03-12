@@ -14,9 +14,10 @@ class GamePageComponent extends Component {
 
   constructor() {
     super({ className: 'game' });
-    this.playFieldContainer = div({ className: 'game__play-field-container' });
+    this.playFieldContainer = div({ id: 'playField', className: 'game__play-field-container' });
     this.playFieldContainer.setAttribute('data-width', '700');
     this.wordsField = div({
+      id: 'wordsField',
       className: 'game__words-field',
     });
     this.appendChildren([this.playFieldContainer, this.wordsField]);

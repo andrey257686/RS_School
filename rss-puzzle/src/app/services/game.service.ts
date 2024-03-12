@@ -11,13 +11,12 @@ export default class GameService {
 
   constructor() {
     this.data = data.rounds;
-    console.log(this.data);
   }
 
   public start(page: GamePage) {
     this.page = page;
     const level = 0;
-    const sentenceNumber = 1;
+    const sentenceNumber = 0;
     this.renderData(page, level, sentenceNumber);
   }
 
@@ -33,7 +32,7 @@ export default class GameService {
       const word = wordsInSentence[i];
       const wordCanvas = canvas({
         className: 'game__words-field_word',
-        height: 70,
+        height: 50,
         width: widthCardWord,
         id: `word${i}`,
       });
@@ -54,6 +53,10 @@ export default class GameService {
   }
 
   public handleClickCard(card: Component<HTMLCanvasElement>) {
-    this.page!.playFieldContainer.append(card);
+    if (card.getNode().parentElement?.id === 'wordsField') {
+      this.page!.playFieldContainer.append(card);
+    } else {
+      this.page!.wordsField.prepend(card);
+    }
   }
 }

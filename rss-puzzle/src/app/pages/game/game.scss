@@ -12,9 +12,16 @@
     }
   }
   &__words-field {
-    border: 2px solid red;
+    min-width: 700px;
+    height: 50px;
+    outline: 2px solid red;
     &_word {
-      border: 2px solid blue;
+      outline: 2px solid blue;
+      background-color: rgb(250, 167, 167);
+      &:hover {
+        opacity: 0.5;
+        cursor: pointer;
+      }
     }
   }
 }
