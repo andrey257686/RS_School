@@ -20,3 +20,38 @@ export enum errorMessages {
   firstLetterNotCapital = 'First letter should be capital',
   minLength = 'Min length should be 3',
 }
+
+export interface WordsData {
+  audioExample: string;
+  textExample: string;
+  textExampleTranslate: string;
+  id: number;
+  word: string;
+  wordTranslate: string;
+}
+
+export interface LevelData {
+  id: string;
+  name: string;
+  imageSrc: string;
+  cutSrc: string;
+  author: string;
+  year: string;
+}
+
+export interface RoundData {
+  levelData: LevelData;
+  words: WordsData[];
+}
+
+export interface GameService {
+  start(gamePage: Component): void;
+}
+
+export interface GamePage extends Component {
+  playFieldContainer: Component;
+
+  wordsField: Component;
+
+  game: GameService;
+}

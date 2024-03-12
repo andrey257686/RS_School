@@ -5,8 +5,16 @@
   gap: 20px;
   &__play-field {
     border: 2px solid black;
+    &-container {
+      min-width: 700px;
+      height: 500px;
+      border: 2px solid black;
+    }
   }
   &__words-field {
     border: 2px solid red;
+    &_word {
+      border: 2px solid blue;
+    }
   }
 }
