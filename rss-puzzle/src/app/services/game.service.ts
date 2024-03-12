@@ -16,7 +16,7 @@ export default class GameService {
   public start(page: GamePage) {
     this.page = page;
     const level = 0;
-    const sentenceNumber = 0;
+    const sentenceNumber = 6;
     this.renderData(page, level, sentenceNumber);
   }
 
@@ -25,11 +25,11 @@ export default class GameService {
     const wordsData = words[sentenceNumber];
     const sentence = wordsData.textExample;
     const wordsInSentence = sentence.split(' ');
-    const widthCardWord =
-      Number(gamePage.playFieldContainer.getNode().getAttribute('data-width')) / wordsInSentence.length;
     let arrCards: Component<HTMLCanvasElement>[] = [];
+    const arr = this.wordWidth(wordsInSentence);
     for (let i = 0; i < wordsInSentence.length; i += 1) {
       const word = wordsInSentence[i];
+      const widthCardWord = arr[i];
       const wordCanvas = canvas({
         className: 'game__words-field_word',
         height: 50,
@@ -41,8 +41,9 @@ export default class GameService {
       });
       const ctx = wordCanvas.getNode().getContext('2d');
       if (ctx) {
-        ctx.font = 'bold 20px Arial';
-        ctx.fillText(word, 0, 40);
+        ctx.font = '18px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5);
       }
       arrCards.push(wordCanvas);
     }
@@ -50,6 +51,34 @@ export default class GameService {
     for (let i = 0; i < arrCards.length; i += 1) {
       gamePage.wordsField.append(arrCards[i]);
     }
+  }
+
+  public wordWidth(words: string[]): number[] {
+    const widths = new Array(words.length).fill(0);
+    const maxWidth = Number(this.page!.playFieldContainer.getNode().getAttribute('data-width')!);
+    const charWidth = 9;
+    let totalWordWidth = 0;
+    for (let i = 0; i < words.length; i += 1) {
+      totalWordWidth += words[i].length;
+      widths[i] = words[i].length * charWidth;
+    }
+    const scaleFactor = totalWordWidth > maxWidth ? maxWidth / totalWordWidth : 1;
+    for (let i = 0; i < widths.length; i += 1) {
+      widths[i] = Math.round(widths[i] * scaleFactor);
+    }
+    let totalWidth = widths.reduce((sum, width) => sum + width, 0);
+    if (totalWidth !== maxWidth) {
+      const difference = maxWidth - totalWidth;
+      const ratio = difference / totalWidth;
+      for (let i = 0; i < widths.length; i += 1) {
+        widths[i] += Math.round(widths[i] * ratio);
+      }
+      totalWidth = widths.reduce((sum, width) => sum + width, 0);
+      if (totalWidth !== maxWidth) {
+        widths[widths.length - 1] += maxWidth - totalWidth;
+      }
+    }
+    return widths;
   }
 
   public handleClickCard(card: Component<HTMLCanvasElement>) {
