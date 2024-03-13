@@ -3,24 +3,52 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  &__play-field {
-    &-container {
-      min-width: 700px;
-      height: 500px;
-      outline: 2px solid black;
+  &__button {
+    padding: 5px 10px;
+    border: 2px solid #333333;
+    opacity: 0.5;
+    // border: 2px solid #ff6969;
+    border-radius: 40px;
+    background-color: transparent;
+    font-size: 20px;
+    font-weight: 400;
+    color: #333333;
+    // color: #ff6969;
+    cursor: pointer;
+    &:hover {
+      background-color: #333333;
+      color: white;
+      mix-blend-mode: multiply;
     }
+  }
+  &__play-field {
+    min-width: 700px;
+    height: 500px;
+    outline: 2px solid black;
   }
   &__words-field {
     min-width: 700px;
+    display: flex;
+    flex-direction: row;
     height: 50px;
     outline: 2px solid red;
-    &_word {
-      outline: 2px solid blue;
-      background-color: rgb(250, 167, 167);
-      &:hover {
-        opacity: 0.5;
-        cursor: pointer;
-      }
+  }
+  &__line {
+    &_container {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+  &__word {
+    outline: 2px solid blue;
+    background-color: #faa7a7;
+    &:hover {
+      opacity: 0.5;
+      cursor: pointer;
+    }
+    &_container {
+      height: 50px;
+      outline: 1px solid yellow;
     }
   }
 }

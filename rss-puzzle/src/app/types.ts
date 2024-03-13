@@ -54,4 +54,6 @@ export interface GamePage extends Component {
   wordsField: Component;
 
   game: GameService;
+
+  buttonContinue: Component;
 }

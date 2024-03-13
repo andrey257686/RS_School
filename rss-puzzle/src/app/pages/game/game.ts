@@ -1,5 +1,5 @@
 import Component from '../../components/base-component.ts';
-import { div } from '../../components/tags.ts';
+import { div, button } from '../../components/tags.ts';
 // import { GamePage, GameService } from '../../types.ts';
 // import data from '../../../gamedata/data/wordCollectionLevel1.json';
 import GameService from '../../services/game.service.ts';
@@ -12,15 +12,25 @@ class GamePageComponent extends Component {
 
   public game: GameService;
 
+  public buttonContinue: Component;
+
   constructor() {
     super({ className: 'game' });
-    this.playFieldContainer = div({ id: 'playField', className: 'game__play-field-container' });
+    this.playFieldContainer = div({ id: 'playField', className: 'game__play-field' });
     this.playFieldContainer.setAttribute('data-width', '700');
     this.wordsField = div({
       id: 'wordsField',
       className: 'game__words-field',
     });
-    this.appendChildren([this.playFieldContainer, this.wordsField]);
+    this.buttonContinue = button({
+      className: 'button game__button',
+      textContent: 'Continue',
+      onclick: () => {
+        this.game.nextSentence();
+      },
+    });
+    this.buttonContinue.setAttribute('disabled', 'true');
+    this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonContinue]);
     this.game = new GameService();
     this.game.start(this);
   }

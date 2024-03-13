@@ -1,13 +1,26 @@
 import data from '../../gamedata/data/wordCollectionLevel1.json';
 import { RoundData, GamePage } from '../types.ts';
 import Component from '../components/base-component.ts';
-import { canvas } from '../components/tags.ts';
+import { canvas, div } from '../components/tags.ts';
 import randomize from '../utils/utils.ts';
+import Card from '../components/card.ts';
 
 export default class GameService {
   public data: RoundData[];
 
   public page: GamePage | undefined;
+
+  public lineContainers: Component<HTMLElement>[] = [];
+
+  public wordContainers: Component<HTMLElement>[] = [];
+
+  public correctWords: string[][] = [];
+
+  public activeLine: number = 0;
+
+  public arrCards: Card[][] = [];
+
+  public currentLevel: number = 0;
 
   constructor() {
     this.data = data.rounds;
@@ -15,41 +28,56 @@ export default class GameService {
 
   public start(page: GamePage) {
     this.page = page;
-    const level = 0;
-    const sentenceNumber = 6;
-    this.renderData(page, level, sentenceNumber);
+    const level = this.currentLevel;
+    this.renderData(page, level);
   }
 
-  public renderData(gamePage: GamePage, level: number, sentenceNumber: number) {
+  public renderData(gamePage: GamePage, level: number) {
     const { words } = this.data[level];
-    const wordsData = words[sentenceNumber];
-    const sentence = wordsData.textExample;
-    const wordsInSentence = sentence.split(' ');
-    let arrCards: Component<HTMLCanvasElement>[] = [];
-    const arr = this.wordWidth(wordsInSentence);
-    for (let i = 0; i < wordsInSentence.length; i += 1) {
-      const word = wordsInSentence[i];
-      const widthCardWord = arr[i];
-      const wordCanvas = canvas({
-        className: 'game__words-field_word',
-        height: 50,
-        width: widthCardWord,
-        id: `word${i}`,
-      });
-      wordCanvas.addListener('click', () => {
-        this.handleClickCard(wordCanvas);
-      });
-      const ctx = wordCanvas.getNode().getContext('2d');
-      if (ctx) {
-        ctx.font = '18px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5);
+    for (let j = 0; j < words.length; j += 1) {
+      const wordsData = words[j];
+      const sentence = wordsData.textExample;
+      const wordsInSentence = sentence.split(' ');
+      this.correctWords[j] = [...wordsInSentence];
+      const lineContainer = div({ className: 'game__line_container', id: `line${j}` });
+      lineContainer.getNode().style.width = `700px`;
+      this.lineContainers.push(lineContainer);
+      this.page?.playFieldContainer.append(lineContainer);
+      const arr = this.wordWidth(wordsInSentence);
+      this.arrCards[j] = [];
+      for (let i = 0; i < wordsInSentence.length; i += 1) {
+        const word = wordsInSentence[i];
+        const widthCardWord = arr[i];
+        const wordContainer = div({ className: 'game__word_container', id: `container${j}_${i}` });
+        lineContainer.append(wordContainer);
+        wordContainer.getNode().style.width = `${widthCardWord}px`;
+        this.wordContainers.push(wordContainer);
+        const wordCanvas = canvas({
+          className: 'game__word',
+          height: 50,
+          width: widthCardWord,
+          id: `word${j}_${i}`,
+        });
+        const card = new Card(wordCanvas, j, i, word);
+        card.clickListener = this.handleClickCard.bind(this, card);
+        wordCanvas.getNode().addEventListener('click', card.clickListener);
+        const ctx = wordCanvas.getNode().getContext('2d');
+        if (ctx) {
+          ctx.font = '18px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5);
+        }
+        if (j !== 0) {
+          wordCanvas.getNode().style.display = 'none';
+        }
+        this.arrCards[j].push(card);
       }
-      arrCards.push(wordCanvas);
+      this.arrCards[j] = randomize(this.arrCards[j]);
     }
-    arrCards = randomize(arrCards);
-    for (let i = 0; i < arrCards.length; i += 1) {
-      gamePage.wordsField.append(arrCards[i]);
+    for (let i = 0; i < this.arrCards.length; i += 1) {
+      for (let j = 0; j < this.arrCards[i].length; j += 1) {
+        gamePage.wordsField.append(this.arrCards[i][j].canvas);
+      }
     }
   }
 
@@ -81,11 +109,82 @@ export default class GameService {
     return widths;
   }
 
-  public handleClickCard(card: Component<HTMLCanvasElement>) {
-    if (card.getNode().parentElement?.id === 'wordsField') {
-      this.page!.playFieldContainer.append(card);
+  public handleClickCard(card: Card) {
+    const { line } = card;
+    const { wordNumber } = card;
+    const currentLine = this.lineContainers[line];
+    const children = currentLine.getChildren();
+    if (card.canvas.getNode().parentElement?.id === 'wordsField') {
+      for (let i = 0; i < children.length; i += 1) {
+        if (children[i].getChildren().length === 0) {
+          card.setWordContainer(children[i]);
+          children[i].getNode().style.width = `${card.canvas.getNode().width}px`;
+          if (i === wordNumber || this.correctWords[line][i] === card.word) {
+            card.setCorrect(true);
+          }
+          children[i].append(card.canvas);
+          break;
+        }
+      }
     } else {
-      this.page!.wordsField.prepend(card);
+      const { wordContainer } = card;
+      card.setCorrect(false);
+      wordContainer?.destroyChildren();
+      card.deleteWordContainer();
+      this.page!.wordsField.prepend(card.canvas);
     }
+    this.checkSentence();
+  }
+
+  public checkSentence() {
+    const activeLineArr = this.arrCards[this.activeLine];
+    let flag = true;
+    for (let i = 0; i < activeLineArr.length; i += 1) {
+      if (!activeLineArr[i].isCorrect) {
+        flag = false;
+      }
+    }
+    if (flag) {
+      this.page!.buttonContinue.getNode().style.opacity = '1';
+      this.page!.buttonContinue.getNode().removeAttribute('disabled');
+    } else {
+      this.page!.buttonContinue.getNode().style.opacity = '0.5';
+      this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
+    }
+    return flag;
+  }
+
+  public nextSentence() {
+    this.activeLine += 1;
+    if (this.activeLine === this.arrCards.length) {
+      this.nextRound();
+      return;
+    }
+    for (let i = 0; i < this.arrCards[this.activeLine].length; i += 1) {
+      this.arrCards[this.activeLine][i].canvas.getNode().style.display = 'block';
+    }
+    for (let i = 0; i < this.arrCards[this.activeLine - 1].length; i += 1) {
+      this.arrCards[this.activeLine - 1][i].canvas
+        .getNode()
+        .removeEventListener(
+          'click',
+          this.arrCards[this.activeLine - 1][i].clickListener as EventListenerOrEventListenerObject,
+        );
+    }
+    this.checkSentence();
+  }
+
+  public nextRound() {
+    this.page?.playFieldContainer.setInnerHTML('');
+    this.page?.wordsField.setInnerHTML('');
+    this.activeLine = 0;
+    this.lineContainers = [];
+    this.wordContainers = [];
+    this.correctWords = [];
+    this.activeLine = 0;
+    this.arrCards = [];
+    this.currentLevel += 1;
+    this.renderData(this.page!, this.currentLevel);
+    this.checkSentence();
   }
 }
