@@ -168,17 +168,22 @@ export default class GameService {
           }
         }
         if (flag) {
-          this.page!.buttonContinue.getNode().style.opacity = '1';
-          this.page!.buttonContinue.getNode().removeAttribute('disabled');
+          // this.page?.append(this.page!.buttonContinue);
+          // this.page!.buttonContinue.getNode().style.opacity = '1';
+          // this.page!.buttonContinue.getNode().removeAttribute('disabled');
+          this.transformCheckToContinue();
         } else {
-          this.page!.buttonContinue.getNode().style.opacity = '0.5';
-          this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
+          this.transformContinueToCheck();
         }
       }
     }
   }
 
   public nextSentence() {
+    // this.page?.remove(this.page!.buttonContinue);
+    // this.page!.buttonContinue.getNode().style.opacity = '0.5';
+    // this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
+    this.transformContinueToCheck();
     this.activeLine += 1;
     if (this.activeLine === this.arrCards.length) {
       this.nextRound();
@@ -196,6 +201,28 @@ export default class GameService {
         );
     }
     this.checkSentence();
+  }
+
+  public transformCheckToContinue() {
+    if (this.page?.getChildren().indexOf(this.page?.buttonCheck) !== -1) {
+      this.page?.remove(this.page.buttonCheck);
+    }
+    this.page!.buttonCheck.getNode().style.opacity = '0.5';
+    this.page!.buttonCheck.getNode().setAttribute('disabled', 'true');
+    this.page?.append(this.page!.buttonContinue);
+    this.page!.buttonContinue.getNode().style.opacity = '1';
+    this.page!.buttonContinue.getNode().removeAttribute('disabled');
+  }
+
+  public transformContinueToCheck() {
+    if (this.page?.getChildren().indexOf(this.page?.buttonContinue) !== -1) {
+      this.page?.remove(this.page!.buttonContinue);
+    }
+    this.page!.buttonContinue.getNode().style.opacity = '0.5';
+    this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
+    this.page?.append(this.page!.buttonCheck);
+    this.page!.buttonCheck.getNode().style.opacity = '1';
+    this.page!.buttonCheck.getNode().removeAttribute('disabled');
   }
 
   public nextRound() {

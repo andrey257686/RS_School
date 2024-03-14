@@ -90,6 +90,14 @@ export default class Component<T extends HTMLElement = HTMLElement> implements C
     this.node.removeEventListener(event, listener, options);
   }
 
+  remove(child: Component<T>) {
+    const index = this.children.indexOf(child);
+    if (index > -1) {
+      this.children.splice(index, 1);
+    }
+    this.node.removeChild(child.getNode());
+  }
+
   destroyChildren() {
     this.children.forEach((child) => {
       child.destroy();

@@ -40,7 +40,8 @@ class GamePageComponent extends Component {
     });
     this.buttonContinue.setAttribute('disabled', 'true');
     this.buttonCheck.setAttribute('disabled', 'true');
-    this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonContinue, this.buttonCheck]);
+    // this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonContinue, this.buttonCheck]);
+    this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonCheck]);
     this.game = new GameService();
     this.game.start(this);
   }
