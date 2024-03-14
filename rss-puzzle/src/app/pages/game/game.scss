@@ -7,14 +7,15 @@
     padding: 5px 10px;
     border: 2px solid #333333;
     opacity: 0.5;
-    // border: 2px solid #ff6969;
     border-radius: 40px;
     background-color: transparent;
     font-size: 20px;
     font-weight: 400;
     color: #333333;
-    // color: #ff6969;
     cursor: pointer;
+    &_auto-complete {
+      opacity: 1 !important;
+    }
     &:hover {
       background-color: #333333;
       color: white;

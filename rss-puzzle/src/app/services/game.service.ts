@@ -16,6 +16,8 @@ export default class GameService {
 
   public correctWords: string[][] = [];
 
+  public correctCards: Card[][] = [];
+
   public activeLine: number = 0;
 
   public arrCards: Card[][] = [];
@@ -47,15 +49,12 @@ export default class GameService {
       this.page?.playFieldContainer.append(lineContainer);
       const arr = this.wordWidth(wordsInSentence);
       this.arrCards[j] = [];
+      this.correctCards[j] = [];
       this.currentState[j] = [];
       for (let i = 0; i < wordsInSentence.length; i += 1) {
         this.currentState[j][i] = null;
         const word = wordsInSentence[i];
         const widthCardWord = arr[i];
-        const wordContainer = div({ className: 'game__word_container', id: `container${j}_${i}` });
-        lineContainer.append(wordContainer);
-        wordContainer.getNode().style.width = `${widthCardWord}px`;
-        this.wordContainers.push(wordContainer);
         const wordCanvas = canvas({
           className: 'game__word',
           height: 50,
@@ -74,6 +73,7 @@ export default class GameService {
         if (j !== 0) {
           wordCanvas.getNode().style.display = 'none';
         }
+        this.correctCards[j].push(card);
         this.arrCards[j].push(card);
       }
       this.arrCards[j] = randomize(this.arrCards[j]);
@@ -116,31 +116,33 @@ export default class GameService {
   public handleClickCard(card: Card) {
     const { line } = card;
     const { wordNumber } = card;
-    const currentLine = this.lineContainers[line];
-    const children = currentLine.getChildren();
     if (card.canvas.getNode().parentElement?.id === 'wordsField') {
-      for (let i = 0; i < children.length; i += 1) {
-        if (children[i].getChildren().length === 0) {
-          card.setWordContainer(children[i]);
-          children[i].getNode().style.width = `${card.canvas.getNode().width}px`;
+      for (let i = 0; i < this.currentState[line].length; i += 1) {
+        if (this.currentState[line][i] === null) {
+          this.currentState[line][i] = card;
           if (i === wordNumber || this.correctWords[line][i] === card.word) {
             card.setCorrect(true);
           }
-          this.currentState[line][i] = card;
-          children[i].append(card.canvas);
           break;
         }
       }
+      this.renderCurrentState();
     } else {
-      const { wordContainer } = card;
       this.currentState[line][this.currentState[line].indexOf(card)] = null;
       card.setCorrect(false);
       card.setOutline('blue');
-      wordContainer?.destroyChildren();
-      card.deleteWordContainer();
       this.page!.wordsField.prepend(card.canvas);
     }
     this.checkSentence();
+  }
+
+  public renderCurrentState() {
+    for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
+      const currentLine = this.lineContainers[this.activeLine];
+      if (this.currentState[this.activeLine][i] !== null) {
+        currentLine.append(this.currentState[this.activeLine][i]!.canvas);
+      }
+    }
   }
 
   public checkSentence(checkButton = false) {
@@ -168,9 +170,6 @@ export default class GameService {
           }
         }
         if (flag) {
-          // this.page?.append(this.page!.buttonContinue);
-          // this.page!.buttonContinue.getNode().style.opacity = '1';
-          // this.page!.buttonContinue.getNode().removeAttribute('disabled');
           this.transformCheckToContinue();
         } else {
           this.transformContinueToCheck();
@@ -180,9 +179,6 @@ export default class GameService {
   }
 
   public nextSentence() {
-    // this.page?.remove(this.page!.buttonContinue);
-    // this.page!.buttonContinue.getNode().style.opacity = '0.5';
-    // this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
     this.transformContinueToCheck();
     this.activeLine += 1;
     if (this.activeLine === this.arrCards.length) {
@@ -209,7 +205,9 @@ export default class GameService {
     }
     this.page!.buttonCheck.getNode().style.opacity = '0.5';
     this.page!.buttonCheck.getNode().setAttribute('disabled', 'true');
-    this.page?.append(this.page!.buttonContinue);
+    if (this.page?.getChildren().indexOf(this.page?.buttonContinue) === -1) {
+      this.page?.append(this.page!.buttonContinue);
+    }
     this.page!.buttonContinue.getNode().style.opacity = '1';
     this.page!.buttonContinue.getNode().removeAttribute('disabled');
   }
@@ -220,9 +218,21 @@ export default class GameService {
     }
     this.page!.buttonContinue.getNode().style.opacity = '0.5';
     this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
-    this.page?.append(this.page!.buttonCheck);
+    if (this.page?.getChildren().indexOf(this.page?.buttonCheck) === -1) {
+      this.page?.append(this.page!.buttonCheck);
+    }
     this.page!.buttonCheck.getNode().style.opacity = '1';
     this.page!.buttonCheck.getNode().removeAttribute('disabled');
+  }
+
+  public autoComplete() {
+    for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
+      this.currentState[this.activeLine][i] = this.correctCards[this.activeLine][i];
+      this.currentState[this.activeLine][i]!.setCorrect(true);
+      this.currentState[this.activeLine][i]!.setOutline('green');
+    }
+    this.renderCurrentState();
+    this.checkSentence();
   }
 
   public nextRound() {
