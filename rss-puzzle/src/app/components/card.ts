@@ -39,10 +39,9 @@ export default class Card {
 
   public setCorrect(is: boolean) {
     this.isCorrect = is;
-    if (is) {
-      this.canvas.getNode().style.backgroundColor = 'green';
-    } else {
-      this.canvas.getNode().style.backgroundColor = '#faa7a7';
-    }
+  }
+
+  setOutline(color: string) {
+    this.canvas.getNode().style.outlineColor = color;
   }
 }

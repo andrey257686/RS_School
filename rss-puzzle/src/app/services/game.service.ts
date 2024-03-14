@@ -22,6 +22,8 @@ export default class GameService {
 
   public currentLevel: number = 0;
 
+  public currentState: (Card | null)[][] = [];
+
   constructor() {
     this.data = data.rounds;
   }
@@ -45,7 +47,9 @@ export default class GameService {
       this.page?.playFieldContainer.append(lineContainer);
       const arr = this.wordWidth(wordsInSentence);
       this.arrCards[j] = [];
+      this.currentState[j] = [];
       for (let i = 0; i < wordsInSentence.length; i += 1) {
+        this.currentState[j][i] = null;
         const word = wordsInSentence[i];
         const widthCardWord = arr[i];
         const wordContainer = div({ className: 'game__word_container', id: `container${j}_${i}` });
@@ -122,13 +126,16 @@ export default class GameService {
           if (i === wordNumber || this.correctWords[line][i] === card.word) {
             card.setCorrect(true);
           }
+          this.currentState[line][i] = card;
           children[i].append(card.canvas);
           break;
         }
       }
     } else {
       const { wordContainer } = card;
+      this.currentState[line][this.currentState[line].indexOf(card)] = null;
       card.setCorrect(false);
+      card.setOutline('blue');
       wordContainer?.destroyChildren();
       card.deleteWordContainer();
       this.page!.wordsField.prepend(card.canvas);
@@ -136,22 +143,39 @@ export default class GameService {
     this.checkSentence();
   }
 
-  public checkSentence() {
-    const activeLineArr = this.arrCards[this.activeLine];
-    let flag = true;
-    for (let i = 0; i < activeLineArr.length; i += 1) {
-      if (!activeLineArr[i].isCorrect) {
-        flag = false;
+  public checkSentence(checkButton = false) {
+    for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
+      if (this.currentState[this.activeLine][i] === null) {
+        this.page!.buttonContinue.getNode().style.opacity = '0.5';
+        this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
+        this.page!.buttonCheck.getNode().style.opacity = '0.5';
+        this.page!.buttonCheck.getNode().setAttribute('disabled', 'true');
+        return;
+      }
+      if (i === this.currentState[this.activeLine].length - 1) {
+        this.page!.buttonCheck.getNode().style.opacity = '1';
+        this.page!.buttonCheck.getNode().removeAttribute('disabled');
+        let flag = true;
+        const currentStateLine = this.currentState[this.activeLine];
+        for (let j = 0; j < currentStateLine.length; j += 1) {
+          if (!currentStateLine[j]!.isCorrect) {
+            flag = false;
+            if (checkButton) {
+              currentStateLine[j]!.setOutline('red');
+            }
+          } else if (checkButton) {
+            currentStateLine[j]!.setOutline('green');
+          }
+        }
+        if (flag) {
+          this.page!.buttonContinue.getNode().style.opacity = '1';
+          this.page!.buttonContinue.getNode().removeAttribute('disabled');
+        } else {
+          this.page!.buttonContinue.getNode().style.opacity = '0.5';
+          this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
+        }
       }
     }
-    if (flag) {
-      this.page!.buttonContinue.getNode().style.opacity = '1';
-      this.page!.buttonContinue.getNode().removeAttribute('disabled');
-    } else {
-      this.page!.buttonContinue.getNode().style.opacity = '0.5';
-      this.page!.buttonContinue.getNode().setAttribute('disabled', 'true');
-    }
-    return flag;
   }
 
   public nextSentence() {

@@ -14,6 +14,8 @@ class GamePageComponent extends Component {
 
   public buttonContinue: Component;
 
+  public buttonCheck: Component;
+
   constructor() {
     super({ className: 'game' });
     this.playFieldContainer = div({ id: 'playField', className: 'game__play-field' });
@@ -29,8 +31,16 @@ class GamePageComponent extends Component {
         this.game.nextSentence();
       },
     });
+    this.buttonCheck = button({
+      className: 'button game__button',
+      textContent: 'Check',
+      onclick: () => {
+        this.game.checkSentence(true);
+      },
+    });
     this.buttonContinue.setAttribute('disabled', 'true');
-    this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonContinue]);
+    this.buttonCheck.setAttribute('disabled', 'true');
+    this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonContinue, this.buttonCheck]);
     this.game = new GameService();
     this.game.start(this);
   }
