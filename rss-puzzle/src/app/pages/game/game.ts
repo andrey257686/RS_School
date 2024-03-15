@@ -20,11 +20,27 @@ class GamePageComponent extends Component {
 
   constructor() {
     super({ className: 'game' });
-    this.playFieldContainer = div({ id: 'playField', className: 'game__play-field' });
+    this.game = new GameService();
+    this.playFieldContainer = div({
+      id: 'playField',
+      className: 'game__play-field',
+      ondrop: (event: MouseEvent) => {
+        this.game.handleDropPlayField(event);
+      },
+      ondragover: (event) => {
+        event.preventDefault();
+      },
+    });
     this.playFieldContainer.setAttribute('data-width', '700');
     this.wordsField = div({
       id: 'wordsField',
       className: 'game__words-field',
+      ondrop: () => {
+        this.game.handleDropWordsField();
+      },
+      ondragover: (event) => {
+        event.preventDefault();
+      },
     });
     this.buttonContinue = button({
       className: 'button game__button game__button_continue',
@@ -37,7 +53,7 @@ class GamePageComponent extends Component {
       className: 'button game__button game__button_check',
       textContent: 'Check',
       onclick: () => {
-        this.game.checkSentence(true);
+        this.game.checkButton();
       },
     });
     this.buttonAutoComplete = button({
@@ -50,7 +66,6 @@ class GamePageComponent extends Component {
     this.buttonContinue.setAttribute('disabled', 'true');
     this.buttonCheck.setAttribute('disabled', 'true');
     this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonCheck, this.buttonAutoComplete]);
-    this.game = new GameService();
     this.game.start(this);
   }
 }

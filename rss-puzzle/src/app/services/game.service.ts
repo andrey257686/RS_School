@@ -26,14 +26,144 @@ export default class GameService {
 
   public currentState: (Card | null)[][] = [];
 
+  public clickedCard: Card;
+
+  public draggedCard: Card;
+
   constructor() {
     this.data = data.rounds;
+    this.draggedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
+    this.clickedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
   }
 
   public start(page: GamePage) {
     this.page = page;
     const level = this.currentLevel;
     this.renderData(page, level);
+  }
+
+  public handleDropPlayField(event: MouseEvent) {
+    const { line } = this.draggedCard;
+    const currentCard = this.draggedCard;
+    currentCard.canvas.getNode().style.animation = 'fadeIn 0.5s ease-in-out forwards';
+    setInterval(() => {
+      currentCard.canvas.getNode().style.animation = '';
+    }, 500);
+    if (this.draggedCard.canvas.getNode().parentElement?.id === 'wordsField') {
+      const underCard = this.getCardUnderCursor(event);
+      if (underCard.resultCard !== null) {
+        this.insertCard(this.draggedCard, underCard);
+      } else {
+        for (let i = 0; i < this.currentState[line].length; i += 1) {
+          if (this.currentState[line][i] === null) {
+            this.currentState[line][i] = this.draggedCard;
+            break;
+          }
+        }
+      }
+    } else {
+      const underCard = this.getCardUnderCursor(event);
+      if (underCard.resultCard !== null) {
+        this.insertCard(this.draggedCard, underCard);
+      } else {
+        const isOutLine = this.isOutLine(event);
+        if (!isOutLine) {
+          const firstNotNullIndex = this.currentState[this.activeLine].findIndex((element) => element === null);
+          if (firstNotNullIndex !== -1) {
+            const elementToMoveIndex = this.currentState[this.activeLine].indexOf(this.draggedCard);
+            this.currentState[this.activeLine].splice(elementToMoveIndex, 1);
+            this.currentState[this.activeLine].splice(firstNotNullIndex - 1, 0, this.draggedCard);
+          }
+        }
+      }
+    }
+    this.renderCurrentState();
+    this.checkSentence();
+  }
+
+  public insertCard(draggedCard: Card, underCard: { resultCard: Card | null; position: string }) {
+    const { position } = underCard;
+    const { resultCard } = underCard;
+    if (position === 'left') {
+      this.currentState[this.activeLine].splice(this.currentState[this.activeLine].indexOf(draggedCard), 1);
+      this.currentState[this.activeLine].splice(this.currentState[this.activeLine].indexOf(resultCard), 0, draggedCard);
+    } else if (position === 'right') {
+      this.currentState[this.activeLine].splice(this.currentState[this.activeLine].indexOf(draggedCard), 1);
+      this.currentState[this.activeLine].splice(
+        this.currentState[this.activeLine].indexOf(resultCard) + 1,
+        0,
+        draggedCard,
+      );
+    }
+  }
+
+  public isOutLine(event: MouseEvent): boolean {
+    const currentCardRect = this.draggedCard.canvas.getNode().getBoundingClientRect();
+    if (event.clientY > currentCardRect.bottom) {
+      return true;
+    }
+    return false;
+  }
+
+  public getCardUnderCursor(event: MouseEvent): { resultCard: Card | null; position: string } {
+    let resultCard: Card | null = null;
+    let position: string = '';
+    for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
+      if (this.currentState[this.activeLine][i] !== null) {
+        const tmpresultCard = this.currentState[this.activeLine][i];
+        const resultCardRect = tmpresultCard!.canvas.getNode().getBoundingClientRect();
+        const resultCardBegin = resultCardRect.x;
+        const resultCardEnd = resultCardRect.x + resultCardRect.width;
+        const resultCardMid = resultCardRect.x + resultCardRect.width / 2;
+        if (
+          event.clientX > resultCardBegin &&
+          event.clientX < resultCardEnd &&
+          event.clientY > resultCardRect.y &&
+          event.clientY < resultCardRect.y + resultCardRect.height
+        ) {
+          resultCard = tmpresultCard;
+          if (event.clientX > resultCardMid) {
+            position = 'right';
+          } else {
+            position = 'left';
+          }
+          break;
+        }
+      }
+    }
+    return {
+      resultCard,
+      position,
+    };
+  }
+
+  public defineCorrect() {
+    for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
+      if (this.currentState[this.activeLine][i] !== null) {
+        if (this.currentState[this.activeLine][i]?.word === this.correctCards[this.activeLine][i].word) {
+          this.currentState[this.activeLine][i]!.setCorrect(true);
+        } else {
+          this.currentState[this.activeLine][i]!.setCorrect(false);
+        }
+      }
+    }
+  }
+
+  public handleDropWordsField() {
+    const { line } = this.draggedCard;
+    const currentCard = this.draggedCard;
+    currentCard.canvas.getNode().style.animation = 'fadeIn 0.5s ease-in-out forwards';
+    setInterval(() => {
+      currentCard.canvas.getNode().style.animation = '';
+    }, 500);
+    if (this.draggedCard.canvas.getNode().closest('#playField')) {
+      const indexCard = this.currentState[line].indexOf(this.draggedCard);
+      this.currentState[line].splice(indexCard, 1);
+      this.currentState[line].push(null);
+      this.page!.wordsField.prepend(this.draggedCard.canvas);
+    }
+    this.renderCurrentState();
+    this.checkSentence();
   }
 
   public renderData(gamePage: GamePage, level: number) {
@@ -63,7 +193,10 @@ export default class GameService {
         });
         const card = new Card(wordCanvas, j, i, word);
         card.clickListener = this.handleClickCard.bind(this, card);
+        card.clickListenerDragStart = this.handleDragStart.bind(this, card);
+        card.canvas.getNode().draggable = true;
         wordCanvas.getNode().addEventListener('click', card.clickListener);
+        wordCanvas.getNode().addEventListener('dragstart', card.clickListenerDragStart);
         const ctx = wordCanvas.getNode().getContext('2d');
         if (ctx) {
           ctx.font = '18px Arial';
@@ -83,6 +216,10 @@ export default class GameService {
         gamePage.wordsField.append(this.arrCards[i][j].canvas);
       }
     }
+  }
+
+  public handleDragStart(card: Card) {
+    this.draggedCard = card;
   }
 
   public wordWidth(words: string[]): number[] {
@@ -115,37 +252,50 @@ export default class GameService {
 
   public handleClickCard(card: Card) {
     const { line } = card;
-    const { wordNumber } = card;
+    const currentCard = card;
+    currentCard.canvas.getNode().style.animation = 'fadeIn 0.5s ease-in-out forwards';
+    setInterval(() => {
+      currentCard.canvas.getNode().style.animation = '';
+    }, 500);
     if (card.canvas.getNode().parentElement?.id === 'wordsField') {
       for (let i = 0; i < this.currentState[line].length; i += 1) {
         if (this.currentState[line][i] === null) {
           this.currentState[line][i] = card;
-          if (i === wordNumber || this.correctWords[line][i] === card.word) {
-            card.setCorrect(true);
-          }
           break;
         }
       }
-      this.renderCurrentState();
     } else {
-      this.currentState[line][this.currentState[line].indexOf(card)] = null;
-      card.setCorrect(false);
-      card.setOutline('blue');
+      const indexCard = this.currentState[line].indexOf(card);
+      this.currentState[line].splice(indexCard, 1);
+      this.currentState[line].push(null);
       this.page!.wordsField.prepend(card.canvas);
     }
+    this.renderCurrentState();
     this.checkSentence();
   }
 
   public renderCurrentState() {
+    this.defineCorrect();
     for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
       const currentLine = this.lineContainers[this.activeLine];
       if (this.currentState[this.activeLine][i] !== null) {
         currentLine.append(this.currentState[this.activeLine][i]!.canvas);
+        this.currentState[this.activeLine][i]!.setOutline('blue');
       }
     }
   }
 
-  public checkSentence(checkButton = false) {
+  public checkButton() {
+    for (let j = 0; j < this.currentState[this.activeLine].length; j += 1) {
+      if (!this.currentState[this.activeLine][j]!.isCorrect) {
+        this.currentState[this.activeLine][j]!.setOutline('red');
+      } else {
+        this.currentState[this.activeLine][j]!.setOutline('green');
+      }
+    }
+  }
+
+  public checkSentence() {
     for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
       if (this.currentState[this.activeLine][i] === null) {
         this.page!.buttonContinue.getNode().style.opacity = '0.5';
@@ -162,11 +312,6 @@ export default class GameService {
         for (let j = 0; j < currentStateLine.length; j += 1) {
           if (!currentStateLine[j]!.isCorrect) {
             flag = false;
-            if (checkButton) {
-              currentStateLine[j]!.setOutline('red');
-            }
-          } else if (checkButton) {
-            currentStateLine[j]!.setOutline('green');
           }
         }
         if (flag) {
@@ -230,6 +375,13 @@ export default class GameService {
       this.currentState[this.activeLine][i] = this.correctCards[this.activeLine][i];
       this.currentState[this.activeLine][i]!.setCorrect(true);
       this.currentState[this.activeLine][i]!.setOutline('green');
+      const currentCard = this.currentState[this.activeLine][i];
+      if (currentCard) {
+        currentCard.canvas.getNode().style.animation = 'fadeIn 1s ease-in-out forwards';
+        setInterval(() => {
+          currentCard.canvas.getNode().style.animation = '';
+        }, 1000);
+      }
     }
     this.renderCurrentState();
     this.checkSentence();

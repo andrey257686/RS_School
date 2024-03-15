@@ -13,6 +13,12 @@ export default class Card {
 
   public clickListener: ((this: HTMLCanvasElement, ev: MouseEvent) => void) | undefined;
 
+  public clickListenerDragStart: ((this: HTMLCanvasElement, ev: MouseEvent) => void) | undefined;
+
+  public clickListenerDragEnd: ((this: HTMLCanvasElement, ev: MouseEvent) => void) | undefined;
+
+  public clickListenerDragOver: ((this: HTMLCanvasElement, ev: MouseEvent) => void) | undefined;
+
   public isCorrect: boolean = false;
 
   constructor(
