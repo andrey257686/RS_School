@@ -2,8 +2,11 @@ import data from '../../gamedata/data/wordCollectionLevel1.json';
 import { RoundData, GamePage } from '../types.ts';
 import Component from '../components/base-component.ts';
 import { canvas, div } from '../components/tags.ts';
-import randomize from '../utils/utils.ts';
+import { resizeImage, randomize } from '../utils/utils.ts';
 import Card from '../components/card.ts';
+// import image from '../../gamedata/images/level1/9th_wave.jpg';
+
+// import  from '../utils/utils.ts';
 
 export default class GameService {
   public data: RoundData[];
@@ -30,6 +33,8 @@ export default class GameService {
 
   public draggedCard: Card;
 
+  public resizedCanvas: HTMLCanvasElement | undefined;
+
   constructor() {
     this.data = data.rounds;
     this.draggedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
@@ -39,7 +44,19 @@ export default class GameService {
   public start(page: GamePage) {
     this.page = page;
     const level = this.currentLevel;
-    this.renderData(page, level);
+    this.loadImageAndRenderData(page, level);
+  }
+
+  public loadImageAndRenderData(page: GamePage, level: number) {
+    const image = new Image();
+    image.src = `/src/gamedata/images/${data.rounds[this.currentLevel].levelData.imageSrc}`;
+    image.onload = () => {
+      this.resizedCanvas = resizeImage(image, 700, 500);
+      this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas.toDataURL()})`;
+      this.page!.playFieldContainer.getNode().style.backgroundSize = 'cover';
+
+      this.renderData(page, level);
+    };
   }
 
   public handleDropPlayField(event: MouseEvent) {
@@ -140,7 +157,7 @@ export default class GameService {
   public defineCorrect() {
     for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
       if (this.currentState[this.activeLine][i] !== null) {
-        if (this.currentState[this.activeLine][i]?.word === this.correctCards[this.activeLine][i].word) {
+        if (this.currentState[this.activeLine][i] === this.correctCards[this.activeLine][i]) {
           this.currentState[this.activeLine][i]!.setCorrect(true);
         } else {
           this.currentState[this.activeLine][i]!.setCorrect(false);
@@ -168,7 +185,9 @@ export default class GameService {
 
   public renderData(gamePage: GamePage, level: number) {
     const { words } = this.data[level];
+    let offsetWidth = 0;
     for (let j = 0; j < words.length; j += 1) {
+      offsetWidth = 0;
       const wordsData = words[j];
       const sentence = wordsData.textExample;
       const wordsInSentence = sentence.split(' ');
@@ -185,6 +204,8 @@ export default class GameService {
         this.currentState[j][i] = null;
         const word = wordsInSentence[i];
         const widthCardWord = arr[i];
+        const pieceWidth = widthCardWord;
+        const pieceHeight = 50;
         const wordCanvas = canvas({
           className: 'game__word',
           height: 50,
@@ -198,14 +219,39 @@ export default class GameService {
         wordCanvas.getNode().addEventListener('click', card.clickListener);
         wordCanvas.getNode().addEventListener('dragstart', card.clickListenerDragStart);
         const ctx = wordCanvas.getNode().getContext('2d');
+        wordCanvas.getNode().width = widthCardWord;
+        wordCanvas.getNode().height = 50;
+        if (this.resizedCanvas) {
+          ctx?.drawImage(
+            this.resizedCanvas,
+            offsetWidth,
+            j * pieceHeight,
+            pieceWidth,
+            pieceHeight,
+            0,
+            0,
+            pieceWidth,
+            pieceHeight,
+          );
+        }
+        offsetWidth += widthCardWord;
         if (ctx) {
+          ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 2;
+          ctx.shadowBlur = 4;
+          ctx.fillStyle = 'black';
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = 2;
           ctx.font = '18px Arial';
           ctx.textAlign = 'center';
+          ctx.strokeText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5); // Рисует контур текста
           ctx.fillText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5);
         }
         if (j !== 0) {
           wordCanvas.getNode().style.display = 'none';
         }
+        this.page?.playFieldContainer.append(wordCanvas);
         this.correctCards[j].push(card);
         this.arrCards[j].push(card);
       }
@@ -280,7 +326,7 @@ export default class GameService {
       const currentLine = this.lineContainers[this.activeLine];
       if (this.currentState[this.activeLine][i] !== null) {
         currentLine.append(this.currentState[this.activeLine][i]!.canvas);
-        this.currentState[this.activeLine][i]!.setOutline('blue');
+        this.currentState[this.activeLine][i]!.setOutline('white');
       }
     }
   }
@@ -397,7 +443,8 @@ export default class GameService {
     this.activeLine = 0;
     this.arrCards = [];
     this.currentLevel += 1;
-    this.renderData(this.page!, this.currentLevel);
+    this.loadImageAndRenderData(this.page!, this.currentLevel);
+    // this.renderData(this.page!, this.currentLevel);
     this.checkSentence();
   }
 }

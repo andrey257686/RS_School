@@ -23,7 +23,7 @@ class GamePageComponent extends Component {
     this.game = new GameService();
     this.playFieldContainer = div({
       id: 'playField',
-      className: 'game__play-field',
+      className: 'game__play-field transparent-background',
       ondrop: (event: MouseEvent) => {
         this.game.handleDropPlayField(event);
       },
