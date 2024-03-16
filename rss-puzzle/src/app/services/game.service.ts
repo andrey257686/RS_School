@@ -44,6 +44,7 @@ export default class GameService {
   public start(page: GamePage) {
     this.page = page;
     const level = this.currentLevel;
+    this.updateHintTranslationSentence();
     this.loadImageAndRenderData(page, level);
   }
 
@@ -57,6 +58,11 @@ export default class GameService {
 
       this.renderData(page, level);
     };
+  }
+
+  public updateHintTranslationSentence() {
+    this.page!.hintTranslationSentence.getNode().innerHTML =
+      data.rounds[this.currentLevel].words[this.activeLine].textExampleTranslate;
   }
 
   public handleDropPlayField(event: MouseEvent) {
@@ -387,6 +393,7 @@ export default class GameService {
           this.arrCards[this.activeLine - 1][i].clickListener as EventListenerOrEventListenerObject,
         );
     }
+    this.updateHintTranslationSentence();
     this.checkSentence();
   }
 
@@ -444,7 +451,7 @@ export default class GameService {
     this.arrCards = [];
     this.currentLevel += 1;
     this.loadImageAndRenderData(this.page!, this.currentLevel);
-    // this.renderData(this.page!, this.currentLevel);
+    this.updateHintTranslationSentence();
     this.checkSentence();
   }
 }

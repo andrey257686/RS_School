@@ -6,6 +6,8 @@ import GameService from '../../services/game.service.ts';
 import './game.scss';
 
 class GamePageComponent extends Component {
+  public hintTranslationSentence: Component;
+
   public playFieldContainer: Component;
 
   public wordsField: Component;
@@ -21,6 +23,7 @@ class GamePageComponent extends Component {
   constructor() {
     super({ className: 'game' });
     this.game = new GameService();
+    this.hintTranslationSentence = div({ className: 'game__translation-sentence', innerHTML: '' });
     this.playFieldContainer = div({
       id: 'playField',
       className: 'game__play-field transparent-background',
@@ -65,7 +68,13 @@ class GamePageComponent extends Component {
     });
     this.buttonContinue.setAttribute('disabled', 'true');
     this.buttonCheck.setAttribute('disabled', 'true');
-    this.appendChildren([this.playFieldContainer, this.wordsField, this.buttonCheck, this.buttonAutoComplete]);
+    this.appendChildren([
+      this.hintTranslationSentence,
+      this.playFieldContainer,
+      this.wordsField,
+      this.buttonAutoComplete,
+      this.buttonCheck,
+    ]);
     this.game.start(this);
   }
 }

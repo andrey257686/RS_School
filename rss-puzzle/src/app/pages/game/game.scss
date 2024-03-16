@@ -3,6 +3,12 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  &__translation-sentence {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333333;
+    font-style: italic;
+  }
   &__button {
     padding: 5px 10px;
     border: 2px solid #333333;

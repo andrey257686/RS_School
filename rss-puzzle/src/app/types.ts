@@ -49,6 +49,8 @@ export interface GameService {
 }
 
 export interface GamePage extends Component {
+  hintTranslationSentence: Component;
+
   playFieldContainer: Component;
 
   wordsField: Component;
