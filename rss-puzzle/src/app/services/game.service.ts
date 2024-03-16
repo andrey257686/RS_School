@@ -35,6 +35,8 @@ export default class GameService {
 
   public resizedCanvas: HTMLCanvasElement | undefined;
 
+  public isHintTranslation: boolean = false;
+
   constructor() {
     this.data = data.rounds;
     this.draggedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
@@ -60,9 +62,25 @@ export default class GameService {
     };
   }
 
+  public hintButtonTranslate() {
+    this.isHintTranslation = !this.isHintTranslation;
+    this.page?.buttonHintTranslation.getNode().classList.toggle('checked');
+    if (this.isHintTranslation) {
+      this.page!.hintTranslationSentence.getNode().style.opacity = '1';
+    } else {
+      this.page!.hintTranslationSentence.getNode().style.opacity = '0';
+    }
+    this.updateHintTranslationSentence();
+  }
+
   public updateHintTranslationSentence() {
     this.page!.hintTranslationSentence.getNode().innerHTML =
       data.rounds[this.currentLevel].words[this.activeLine].textExampleTranslate;
+    if (this.isHintTranslation) {
+      this.page!.hintTranslationSentence.getNode().style.opacity = '1';
+    } else {
+      this.page!.hintTranslationSentence.getNode().style.opacity = '0';
+    }
   }
 
   public handleDropPlayField(event: MouseEvent) {
