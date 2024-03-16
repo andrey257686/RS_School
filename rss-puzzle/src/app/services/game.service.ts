@@ -4,9 +4,6 @@ import Component from '../components/base-component.ts';
 import { canvas, div } from '../components/tags.ts';
 import { resizeImage, randomize } from '../utils/utils.ts';
 import Card from '../components/card.ts';
-// import image from '../../gamedata/images/level1/9th_wave.jpg';
-
-// import  from '../utils/utils.ts';
 
 export default class GameService {
   public data: RoundData[];
@@ -71,6 +68,11 @@ export default class GameService {
       this.page!.hintTranslationSentence.getNode().style.opacity = '0';
     }
     this.updateHintTranslationSentence();
+  }
+
+  public hintButtonPronunciation() {
+    const audio = new Audio(`/src/gamedata/${data.rounds[this.currentLevel].words[this.activeLine].audioExample}`);
+    audio.play();
   }
 
   public updateHintTranslationSentence() {
