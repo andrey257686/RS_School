@@ -385,8 +385,10 @@ export default class GameService {
           }
         }
         if (flag) {
+          this.page!.hintTranslationSentence.getNode().style.opacity = '1';
           this.transformCheckToContinue();
         } else {
+          this.page!.hintTranslationSentence.getNode().style.opacity = '0';
           this.transformContinueToCheck();
         }
       }
