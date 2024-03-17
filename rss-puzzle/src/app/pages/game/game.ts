@@ -1,7 +1,5 @@
 import Component from '../../components/base-component.ts';
-import { div, button } from '../../components/tags.ts';
-// import { GamePage, GameService } from '../../types.ts';
-// import data from '../../../gamedata/data/wordCollectionLevel1.json';
+import { div, button, label } from '../../components/tags.ts';
 import GameService from '../../services/game.service.ts';
 import './game.scss';
 
@@ -9,6 +7,8 @@ class GamePageComponent extends Component {
   public buttonHintTranslation: Component;
 
   public buttonHintPronunciation: Component;
+
+  public switchAudioButton: Component;
 
   public hintTranslationSentence: Component;
 
@@ -41,6 +41,14 @@ class GamePageComponent extends Component {
         '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 511.999 511.999" style="enable-background:new 0 0 511.999 511.999;width: 15px;" xml:space="preserve"><g><g><path d="M458.35,128.554l-20.988,21.558c28.729,27.969,44.552,65.374,44.552,105.323c0,39.798-15.72,77.102-44.265,105.041 l21.044,21.5c34.374-33.646,53.305-78.586,53.305-126.543C512,207.296,492.947,162.235,458.35,128.554z"/></g></g><g><g><path d="M412.066,165.399l-19.519,22.895c20.318,17.32,31.97,41.788,31.97,67.13c0,25.206-11.551,49.584-31.69,66.884 l19.605,22.821c26.801-23.023,42.171-55.719,42.171-89.706C454.604,221.258,439.1,188.445,412.066,165.399z"/></g></g><g><g><path d="M319.154,56.797l-190.325,93.874H0v209.216h128.784l190.537,95.315L319.154,56.797z M58.415,329.802H30.086V180.757 h28.329V329.802z M117.293,329.802H88.501V180.757h28.792V329.802z M147.379,335.55V175.068l141.708-69.895l0.127,301.328 L147.379,335.55z"/></g></g></svg>',
       onclick: () => {
         this.game.hintButtonPronunciation();
+      },
+    });
+    this.switchAudioButton = label({
+      className: 'game__switch-audio',
+      innerHTML:
+        '<input class="game__switch-audio_checkbox" type="checkbox"> \n <span class="game__switch-audio_span"></span> \n <p class="game__switch-audio_text">Audio</p>',
+      onchange: (event: Event) => {
+        this.game.switchAudio(event);
       },
     });
     this.hintTranslationSentence = div({ className: 'game__translation-sentence', innerHTML: '' });
@@ -89,7 +97,12 @@ class GamePageComponent extends Component {
     this.buttonContinue.setAttribute('disabled', 'true');
     this.buttonCheck.setAttribute('disabled', 'true');
     this.appendChildren([
-      div({ className: 'game__hints' }, this.buttonHintTranslation, this.buttonHintPronunciation),
+      div(
+        { className: 'game__hints' },
+        this.buttonHintTranslation,
+        this.buttonHintPronunciation,
+        this.switchAudioButton,
+      ),
       this.hintTranslationSentence,
       this.playFieldContainer,
       this.wordsField,

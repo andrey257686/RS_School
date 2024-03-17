@@ -34,6 +34,8 @@ export default class GameService {
 
   public isHintTranslation: boolean = false;
 
+  public isAudioOn: boolean = true;
+
   constructor() {
     this.data = data.rounds;
     this.draggedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
@@ -44,6 +46,7 @@ export default class GameService {
     this.page = page;
     const level = this.currentLevel;
     this.updateHintTranslationSentence();
+    this.updateHintPronunciation();
     this.loadImageAndRenderData(page, level);
   }
 
@@ -81,6 +84,22 @@ export default class GameService {
       this.page!.buttonHintPronunciation.getNode().classList.remove('checked');
     });
     audio.play();
+  }
+
+  public switchAudio(event: Event) {
+    if (event.target instanceof HTMLInputElement && event.target.type === 'checkbox') {
+      this.isAudioOn = !event.target.checked;
+      this.updateHintPronunciation();
+    }
+  }
+
+  public updateHintPronunciation() {
+    this.page!.buttonHintPronunciation.getNode().style.opacity = this.isAudioOn ? '1' : '0';
+    if (this.isAudioOn) {
+      this.page!.buttonHintPronunciation.removeAttribute('disabled');
+    } else {
+      this.page!.buttonHintPronunciation.setAttribute('disabled', 'true');
+    }
   }
 
   public updateHintTranslationSentence() {
@@ -396,9 +415,13 @@ export default class GameService {
         }
         if (flag) {
           this.page!.hintTranslationSentence.getNode().style.opacity = '1';
+          this.page!.buttonHintPronunciation.getNode().style.opacity = '1';
+          this.page!.buttonHintPronunciation.removeAttribute('disabled');
           this.transformCheckToContinue();
         } else {
           this.page!.hintTranslationSentence.getNode().style.opacity = '0';
+          this.page!.buttonHintPronunciation.getNode().style.opacity = '0';
+          this.page!.buttonHintPronunciation.setAttribute('disabled', 'true');
           this.transformContinueToCheck();
         }
       }
@@ -424,6 +447,7 @@ export default class GameService {
         );
     }
     this.updateHintTranslationSentence();
+    this.updateHintPronunciation();
     this.checkSentence();
   }
 
@@ -482,6 +506,7 @@ export default class GameService {
     this.currentLevel += 1;
     this.loadImageAndRenderData(this.page!, this.currentLevel);
     this.updateHintTranslationSentence();
+    this.updateHintPronunciation();
     this.checkSentence();
   }
 }
