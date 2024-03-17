@@ -53,6 +53,8 @@ export interface GamePage extends Component {
 
   buttonHintPronunciation: Component;
 
+  buttonHintBackground: Component;
+
   hintTranslationSentence: Component;
 
   playFieldContainer: Component;

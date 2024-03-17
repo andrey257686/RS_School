@@ -12,7 +12,7 @@ export default class GameService {
 
   public lineContainers: Component<HTMLElement>[] = [];
 
-  public wordContainers: Component<HTMLElement>[] = [];
+  // public wordContainers: Component<HTMLElement>[] = [];
 
   public correctWords: string[][] = [];
 
@@ -33,6 +33,8 @@ export default class GameService {
   public resizedCanvas: HTMLCanvasElement | undefined;
 
   public isHintTranslation: boolean = false;
+
+  public isHintBackground: boolean = true;
 
   public isAudioOn: boolean = true;
 
@@ -57,19 +59,19 @@ export default class GameService {
       this.resizedCanvas = resizeImage(image, 700, 500);
       this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas.toDataURL()})`;
       this.page!.playFieldContainer.getNode().style.backgroundSize = 'cover';
-
       this.renderData(page, level);
+      this.hintButtonBackground();
     };
   }
 
   public hintButtonTranslate() {
     this.isHintTranslation = !this.isHintTranslation;
     this.page?.buttonHintTranslation.getNode().classList.toggle('checked');
-    if (this.isHintTranslation) {
-      this.page!.hintTranslationSentence.getNode().style.opacity = '1';
-    } else {
-      this.page!.hintTranslationSentence.getNode().style.opacity = '0';
-    }
+    // if (this.isHintTranslation) {
+    //   this.page!.hintTranslationSentence.getNode().style.opacity = '1';
+    // } else {
+    //   this.page!.hintTranslationSentence.getNode().style.opacity = '0';
+    // }
     this.updateHintTranslationSentence();
   }
 
@@ -84,6 +86,69 @@ export default class GameService {
       this.page!.buttonHintPronunciation.getNode().classList.remove('checked');
     });
     audio.play();
+  }
+
+  public hintButtonBackground(fromButton = false) {
+    if (fromButton) {
+      this.isHintBackground = !this.isHintBackground;
+    }
+    if (!this.isHintBackground) {
+      this.page!.playFieldContainer.getNode().style.backgroundColor = 'transparent';
+      this.page!.playFieldContainer.getNode().style.backgroundImage = 'none';
+      this.page!.playFieldContainer.getNode().classList.remove('transparent-background');
+      this.page?.buttonHintBackground.getNode().classList.remove('checked');
+    } else {
+      this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas?.toDataURL()})`;
+      this.page!.playFieldContainer.getNode().style.backgroundSize = 'cover';
+      this.page!.playFieldContainer.getNode().classList.add('transparent-background');
+      this.page?.buttonHintBackground.getNode().classList.add('checked');
+    }
+    const renderedCards = this.arrCards;
+    if (renderedCards?.length !== 0) {
+      for (let i = 0; i < renderedCards.length; i += 1) {
+        for (let j = 0; j < renderedCards[i].length; j += 1) {
+          if (renderedCards[i][j].canvas.getNode().parentElement?.id === 'wordsField') {
+            const context = renderedCards[i][j].canvas.getNode().getContext('2d');
+            if (!this.isHintBackground) {
+              context!.clearRect(
+                0,
+                0,
+                renderedCards[i][j].canvas.getNode().width,
+                renderedCards[i][j].canvas.getNode().height,
+              );
+              const { word } = this.arrCards[i][j];
+              context!.shadowColor = 'rgba(255, 255, 255, 0.5)';
+              context!.shadowOffsetX = 2;
+              context!.shadowOffsetY = 2;
+              context!.shadowBlur = 4;
+              context!.fillStyle = 'black';
+              context!.strokeStyle = 'white';
+              context!.lineWidth = 2;
+              context!.font = '18px Arial';
+              context!.textAlign = 'center';
+              context!.strokeText(
+                word,
+                renderedCards[i][j].canvas.getNode().width / 2,
+                renderedCards[i][j].canvas.getNode().height / 2 + 5,
+              );
+              context!.fillText(
+                word,
+                renderedCards[i][j].canvas.getNode().width / 2,
+                renderedCards[i][j].canvas.getNode().height / 2 + 5,
+              );
+            } else {
+              context!.clearRect(
+                0,
+                0,
+                renderedCards[i][j].canvas.getNode().width,
+                renderedCards[i][j].canvas.getNode().height,
+              );
+              context!.putImageData(renderedCards[i][j].originalContext!, 0, 0);
+            }
+          }
+        }
+      }
+    }
   }
 
   public switchAudio(event: Event) {
@@ -298,8 +363,9 @@ export default class GameService {
           ctx.lineWidth = 2;
           ctx.font = '18px Arial';
           ctx.textAlign = 'center';
-          ctx.strokeText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5); // Рисует контур текста
+          ctx.strokeText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5);
           ctx.fillText(word, wordCanvas.getNode().width / 2, wordCanvas.getNode().height / 2 + 5);
+          card.originalContext = ctx.getImageData(0, 0, wordCanvas.getNode().width, wordCanvas.getNode().height);
         }
         if (j !== 0) {
           wordCanvas.getNode().style.display = 'none';
@@ -409,6 +475,14 @@ export default class GameService {
         let flag = true;
         const currentStateLine = this.currentState[this.activeLine];
         for (let j = 0; j < currentStateLine.length; j += 1) {
+          const context = currentStateLine[j]?.canvas.getNode().getContext('2d');
+          context?.clearRect(
+            0,
+            0,
+            currentStateLine[j]!.canvas.getNode().width,
+            currentStateLine[j]!.canvas.getNode().height,
+          );
+          context!.putImageData(currentStateLine[j]!.originalContext!, 0, 0);
           if (!currentStateLine[j]!.isCorrect) {
             flag = false;
           }
@@ -419,8 +493,12 @@ export default class GameService {
           this.page!.buttonHintPronunciation.removeAttribute('disabled');
           this.transformCheckToContinue();
         } else {
-          this.page!.hintTranslationSentence.getNode().style.opacity = '0';
-          this.page!.buttonHintPronunciation.getNode().style.opacity = '0';
+          if (!this.isHintTranslation) {
+            this.page!.hintTranslationSentence.getNode().style.opacity = '0';
+          }
+          if (!this.isAudioOn) {
+            this.page!.buttonHintPronunciation.getNode().style.opacity = '0';
+          }
           this.page!.buttonHintPronunciation.setAttribute('disabled', 'true');
           this.transformContinueToCheck();
         }
@@ -499,14 +577,13 @@ export default class GameService {
     this.page?.wordsField.setInnerHTML('');
     this.activeLine = 0;
     this.lineContainers = [];
-    this.wordContainers = [];
     this.correctWords = [];
-    this.activeLine = 0;
     this.arrCards = [];
     this.currentLevel += 1;
     this.loadImageAndRenderData(this.page!, this.currentLevel);
     this.updateHintTranslationSentence();
     this.updateHintPronunciation();
+    this.hintButtonBackground();
     this.checkSentence();
   }
 }

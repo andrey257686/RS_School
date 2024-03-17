@@ -11,6 +11,8 @@ export default class Card {
 
   public wordContainer: Component<HTMLElement> | undefined;
 
+  public originalContext: ImageData | undefined;
+
   public clickListener: ((this: HTMLCanvasElement, ev: MouseEvent) => void) | undefined;
 
   public clickListenerDragStart: ((this: HTMLCanvasElement, ev: MouseEvent) => void) | undefined;
@@ -47,7 +49,7 @@ export default class Card {
     this.isCorrect = is;
   }
 
-  setOutline(color: string) {
+  public setOutline(color: string) {
     this.canvas.getNode().style.outlineColor = color;
   }
 }

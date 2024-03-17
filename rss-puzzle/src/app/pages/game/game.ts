@@ -10,6 +10,8 @@ class GamePageComponent extends Component {
 
   public switchAudioButton: Component;
 
+  public buttonHintBackground: Component;
+
   public hintTranslationSentence: Component;
 
   public playFieldContainer: Component;
@@ -49,6 +51,14 @@ class GamePageComponent extends Component {
         '<input class="game__switch-audio_checkbox" type="checkbox"> \n <span class="game__switch-audio_span"></span> \n <p class="game__switch-audio_text">Audio</p>',
       onchange: (event: Event) => {
         this.game.switchAudio(event);
+      },
+    });
+    this.buttonHintBackground = button({
+      className: 'button game__button game__button_hint-background checked',
+      innerHTML:
+        '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 381.2 381.2" style="enable-background:new 0 0 381.2 381.2;width: 15px;" xml:space="preserve"><g><g><path d="M345.6,20.2h-310C16,20.2,0,36.2,0,55.8v194v75.6C0,345,16,361,35.6,361h310c19.6,0,35.6-16,35.6-35.6V55.8 C381.2,36.2,365.2,20.2,345.6,20.2z M363.2,325.4c0,9.6-8,17.6-18,17.6H35.6c-10,0-18-8-18-18v-72L118,150.6L208.8,255 c3.2,3.6,8,4,12,1.6l73.6-52l68.8,49.6V325.4z M363.6,232.6l-64-46c-3.2-2.4-7.2-2.4-10.4,0l-72,51.2l-92-105.6 c-1.6-2-4-2.8-6.4-3.2c-2.4,0-4.8,0.8-6.8,2.8l-94.4,96v-172c0-9.6,8-17.6,18-17.6h310c10,0,18,8,18,18V232.6z"/></g></g><g><g><path d="M244.8,73.4c-25.6,0-46,20.8-46,46c-0.4,25.2,20.4,46,46,46c25.6,0,46-20.8,46-46C290.8,93.8,270,73.4,244.8,73.4z M244.8,147.8c-15.6,0-28.4-12.8-28.4-28.4c0-16,12.8-28.4,28.4-28.4c15.6,0,28.4,12.8,28.4,28.4S260.4,147.8,244.8,147.8z"/></g></g></svg>',
+      onclick: () => {
+        this.game.hintButtonBackground(true);
       },
     });
     this.hintTranslationSentence = div({ className: 'game__translation-sentence', innerHTML: '' });
@@ -100,6 +110,7 @@ class GamePageComponent extends Component {
       div(
         { className: 'game__hints' },
         this.buttonHintTranslation,
+        this.buttonHintBackground,
         this.buttonHintPronunciation,
         this.switchAudioButton,
       ),
