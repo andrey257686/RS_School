@@ -53,7 +53,7 @@ export default class GameService {
     if (LSRoundsString) {
       this.completedRounds = new Set(JSON.parse(LSRoundsString).completedRounds);
     }
-    const response = await fetch(`/src/gamedata/data/wordCollectionLevel${this.currentLevel}.json`);
+    const response = await fetch(`./gamedata/data/wordCollectionLevel${this.currentLevel}.json`);
     if (response.ok) {
       const levelData = await response.json();
       this.data = levelData.rounds;
@@ -139,7 +139,7 @@ export default class GameService {
 
   public loadImageAndRenderData(page: GamePage, level: number) {
     const image = new Image();
-    image.src = `/src/gamedata/images/${this.data![this.currentRound].levelData.imageSrc}`;
+    image.src = `./gamedata/images/${this.data![this.currentRound].levelData.imageSrc}`;
     image.onload = () => {
       this.resizedCanvas = resizeImage(image, 700, 500);
       this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas.toDataURL()})`;
@@ -156,7 +156,7 @@ export default class GameService {
   }
 
   public hintButtonPronunciation() {
-    const audio = new Audio(`/src/gamedata/${this.data![this.currentRound].words[this.activeLine].audioExample}`);
+    const audio = new Audio(`./gamedata/${this.data![this.currentRound].words[this.activeLine].audioExample}`);
     audio.addEventListener('play', () => {
       this.page!.buttonHintPronunciation.getNode().querySelector('svg')?.classList.add('pulsating');
       this.page!.buttonHintPronunciation.getNode().classList.add('checked');
