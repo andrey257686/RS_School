@@ -44,31 +44,37 @@ class GamePageComponent extends Component {
         className: 'game_select-level_option',
         value: '1',
         innerHTML: 'Level 1',
+        id: 'level_1',
         selected: true,
       }),
       option({
         className: 'game_select-level_option',
         value: '2',
+        id: 'level_2',
         innerHTML: 'Level 2',
       }),
       option({
         className: 'game_select-level_option',
         value: '3',
+        id: 'level_3',
         innerHTML: 'Level 3',
       }),
       option({
         className: 'game_select-level_option',
         value: '4',
+        id: 'level_4',
         innerHTML: 'Level 4',
       }),
       option({
         className: 'game_select-level_option',
         value: '5',
+        id: 'level_5',
         innerHTML: 'Level 5',
       }),
       option({
         className: 'game_select-level_option',
         value: '6',
+        id: 'level_6',
         innerHTML: 'Level 6',
       }),
     );

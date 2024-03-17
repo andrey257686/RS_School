@@ -23,6 +23,10 @@ export default class GameService {
 
   public currentLevel: number = 1;
 
+  public completedRounds: Set<number> = new Set<number>();
+
+  public completedLevels: Set<number> = new Set<number>();
+
   public currentState: (Card | null)[][] = [];
 
   public clickedCard: Card;
@@ -45,6 +49,10 @@ export default class GameService {
   public async start(page: GamePage, isFromRound = false) {
     this.page = page;
     const round = this.currentRound;
+    const LSRoundsString = localStorage.getItem(`level_${this.currentLevel}`);
+    if (LSRoundsString) {
+      this.completedRounds = new Set(JSON.parse(LSRoundsString).completedRounds);
+    }
     const response = await fetch(`/src/gamedata/data/wordCollectionLevel${this.currentLevel}.json`);
     if (response.ok) {
       const levelData = await response.json();
@@ -55,16 +63,37 @@ export default class GameService {
     this.updateHintTranslationSentence();
     this.updateHintPronunciation();
     this.loadImageAndRenderData(page, round);
+    this.renderLevels();
     if (isFromRound) {
       return;
     }
     this.renderRounds();
   }
 
+  public renderLevels() {
+    const LSLevelsString = localStorage.getItem(`completedLevels`);
+    if (LSLevelsString) {
+      this.completedLevels = new Set(JSON.parse(LSLevelsString).completedLevels);
+      if (this.completedLevels) {
+        for (let i = 0; i < [...this.completedLevels].length; i += 1) {
+          (document.getElementById(`level_${[...this.completedLevels][i]}`) as HTMLOptionElement).classList.add(
+            'completed',
+          );
+        }
+      }
+    }
+  }
+
   public renderRounds() {
     for (let i = 0; i < this.data!.length; i += 1) {
       if (i + 1 === 1) {
-        this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option" value="${i + 1}" selected>Round ${i + 1}</option>`;
+        if (this.completedRounds.has(i)) {
+          this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option completed" value="${i + 1}">Round ${i + 1}</option>`;
+        } else {
+          this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option" value="${i + 1}">Round ${i + 1}</option>`;
+        }
+      } else if (this.completedRounds.has(i)) {
+        this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option completed" value="${i + 1}">Round ${i + 1}</option>`;
       } else {
         this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option" value="${i + 1}">Round ${i + 1}</option>`;
       }
@@ -73,8 +102,18 @@ export default class GameService {
 
   public changeLevel(event?: Event) {
     if (event) {
+      const data = JSON.stringify({
+        completedRounds: [...this.completedRounds],
+      });
+      localStorage.setItem(`level_${this.currentLevel}`, data);
       this.currentLevel = Number((event.target as HTMLSelectElement).value);
+    } else {
+      const data = JSON.stringify({
+        completedRounds: [...this.completedRounds],
+      });
+      localStorage.setItem(`level_${this.currentLevel - 1}`, data);
     }
+    this.completedRounds = new Set();
     this.page!.playFieldContainer.getNode().innerHTML = '';
     this.page!.wordsField.getNode().innerHTML = '';
     this.page!.selectRoundElement.getNode().innerHTML = '';
@@ -113,11 +152,6 @@ export default class GameService {
   public hintButtonTranslate() {
     this.isHintTranslation = !this.isHintTranslation;
     this.page?.buttonHintTranslation.getNode().classList.toggle('checked');
-    // if (this.isHintTranslation) {
-    //   this.page!.hintTranslationSentence.getNode().style.opacity = '1';
-    // } else {
-    //   this.page!.hintTranslationSentence.getNode().style.opacity = '0';
-    // }
     this.updateHintTranslationSentence();
   }
 
@@ -619,8 +653,17 @@ export default class GameService {
   }
 
   public nextRound() {
+    this.completedRounds.add(this.currentRound);
+    if (this.completedRounds.size === this.data?.length) {
+      this.completedLevels.add(this.currentLevel);
+      const data = JSON.stringify({
+        completedLevels: [...this.completedLevels],
+      });
+      localStorage.setItem('completedLevels', data);
+    }
     if (this.currentRound + 1 === this.data?.length) {
       this.currentLevel += 1;
+      (document.getElementById(`level_${this.currentLevel}`) as HTMLOptionElement).selected = true;
       this.changeLevel();
       return;
     }
@@ -631,6 +674,8 @@ export default class GameService {
     this.correctWords = [];
     this.arrCards = [];
     this.currentRound += 1;
+    (document.getElementById(`round_${this.currentRound + 1}`) as HTMLOptionElement).selected = true;
+    (document.getElementById(`round_${this.currentRound}`) as HTMLOptionElement)!.classList.add('completed');
     this.loadImageAndRenderData(this.page!, this.currentRound);
     this.updateHintTranslationSentence();
     this.updateHintPronunciation();
