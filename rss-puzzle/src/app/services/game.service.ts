@@ -72,6 +72,14 @@ export default class GameService {
 
   public hintButtonPronunciation() {
     const audio = new Audio(`/src/gamedata/${data.rounds[this.currentLevel].words[this.activeLine].audioExample}`);
+    audio.addEventListener('play', () => {
+      this.page!.buttonHintPronunciation.getNode().querySelector('svg')?.classList.add('pulsating');
+      this.page!.buttonHintPronunciation.getNode().classList.add('checked');
+    });
+    audio.addEventListener('pause', () => {
+      this.page!.buttonHintPronunciation.getNode().querySelector('svg')?.classList.remove('pulsating');
+      this.page!.buttonHintPronunciation.getNode().classList.remove('checked');
+    });
     audio.play();
   }
 
