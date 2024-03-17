@@ -55,6 +55,10 @@ export interface GamePage extends Component {
 
   buttonHintBackground: Component;
 
+  selectLevelElement: Component;
+
+  selectRoundElement: Component;
+
   hintTranslationSentence: Component;
 
   playFieldContainer: Component;

@@ -22,6 +22,12 @@ export const h1 = (props: ComponentOptionsInterface & Partial<HTMLHeadingElement
 export const div = (props: ComponentOptionsInterface & Partial<HTMLDivElement>, ...children: Component[]) =>
   new Component(props, ...children);
 
+export const select = (props: ComponentOptionsInterface & Partial<HTMLSelectElement>, ...children: Component[]) =>
+  new Component({ ...props, tag: 'select' }, ...children);
+
+export const option = (props: ComponentOptionsInterface & Partial<HTMLOptionElement>) =>
+  new Component({ ...props, tag: 'option' });
+
 export const canvas = (
   props: ComponentOptionsInterface & Partial<HTMLCanvasElement>,
   ...children: Component<HTMLCanvasElement>[]

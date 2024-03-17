@@ -1,4 +1,3 @@
-import data from '../../gamedata/data/wordCollectionLevel1.json';
 import { RoundData, GamePage } from '../types.ts';
 import Component from '../components/base-component.ts';
 import { canvas, div } from '../components/tags.ts';
@@ -6,13 +5,11 @@ import { resizeImage, randomize } from '../utils/utils.ts';
 import Card from '../components/card.ts';
 
 export default class GameService {
-  public data: RoundData[];
+  public data: RoundData[] | undefined;
 
   public page: GamePage | undefined;
 
   public lineContainers: Component<HTMLElement>[] = [];
-
-  // public wordContainers: Component<HTMLElement>[] = [];
 
   public correctWords: string[][] = [];
 
@@ -22,7 +19,9 @@ export default class GameService {
 
   public arrCards: Card[][] = [];
 
-  public currentLevel: number = 0;
+  public currentRound: number = 0;
+
+  public currentLevel: number = 1;
 
   public currentState: (Card | null)[][] = [];
 
@@ -39,22 +38,69 @@ export default class GameService {
   public isAudioOn: boolean = true;
 
   constructor() {
-    this.data = data.rounds;
     this.draggedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
     this.clickedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
   }
 
-  public start(page: GamePage) {
+  public async start(page: GamePage, isFromRound = false) {
     this.page = page;
-    const level = this.currentLevel;
+    const round = this.currentRound;
+    const response = await fetch(`/src/gamedata/data/wordCollectionLevel${this.currentLevel}.json`);
+    if (response.ok) {
+      const levelData = await response.json();
+      this.data = levelData.rounds;
+    } else {
+      throw new Error('Ошибка при загрузке JSON');
+    }
     this.updateHintTranslationSentence();
     this.updateHintPronunciation();
-    this.loadImageAndRenderData(page, level);
+    this.loadImageAndRenderData(page, round);
+    if (isFromRound) {
+      return;
+    }
+    this.renderRounds();
+  }
+
+  public renderRounds() {
+    for (let i = 0; i < this.data!.length; i += 1) {
+      if (i + 1 === 1) {
+        this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option" value="${i + 1}" selected>Round ${i + 1}</option>`;
+      } else {
+        this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option" value="${i + 1}">Round ${i + 1}</option>`;
+      }
+    }
+  }
+
+  public changeLevel(event?: Event) {
+    if (event) {
+      this.currentLevel = Number((event.target as HTMLSelectElement).value);
+    }
+    this.page!.playFieldContainer.getNode().innerHTML = '';
+    this.page!.wordsField.getNode().innerHTML = '';
+    this.page!.selectRoundElement.getNode().innerHTML = '';
+    this.activeLine = 0;
+    this.lineContainers = [];
+    this.correctWords = [];
+    this.arrCards = [];
+    this.currentRound = 0;
+    this.start(this.page!);
+  }
+
+  public changeRound(event: Event) {
+    this.currentRound = Number((event.target as HTMLSelectElement).value) - 1;
+    this.page!.playFieldContainer.destroyChildren();
+    this.page!.wordsField.destroyChildren();
+    (document.getElementById(`round_${this.currentRound + 1}`) as HTMLOptionElement).selected = true;
+    this.activeLine = 0;
+    this.lineContainers = [];
+    this.correctWords = [];
+    this.arrCards = [];
+    this.start(this.page!, true);
   }
 
   public loadImageAndRenderData(page: GamePage, level: number) {
     const image = new Image();
-    image.src = `/src/gamedata/images/${data.rounds[this.currentLevel].levelData.imageSrc}`;
+    image.src = `/src/gamedata/images/${this.data![this.currentRound].levelData.imageSrc}`;
     image.onload = () => {
       this.resizedCanvas = resizeImage(image, 700, 500);
       this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas.toDataURL()})`;
@@ -76,7 +122,7 @@ export default class GameService {
   }
 
   public hintButtonPronunciation() {
-    const audio = new Audio(`/src/gamedata/${data.rounds[this.currentLevel].words[this.activeLine].audioExample}`);
+    const audio = new Audio(`/src/gamedata/${this.data![this.currentRound].words[this.activeLine].audioExample}`);
     audio.addEventListener('play', () => {
       this.page!.buttonHintPronunciation.getNode().querySelector('svg')?.classList.add('pulsating');
       this.page!.buttonHintPronunciation.getNode().classList.add('checked');
@@ -169,7 +215,7 @@ export default class GameService {
 
   public updateHintTranslationSentence() {
     this.page!.hintTranslationSentence.getNode().innerHTML =
-      data.rounds[this.currentLevel].words[this.activeLine].textExampleTranslate;
+      this.data![this.currentRound].words[this.activeLine].textExampleTranslate;
     if (this.isHintTranslation) {
       this.page!.hintTranslationSentence.getNode().style.opacity = '1';
     } else {
@@ -302,7 +348,7 @@ export default class GameService {
   }
 
   public renderData(gamePage: GamePage, level: number) {
-    const { words } = this.data[level];
+    const { words } = this.data![level];
     let offsetWidth = 0;
     for (let j = 0; j < words.length; j += 1) {
       offsetWidth = 0;
@@ -573,14 +619,19 @@ export default class GameService {
   }
 
   public nextRound() {
-    this.page?.playFieldContainer.setInnerHTML('');
-    this.page?.wordsField.setInnerHTML('');
+    if (this.currentRound + 1 === this.data?.length) {
+      this.currentLevel += 1;
+      this.changeLevel();
+      return;
+    }
+    this.page!.playFieldContainer.destroyChildren();
+    this.page!.wordsField.destroyChildren();
     this.activeLine = 0;
     this.lineContainers = [];
     this.correctWords = [];
     this.arrCards = [];
-    this.currentLevel += 1;
-    this.loadImageAndRenderData(this.page!, this.currentLevel);
+    this.currentRound += 1;
+    this.loadImageAndRenderData(this.page!, this.currentRound);
     this.updateHintTranslationSentence();
     this.updateHintPronunciation();
     this.hintButtonBackground();

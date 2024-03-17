@@ -1,5 +1,5 @@
 import Component from '../../components/base-component.ts';
-import { div, button, label } from '../../components/tags.ts';
+import { div, button, label, select, option } from '../../components/tags.ts';
 import GameService from '../../services/game.service.ts';
 import './game.scss';
 
@@ -11,6 +11,10 @@ class GamePageComponent extends Component {
   public switchAudioButton: Component;
 
   public buttonHintBackground: Component;
+
+  public selectLevelElement: Component;
+
+  public selectRoundElement: Component;
 
   public hintTranslationSentence: Component;
 
@@ -29,6 +33,51 @@ class GamePageComponent extends Component {
   constructor() {
     super({ className: 'game' });
     this.game = new GameService();
+    this.selectLevelElement = select(
+      {
+        className: 'game__select-level',
+        onchange: (event: Event) => {
+          this.game.changeLevel(event);
+        },
+      },
+      option({
+        className: 'game_select-level_option',
+        value: '1',
+        innerHTML: 'Level 1',
+        selected: true,
+      }),
+      option({
+        className: 'game_select-level_option',
+        value: '2',
+        innerHTML: 'Level 2',
+      }),
+      option({
+        className: 'game_select-level_option',
+        value: '3',
+        innerHTML: 'Level 3',
+      }),
+      option({
+        className: 'game_select-level_option',
+        value: '4',
+        innerHTML: 'Level 4',
+      }),
+      option({
+        className: 'game_select-level_option',
+        value: '5',
+        innerHTML: 'Level 5',
+      }),
+      option({
+        className: 'game_select-level_option',
+        value: '6',
+        innerHTML: 'Level 6',
+      }),
+    );
+    this.selectRoundElement = select({
+      className: 'game__select-round',
+      onchange: (event: Event) => {
+        this.game.changeRound(event);
+      },
+    });
     this.buttonHintTranslation = button({
       className: 'button game__button game__button_hint-translation',
       innerHTML:
@@ -108,11 +157,15 @@ class GamePageComponent extends Component {
     this.buttonCheck.setAttribute('disabled', 'true');
     this.appendChildren([
       div(
-        { className: 'game__hints' },
-        this.buttonHintTranslation,
-        this.buttonHintBackground,
-        this.buttonHintPronunciation,
-        this.switchAudioButton,
+        { className: 'game__header' },
+        div({ className: 'game__selections' }, this.selectLevelElement, this.selectRoundElement),
+        div(
+          { className: 'game__hints' },
+          this.buttonHintTranslation,
+          this.buttonHintBackground,
+          this.buttonHintPronunciation,
+          this.switchAudioButton,
+        ),
       ),
       this.hintTranslationSentence,
       this.playFieldContainer,
