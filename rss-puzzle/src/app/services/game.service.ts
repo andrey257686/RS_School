@@ -160,6 +160,7 @@ export default class GameService {
     }
     this.completedRounds = new Set();
     this.page!.playFieldContainer.getNode().innerHTML = '';
+    this.page!.playFieldContainer.append(div({ className: 'transparent-background' }));
     this.page!.wordsField.getNode().innerHTML = '';
     this.page!.selectRoundElement.getNode().innerHTML = '';
     this.activeLine = 0;
@@ -173,6 +174,7 @@ export default class GameService {
   public changeRound(event: Event) {
     this.currentRound = Number((event.target as HTMLSelectElement).value) - 1;
     this.page!.playFieldContainer.destroyChildren();
+    this.page!.playFieldContainer.append(div({ className: 'transparent-background' }));
     this.page!.wordsField.destroyChildren();
     (document.getElementById(`round_${this.currentRound + 1}`) as HTMLOptionElement).selected = true;
     this.activeLine = 0;
@@ -222,12 +224,12 @@ export default class GameService {
     if (!this.isHintBackground) {
       this.page!.playFieldContainer.getNode().style.backgroundColor = 'transparent';
       this.page!.playFieldContainer.getNode().style.backgroundImage = 'none';
-      this.page!.playFieldContainer.getNode().classList.remove('transparent-background');
+      // this.page!.playFieldContainer.getNode().classList.remove('transparent-background');
       this.page?.buttonHintBackground.getNode().classList.remove('checked');
     } else {
       this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas?.toDataURL()})`;
       this.page!.playFieldContainer.getNode().style.backgroundSize = 'cover';
-      this.page!.playFieldContainer.getNode().classList.add('transparent-background');
+      // this.page!.playFieldContainer.getNode().classList.add('transparent-background');
       this.page?.buttonHintBackground.getNode().classList.add('checked');
     }
     const renderedCards = this.arrCards;
@@ -593,6 +595,11 @@ export default class GameService {
   }
 
   public checkSentence() {
+    let isCompletedRound = false;
+    if (this.activeLine === this.currentState.length - 1) {
+      isCompletedRound = true;
+    }
+    let isAllCorrected = true;
     for (let i = 0; i < this.currentState[this.activeLine].length; i += 1) {
       if (this.currentState[this.activeLine][i] === null) {
         this.page!.buttonContinue.getNode().style.opacity = '0.5';
@@ -617,6 +624,7 @@ export default class GameService {
           context!.putImageData(currentStateLine[j]!.originalContext!, 0, 0);
           if (!currentStateLine[j]!.isCorrect) {
             flag = false;
+            isAllCorrected = false;
           }
         }
         if (flag) {
@@ -635,6 +643,29 @@ export default class GameService {
           this.transformContinueToCheck();
         }
       }
+    }
+    if (isCompletedRound && isAllCorrected) {
+      const { author } = this.data![this.currentRound].levelData;
+      const { name } = this.data![this.currentRound].levelData;
+      const { year } = this.data![this.currentRound].levelData;
+      this.page!.pictureInfo.setInnerHTML(`${name} - ${author}, ${year}`);
+      this.page!.pictureInfo.getNode().style.opacity = '1';
+      setTimeout(() => {
+        for (let i = 0; i < this.currentState.length; i += 1) {
+          for (let j = 0; j < this.currentState[i].length; j += 1) {
+            if (this.currentState[i][j]) {
+              this.currentState[i][j]!.canvas.getNode().style.opacity = '0';
+              this.currentState[i][j]!.canvas.getNode().style.transition = 'opacity 2s ease';
+            }
+            this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas!.toDataURL()})`;
+            this.page!.playFieldContainer.getNode().style.backgroundSize = 'cover';
+            (this.page!.getNode().querySelector('.transparent-background')! as HTMLDivElement).style.opacity = '0';
+          }
+        }
+      }, 2000);
+    } else {
+      this.page!.pictureInfo.getNode().style.opacity = '0';
+      (this.page!.getNode().querySelector('.transparent-background')! as HTMLDivElement).style.opacity = '0,5';
     }
   }
 
@@ -728,6 +759,7 @@ export default class GameService {
       return;
     }
     this.page!.playFieldContainer.destroyChildren();
+    this.page!.playFieldContainer.append(div({ className: 'transparent-background' }));
     this.page!.wordsField.destroyChildren();
     this.activeLine = 0;
     this.lineContainers = [];

@@ -1,5 +1,5 @@
 import Component from '../../components/base-component.ts';
-import { div, button, label, select, option } from '../../components/tags.ts';
+import { div, button, label, select, option, p } from '../../components/tags.ts';
 import GameService from '../../services/game.service.ts';
 import './game.scss';
 
@@ -29,6 +29,8 @@ class GamePageComponent extends Component {
   public buttonCheck: Component;
 
   public buttonAutoComplete: Component;
+
+  public pictureInfo: Component;
 
   constructor() {
     super({ className: 'game' });
@@ -117,16 +119,19 @@ class GamePageComponent extends Component {
       },
     });
     this.hintTranslationSentence = div({ className: 'game__translation-sentence', innerHTML: '' });
-    this.playFieldContainer = div({
-      id: 'playField',
-      className: 'game__play-field transparent-background',
-      ondrop: (event: MouseEvent) => {
-        this.game.handleDropPlayField(event);
+    this.playFieldContainer = div(
+      {
+        id: 'playField',
+        className: 'game__play-field',
+        ondrop: (event: MouseEvent) => {
+          this.game.handleDropPlayField(event);
+        },
+        ondragover: (event) => {
+          event.preventDefault();
+        },
       },
-      ondragover: (event) => {
-        event.preventDefault();
-      },
-    });
+      div({ className: 'transparent-background' }),
+    );
     this.playFieldContainer.setAttribute('data-width', '700');
     this.wordsField = div({
       id: 'wordsField',
@@ -161,6 +166,7 @@ class GamePageComponent extends Component {
     });
     this.buttonContinue.setAttribute('disabled', 'true');
     this.buttonCheck.setAttribute('disabled', 'true');
+    this.pictureInfo = p({ className: 'game__pictureinfo' });
     this.appendChildren([
       div(
         { className: 'game__header' },
@@ -176,6 +182,7 @@ class GamePageComponent extends Component {
       this.hintTranslationSentence,
       this.playFieldContainer,
       this.wordsField,
+      this.pictureInfo,
       this.buttonAutoComplete,
       this.buttonCheck,
     ]);

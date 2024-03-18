@@ -3,6 +3,12 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  &__pictureinfo {
+    height: 20px;
+    color: aliceblue;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
   &__header {
     display: flex;
     width: 100%;
@@ -109,6 +115,16 @@
     cursor: pointer;
     &_auto-complete {
       opacity: 1 !important;
+      border: 2px solid #fafafa;
+      color: #fafafa;
+    }
+    &_continue {
+      border: 2px solid #fafafa;
+      color: #fafafa;
+    }
+    &_check {
+      border: 2px solid #fafafa;
+      color: #fafafa;
     }
     &_hint-translation {
       opacity: 1 !important;
@@ -156,6 +172,7 @@
     outline: 1px solid white;
     background-color: #6f6f6f;
     &:hover {
+      transition: none;
       opacity: 0.5;
       cursor: pointer;
     }
@@ -174,6 +191,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.5);
+  transition: opacity 8s ease;
 }
 
 .checked {
