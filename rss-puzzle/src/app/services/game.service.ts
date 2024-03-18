@@ -650,19 +650,19 @@ export default class GameService {
       const { year } = this.data![this.currentRound].levelData;
       this.page!.pictureInfo.setInnerHTML(`${name} - ${author}, ${year}`);
       this.page!.pictureInfo.getNode().style.opacity = '1';
-      setTimeout(() => {
-        for (let i = 0; i < this.currentState.length; i += 1) {
-          for (let j = 0; j < this.currentState[i].length; j += 1) {
-            if (this.currentState[i][j]) {
-              this.currentState[i][j]!.canvas.getNode().style.opacity = '0';
-              this.currentState[i][j]!.canvas.getNode().style.transition = 'opacity 2s ease';
-            }
-            this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas!.toDataURL()})`;
-            this.page!.playFieldContainer.getNode().style.backgroundSize = 'cover';
-            (this.page!.getNode().querySelector('.transparent-background')! as HTMLDivElement).style.opacity = '0';
+      // setTimeout(() => {
+      for (let i = 0; i < this.currentState.length; i += 1) {
+        for (let j = 0; j < this.currentState[i].length; j += 1) {
+          if (this.currentState[i][j]) {
+            this.currentState[i][j]!.canvas.getNode().style.opacity = '0';
+            this.currentState[i][j]!.canvas.getNode().style.transition = 'opacity 2s ease';
           }
+          this.page!.playFieldContainer.getNode().style.backgroundImage = `url(${this.resizedCanvas!.toDataURL()})`;
+          this.page!.playFieldContainer.getNode().style.backgroundSize = 'cover';
+          (this.page!.getNode().querySelector('.transparent-background')! as HTMLDivElement).style.opacity = '0';
         }
-      }, 2000);
+      }
+      // }, 2000);
     } else {
       this.page!.pictureInfo.getNode().style.opacity = '0';
       (this.page!.getNode().querySelector('.transparent-background')! as HTMLDivElement).style.opacity = '0,5';
@@ -766,6 +766,10 @@ export default class GameService {
     this.correctWords = [];
     this.arrCards = [];
     this.currentRound += 1;
+    const { words } = this.data![this.currentLevel];
+    for (let i = 0; i < words.length; i += 1) {
+      this.currentState[i] = [];
+    }
     (document.getElementById(`round_${this.currentRound + 1}`) as HTMLOptionElement).selected = true;
     (document.getElementById(`round_${this.currentRound}`) as HTMLOptionElement)!.classList.add('completed');
     this.loadImageAndRenderData(this.page!, this.currentRound);
