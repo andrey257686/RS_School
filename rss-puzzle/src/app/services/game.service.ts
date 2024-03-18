@@ -46,8 +46,11 @@ export default class GameService {
     this.clickedCard = new Card(canvas({ className: 'empty' }), 0, 0, '');
   }
 
-  public async start(page: GamePage, isFromRound = false) {
+  public async start(page: GamePage, isFromRound = false, isFromButton = false) {
     this.page = page;
+    if (!isFromButton) {
+      this.renderLastLevelRound();
+    }
     const round = this.currentRound;
     const LSRoundsString = localStorage.getItem(`level_${this.currentLevel}`);
     if (LSRoundsString) {
@@ -79,6 +82,25 @@ export default class GameService {
       isAudioOn: this.isAudioOn,
     });
     localStorage.setItem('hintsState', data);
+  }
+
+  public updateLevelRoundLocalStorage() {
+    const data = JSON.stringify({
+      lastLevel: this.currentLevel,
+      lastRound: this.currentRound,
+    });
+    localStorage.setItem('levelRound', data);
+  }
+
+  public renderLastLevelRound() {
+    const data = JSON.parse(localStorage.getItem('levelRound')!);
+    if (data) {
+      this.currentLevel = data.lastLevel;
+      this.currentRound = data.lastRound;
+    } else {
+      this.currentLevel = 1;
+      this.currentRound = 0;
+    }
   }
 
   public renderHintsState() {
@@ -119,6 +141,8 @@ export default class GameService {
         this.page!.selectRoundElement.getNode().innerHTML += `<option id="round_${i + 1}" class="game_select-level_option" value="${i + 1}">Round ${i + 1}</option>`;
       }
     }
+    (this.page!.getNode().querySelector(`#round_${this.currentRound + 1}`)! as HTMLOptionElement).selected = true;
+    (this.page!.getNode().querySelector(`#level_${this.currentLevel}`)! as HTMLOptionElement).selected = true;
   }
 
   public changeLevel(event?: Event) {
@@ -143,7 +167,7 @@ export default class GameService {
     this.correctWords = [];
     this.arrCards = [];
     this.currentRound = 0;
-    this.start(this.page!);
+    this.start(this.page!, false, true);
   }
 
   public changeRound(event: Event) {
@@ -155,7 +179,7 @@ export default class GameService {
     this.lineContainers = [];
     this.correctWords = [];
     this.arrCards = [];
-    this.start(this.page!, true);
+    this.start(this.page!, true, true);
   }
 
   public loadImageAndRenderData(page: GamePage, level: number) {
@@ -682,17 +706,25 @@ export default class GameService {
 
   public nextRound() {
     this.completedRounds.add(this.currentRound);
+    const data = JSON.stringify({
+      completedRounds: [...this.completedRounds],
+    });
+    localStorage.setItem(`level_${this.currentLevel}`, data);
     if (this.completedRounds.size === this.data?.length) {
       this.completedLevels.add(this.currentLevel);
-      const data = JSON.stringify({
+      const dataLevel = JSON.stringify({
         completedLevels: [...this.completedLevels],
       });
-      localStorage.setItem('completedLevels', data);
+      localStorage.setItem('completedLevels', dataLevel);
     }
     if (this.currentRound + 1 === this.data?.length) {
       this.currentLevel += 1;
+      if (this.currentLevel > 6) {
+        this.currentLevel = 1;
+      }
       (document.getElementById(`level_${this.currentLevel}`) as HTMLOptionElement).selected = true;
       this.changeLevel();
+      this.updateLevelRoundLocalStorage();
       return;
     }
     this.page!.playFieldContainer.destroyChildren();
@@ -709,5 +741,6 @@ export default class GameService {
     this.updateHintPronunciation();
     this.hintButtonBackground();
     this.checkSentence();
+    this.updateLevelRoundLocalStorage();
   }
 }
