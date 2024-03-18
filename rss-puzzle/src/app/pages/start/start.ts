@@ -36,6 +36,7 @@ class StartPageComponent extends Component {
       innerHTML: 'Log out',
       onclick: () => {
         localStorage.removeItem('userData');
+        localStorage.removeItem('hintsState');
         controller.isAuthorized();
       },
     });

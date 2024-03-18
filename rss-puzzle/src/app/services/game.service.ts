@@ -35,7 +35,7 @@ export default class GameService {
 
   public resizedCanvas: HTMLCanvasElement | undefined;
 
-  public isHintTranslation: boolean = false;
+  public isHintTranslation: boolean = true;
 
   public isHintBackground: boolean = true;
 
@@ -60,14 +60,35 @@ export default class GameService {
     } else {
       throw new Error('Ошибка при загрузке JSON');
     }
+    this.renderHintsState();
     this.updateHintTranslationSentence();
     this.updateHintPronunciation();
     this.loadImageAndRenderData(page, round);
     this.renderLevels();
+    this.updateHintLocalStorage();
     if (isFromRound) {
       return;
     }
     this.renderRounds();
+  }
+
+  public updateHintLocalStorage() {
+    const data = JSON.stringify({
+      isHintTranslation: this.isHintTranslation,
+      isHintBackground: this.isHintBackground,
+      isAudioOn: this.isAudioOn,
+    });
+    localStorage.setItem('hintsState', data);
+  }
+
+  public renderHintsState() {
+    const data = JSON.parse(localStorage.getItem('hintsState')!);
+    if (data) {
+      this.isHintTranslation = data.isHintTranslation;
+      this.isHintBackground = data.isHintBackground;
+      this.isAudioOn = data.isAudioOn;
+    }
+    this.hintButtonBackground();
   }
 
   public renderLevels() {
@@ -151,7 +172,8 @@ export default class GameService {
 
   public hintButtonTranslate() {
     this.isHintTranslation = !this.isHintTranslation;
-    this.page?.buttonHintTranslation.getNode().classList.toggle('checked');
+    // this.page?.buttonHintTranslation.getNode().classList.toggle('checked');
+    this.updateHintLocalStorage();
     this.updateHintTranslationSentence();
   }
 
@@ -172,6 +194,7 @@ export default class GameService {
     if (fromButton) {
       this.isHintBackground = !this.isHintBackground;
     }
+    this.updateHintLocalStorage();
     if (!this.isHintBackground) {
       this.page!.playFieldContainer.getNode().style.backgroundColor = 'transparent';
       this.page!.playFieldContainer.getNode().style.backgroundImage = 'none';
@@ -235,6 +258,7 @@ export default class GameService {
     if (event.target instanceof HTMLInputElement && event.target.type === 'checkbox') {
       this.isAudioOn = !event.target.checked;
       this.updateHintPronunciation();
+      this.updateHintLocalStorage();
     }
   }
 
@@ -242,8 +266,10 @@ export default class GameService {
     this.page!.buttonHintPronunciation.getNode().style.opacity = this.isAudioOn ? '1' : '0';
     if (this.isAudioOn) {
       this.page!.buttonHintPronunciation.removeAttribute('disabled');
+      (this.page!.getNode().querySelector('.game__switch-audio_checkbox') as HTMLInputElement).checked = false;
     } else {
       this.page!.buttonHintPronunciation.setAttribute('disabled', 'true');
+      (this.page!.getNode().querySelector('.game__switch-audio_checkbox') as HTMLInputElement).checked = true;
     }
   }
 
@@ -252,8 +278,10 @@ export default class GameService {
       this.data![this.currentRound].words[this.activeLine].textExampleTranslate;
     if (this.isHintTranslation) {
       this.page!.hintTranslationSentence.getNode().style.opacity = '1';
+      this.page?.buttonHintTranslation.getNode().classList.add('checked');
     } else {
       this.page!.hintTranslationSentence.getNode().style.opacity = '0';
+      this.page?.buttonHintTranslation.getNode().classList.remove('checked');
     }
   }
 
