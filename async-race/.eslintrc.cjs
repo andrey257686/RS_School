@@ -29,7 +29,9 @@ module.exports = {
     project: "./tsconfig.json",
     sourceType: "module",
   },
-  plugins: ["prettier", "import", "@typescript-eslint"],
-  rules: {},
+  plugins: ["prettier", "import", "eslint-plugin-import", "@typescript-eslint"],
+  rules: {
+    "class-methods-use-this": "off",
+  },
   noInlineConfig: true,
 };
