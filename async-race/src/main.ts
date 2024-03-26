@@ -3,8 +3,6 @@ import AppController from "./controller/controller";
 class App {
   public appController: AppController;
 
-  // public appView: AppView;
-
   constructor() {
     this.appController = new AppController();
   }

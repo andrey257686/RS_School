@@ -13,16 +13,17 @@ export default class AppModel {
 
   public getInitialData() {
     this.gerCars().then((response) => {
+      console.log(response.headers["x-total-count"]);
       const modelInitGarage: ModelInitGarage = {
         cars: response.data as Car[],
-        count: response.headers.xTotalCount,
+        count: response.headers["x-total-count"],
       };
       this.appView.renderPage(modelInitGarage);
     });
   }
 
   public async gerCars<T>(): Promise<AxiosResponse<T>> {
-    const response = await axios.get(`${this.SERVER}/garage`);
+    const response = await axios.get(`${this.SERVER}/garage?_limit=10`);
     return response;
   }
 }

@@ -9,12 +9,12 @@ export default class GarageView {
   public garageTracks: HTMLDivElement[] | undefined;
 
   constructor() {
-    this.garageContainer = this.createGarageContainer();
+    this.garageContainer = this.createTracksContainer();
 
     this.garagePage = this.createGaragePage();
   }
 
-  public createGarageContainer() {
+  public createTracksContainer() {
     const element: HTMLDivElement = document.createElement("div");
     element.classList.add("tracks__container");
     return element;
@@ -25,6 +25,18 @@ export default class GarageView {
     this.garagePage.classList.add("garage");
     this.garagePage.appendChild(this.garageContainer);
     return this.garagePage;
+  }
+
+  public renderContentGaragePage(data: ModelInitGarage) {
+    this.renderName(data);
+    this.renderTracks(data);
+  }
+
+  public renderName(data: ModelInitGarage) {
+    const element: HTMLSpanElement = document.createElement("span");
+    element.classList.add("garage__name");
+    element.textContent = `Garage (${data.count})`;
+    this.garagePage.prepend(element);
   }
 
   public renderTracks(data: ModelInitGarage) {

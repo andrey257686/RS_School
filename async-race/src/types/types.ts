@@ -6,5 +6,5 @@ export interface Car {
 
 export interface ModelInitGarage {
   cars: Car[];
-  count: number;
+  count: number | undefined;
 }

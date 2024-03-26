@@ -19,7 +19,8 @@ export default class AppView {
   public renderPage(data: ModelInitGarage) {
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
-    this.garageView.renderTracks(data);
+    // this.garageView.renderTracks(data);
+    this.garageView.renderContentGaragePage(data);
   }
 
   public createContainer() {
