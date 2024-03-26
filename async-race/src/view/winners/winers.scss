@@ -6,19 +6,23 @@
     width: 500px;
     flex-direction: column;
   }
+  &__name {
+    font-size: 22px;
+  }
 }
 
 .table {
+  margin-top: 20px;
   &__head {
-    background-color: antiquewhite;
+    background-color: rgb(105, 225, 54);
     &_cell {
-      border: 1px solid #ddd;
+      border: 2px solid black;
       padding: 8px;
       text-align: center;
     }
   }
   &__cell {
-    border: 1px solid #ddd;
+    border: 2px solid black;
     padding: 8px;
     text-align: center;
   }

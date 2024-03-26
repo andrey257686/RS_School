@@ -1,4 +1,5 @@
 import AppController from "./controller/controller";
+import "./style/style.scss";
 
 class App {
   public appController: AppController;
