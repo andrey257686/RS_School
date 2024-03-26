@@ -3,3 +3,8 @@ export interface Car {
   id: number;
   name: string;
 }
+
+export interface ModelInitGarage {
+  cars: Car[];
+  count: number;
+}
