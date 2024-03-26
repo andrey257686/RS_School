@@ -1,0 +1,25 @@
+.winners {
+  display: flex;
+  flex-direction: column;
+  &__table {
+    border-collapse: collapse;
+    width: 500px;
+    flex-direction: column;
+  }
+}
+
+.table {
+  &__head {
+    background-color: antiquewhite;
+    &_cell {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+  }
+  &__cell {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+}

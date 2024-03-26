@@ -1,9 +1,12 @@
 import GarageView from "./garage/garage";
+import WinnersView from "./winners/winners";
 import Components from "./components/components";
-import { ModelInitGarage } from "../types/types";
+import { ModelInitGarage, ModelCarWinners } from "../types/types";
 
 export default class AppView {
   public garageView: GarageView;
+
+  public winnersView: WinnersView;
 
   public components: Components;
 
@@ -12,15 +15,21 @@ export default class AppView {
   constructor() {
     this.container = this.createContainer();
     this.garageView = new GarageView();
+    this.winnersView = new WinnersView();
     this.components = new Components();
     this.container.appendChild(this.garageView.garagePage);
+    this.container.appendChild(this.winnersView.winnersPage);
   }
 
-  public renderPage(data: ModelInitGarage) {
+  public renderPage({ dataGarage, dataWinners }: { dataGarage?: ModelInitGarage; dataWinners?: ModelCarWinners }) {
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
-    // this.garageView.renderTracks(data);
-    this.garageView.renderContentGaragePage(data);
+    if (dataGarage !== undefined) {
+      this.garageView.renderContentGaragePage(dataGarage);
+    }
+    if (dataWinners !== undefined) {
+      this.winnersView.renderContentGaragePage(dataWinners);
+    }
   }
 
   public createContainer() {
