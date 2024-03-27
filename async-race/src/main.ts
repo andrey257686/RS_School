@@ -8,7 +8,7 @@ class App {
     this.appController = new AppController();
   }
 
-  start() {
+  public start() {
     this.appController.initialize();
   }
 }

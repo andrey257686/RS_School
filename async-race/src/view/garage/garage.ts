@@ -1,4 +1,4 @@
-import { ModelInitGarage } from "../../types/types";
+import { ModelInitGarage, Car } from "../../types/types";
 import "./garage.scss";
 
 export default class GarageView {
@@ -143,6 +143,7 @@ export default class GarageView {
         button.classList.add("garage__menu_button");
         button.classList.add("options__create_button");
         button.textContent = "Create";
+        button.addEventListener("click", () => {});
         element.append(inputName, inputColor, button);
       } else {
         element.classList.add("options");
@@ -187,5 +188,14 @@ export default class GarageView {
       element.appendChild(button);
     }
     return element;
+  }
+
+  public addTrack(car: Car) {
+    const element: HTMLDivElement = document.createElement("div");
+    element.classList.add(`track`);
+    element.id = String(car.id);
+    element.prepend(this.renderControl(car.name));
+    element.append(this.renderTrackRoad(car.color));
+    this.garageContainer.appendChild(element);
   }
 }

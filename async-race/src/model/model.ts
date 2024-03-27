@@ -11,8 +11,8 @@ export default class AppModel {
     this.appView = new AppView();
   }
 
-  public getInitialData() {
-    this.gerCars().then((response) => {
+  public async getInitialData() {
+    await this.gerCars().then((response) => {
       const modelInitGarage: ModelInitGarage = {
         cars: response.data as Car[],
         count: response.headers["x-total-count"],
@@ -20,7 +20,7 @@ export default class AppModel {
       this.appView.renderPage({ dataGarage: modelInitGarage });
     });
 
-    this.getWinners().then(async (response) => {
+    await this.getWinners().then(async (response) => {
       const modelCarWinners: ModelCarWinners = {
         carWinners: [],
         count: response.headers["x-total-count"],
@@ -56,6 +56,20 @@ export default class AppModel {
 
   public async getCar(id: number): Promise<AxiosResponse<Car>> {
     const response = await axios.get(`${this.SERVER}/garage/${id}`);
+    return response;
+  }
+
+  public async createCar(name: string, color: string): Promise<AxiosResponse<Car>> {
+    const response = await axios.post(`${this.SERVER}/garage`, {
+      name,
+      color,
+    });
+    const modelCar = {
+      id: response.data.id,
+      name: response.data.name,
+      color: response.data.color,
+    };
+    this.appView.garageView.addTrack(modelCar);
     return response;
   }
 }
