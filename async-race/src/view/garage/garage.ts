@@ -14,6 +14,8 @@ export default class GarageView {
 
   public handleRemoveClick: ((ev: MouseEvent) => Promise<void>) | undefined;
 
+  public handleSelectClick: ((ev: MouseEvent) => void) | undefined;
+
   constructor() {
     this.garageContainer = this.createTracksContainer();
 
@@ -74,7 +76,7 @@ export default class GarageView {
     element.append(this.renderCarButtons());
     element.append(this.renderEngineButtons());
     const elementName: HTMLSpanElement = document.createElement("span");
-    elementName.classList.add("tracl__controls_name");
+    elementName.classList.add("track__controls_name");
     elementName.textContent = name;
     element.append(elementName);
     return element;
@@ -88,6 +90,10 @@ export default class GarageView {
       button.classList.add("track__button");
       if (i === 0) {
         button.textContent = "Select";
+        button.classList.add("track__button_select");
+        if (this.handleSelectClick !== undefined) {
+          button.addEventListener("click", this.handleSelectClick);
+        }
       } else {
         button.textContent = "Remove";
         button.classList.add("track__button_remove");

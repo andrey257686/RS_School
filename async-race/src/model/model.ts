@@ -7,6 +7,8 @@ export default class AppModel {
 
   public appView: AppView;
 
+  public selectedId: number | undefined;
+
   constructor() {
     this.appView = new AppView();
     this.initializeListeners();
@@ -19,8 +21,26 @@ export default class AppModel {
     }
   }
 
+  public handleSelectClick(event: MouseEvent): void {
+    const parentTrack = (event.target as Element).closest(".track");
+    const inputUpdateName = document.querySelector(".options__update_name");
+    const inputUpdateColor = document.querySelector(".options__update_color");
+    if (parentTrack) {
+      this.selectedId = Number(parentTrack.id);
+      const name = parentTrack.querySelector(".track__controls_name")?.textContent;
+      const color = parentTrack.querySelector("svg g")?.getAttribute("fill");
+      if (name) {
+        inputUpdateName?.setAttribute("value", name);
+      }
+      if (color) {
+        inputUpdateColor?.setAttribute("value", color);
+      }
+    }
+  }
+
   public initializeListeners() {
     this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
+    this.appView.garageView.handleSelectClick = this.handleSelectClick.bind(this);
   }
 
   public async getInitialData() {
@@ -83,6 +103,14 @@ export default class AppModel {
     };
     this.appView.garageView.addTrack(modelCar);
     return response;
+  }
+
+  public async updateCar(name: string, color: string) {
+    await axios.put(`${this.SERVER}/garage/${this.selectedId}`, {
+      name,
+      color,
+    });
+    this.getInitialData();
   }
 
   public async deleteCar(id: number) {
