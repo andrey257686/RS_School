@@ -4,6 +4,12 @@ import "./winers.scss";
 export default class WinnersView {
   public winnersPage: HTMLDivElement;
 
+  public winnersName: HTMLSpanElement | undefined;
+
+  public winnersTable: HTMLTableElement | undefined;
+
+  public countWinners: number = 0;
+
   constructor() {
     this.winnersPage = this.createWinnersPage();
   }
@@ -20,14 +26,24 @@ export default class WinnersView {
   }
 
   public renderName(data: ModelCarWinners) {
+    if (this.winnersName !== undefined) {
+      this.winnersName.innerHTML = "";
+    }
     const element: HTMLSpanElement = document.createElement("span");
     element.classList.add("winners__name");
-    element.textContent = `Winners (${data.count})`;
-    this.winnersPage.prepend(element);
+    if (data.count !== undefined) {
+      this.countWinners = Number(data.count);
+    }
+    element.textContent = `Winners (${this.countWinners})`;
+    this.winnersName = element;
+    this.winnersPage.prepend(this.winnersName);
   }
 
   public renderWinnersTable(data: ModelCarWinners) {
     const { carWinners } = data;
+    if (this.winnersTable !== undefined) {
+      this.winnersTable.innerHTML = "";
+    }
     const table: HTMLTableElement = document.createElement("table");
     table.classList.add("winners__table");
     table.classList.add("table");
@@ -88,6 +104,7 @@ export default class WinnersView {
         tr.appendChild(td);
       }
       table.appendChild(tr);
+      this.winnersTable = table;
       this.winnersPage.appendChild(table);
     });
   }

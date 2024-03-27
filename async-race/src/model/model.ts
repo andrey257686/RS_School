@@ -9,6 +9,18 @@ export default class AppModel {
 
   constructor() {
     this.appView = new AppView();
+    this.initializeListeners();
+  }
+
+  public async handleRemoveClick(event: MouseEvent): Promise<void> {
+    const parentTrack = (event.target as Element).closest(".track");
+    if (parentTrack !== null) {
+      await this.deleteCar(Number(parentTrack.id));
+    }
+  }
+
+  public initializeListeners() {
+    this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
   public async getInitialData() {
@@ -71,5 +83,15 @@ export default class AppModel {
     };
     this.appView.garageView.addTrack(modelCar);
     return response;
+  }
+
+  public async deleteCar(id: number) {
+    await axios.delete(`${this.SERVER}/garage/${id}`);
+    try {
+      await axios.delete(`${this.SERVER}/winners/${id}`);
+    } catch (err) {
+      console.log("There is no winner with this id");
+    }
+    this.getInitialData();
   }
 }

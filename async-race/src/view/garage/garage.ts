@@ -8,6 +8,12 @@ export default class GarageView {
 
   public garageTracks: HTMLDivElement[] | undefined;
 
+  public garagaName: HTMLSpanElement | undefined;
+
+  public countCars: number = 0;
+
+  public handleRemoveClick: ((ev: MouseEvent) => Promise<void>) | undefined;
+
   constructor() {
     this.garageContainer = this.createTracksContainer();
 
@@ -35,18 +41,25 @@ export default class GarageView {
   }
 
   public renderName(data: ModelInitGarage) {
+    if (this.garagaName !== undefined) {
+      this.garagaName.innerHTML = "";
+    }
     const element: HTMLSpanElement = document.createElement("span");
     element.classList.add("garage__name");
-    element.textContent = `Garage (${data.count})`;
-    this.garagePage.insertBefore(element, this.garageContainer);
+    if (data.count !== undefined) {
+      this.countCars = Number(data.count);
+      element.textContent = `Garage (${this.countCars})`;
+    }
+    this.garagaName = element;
+    this.garagePage.insertBefore(this.garagaName, this.garageContainer);
   }
 
   public renderTracks(data: ModelInitGarage) {
     this.garageContainer.innerHTML = "";
     const { cars } = data;
-    cars.forEach((car, idx) => {
+    cars.forEach((car) => {
       const element: HTMLDivElement = document.createElement("div");
-      element.classList.add(`track_${idx}`);
+      // element.classList.add(`track_${idx}`);
       element.classList.add(`track`);
       element.id = String(car.id);
       element.prepend(this.renderControl(car.name));
@@ -77,6 +90,10 @@ export default class GarageView {
         button.textContent = "Select";
       } else {
         button.textContent = "Remove";
+        button.classList.add("track__button_remove");
+        if (this.handleRemoveClick !== undefined) {
+          button.addEventListener("click", this.handleRemoveClick);
+        }
       }
       element.appendChild(button);
     }
@@ -196,6 +213,8 @@ export default class GarageView {
     element.id = String(car.id);
     element.prepend(this.renderControl(car.name));
     element.append(this.renderTrackRoad(car.color));
+    this.countCars += 1;
+    this.garagaName!.textContent = `Garage (${this.countCars})`;
     this.garageContainer.appendChild(element);
   }
 }
