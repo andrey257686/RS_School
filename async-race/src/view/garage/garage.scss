@@ -4,6 +4,34 @@
   &__name {
     font-size: 22px;
   }
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 20px;
+  }
+  &__controls {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  &__create {
+    &_name {
+      width: 200px;
+    }
+  }
+  &__update {
+    &_name {
+      width: 200px;
+    }
+  }
 }
 
 .tracks {
