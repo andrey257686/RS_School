@@ -9,6 +9,16 @@
     flex-direction: column;
     gap: 10px;
     padding-bottom: 20px;
+    &_button {
+      padding: 7px;
+      border-radius: 10px;
+      border: none;
+      background-color: rgb(255, 255, 255);
+      cursor: pointer;
+      &:hover {
+        background-color: rgb(105, 225, 54);
+      }
+    }
   }
   &__controls {
     display: flex;
@@ -21,15 +31,22 @@
 .options {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
   &__create {
     &_name {
       width: 200px;
+      height: 25px;
+      border-radius: 10px;
+      border: none;
     }
   }
   &__update {
     &_name {
       width: 200px;
+      height: 25px;
+      border-radius: 10px;
+      border: none;
     }
   }
 }
