@@ -21,11 +21,19 @@ export default class AppView {
     this.container.appendChild(this.winnersView.winnersPage);
   }
 
-  public renderPage({ dataGarage, dataWinners }: { dataGarage?: ModelInitGarage; dataWinners?: ModelCarWinners }) {
+  public renderPage({
+    dataGarage,
+    dataWinners,
+    page,
+  }: {
+    dataGarage?: ModelInitGarage;
+    dataWinners?: ModelCarWinners;
+    page: number;
+  }) {
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
     if (dataGarage !== undefined) {
-      this.garageView.renderContentGaragePage(dataGarage);
+      this.garageView.renderContentGaragePage(dataGarage, page);
     }
     if (dataWinners !== undefined) {
       this.winnersView.renderContentGaragePage(dataWinners);

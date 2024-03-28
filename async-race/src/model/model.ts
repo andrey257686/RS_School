@@ -9,6 +9,14 @@ export default class AppModel {
 
   public selectedId: number | undefined;
 
+  public currentGaragePage: number = 1;
+
+  public totalCountCars: number = 4;
+
+  public currentWinnersPage: number = 1;
+
+  public limitGaragePage: number = 7;
+
   constructor() {
     this.appView = new AppView();
     this.initializeListeners();
@@ -38,9 +46,36 @@ export default class AppModel {
     }
   }
 
+  public async handleNextPageClick(event: MouseEvent) {
+    event.preventDefault();
+    this.currentGaragePage += 1;
+    await this.getInitialData();
+  }
+
+  public async handlePrevPageClick(event: MouseEvent) {
+    event.preventDefault();
+    this.currentGaragePage -= 1;
+    await this.getInitialData();
+  }
+
   public initializeListeners() {
     this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.appView.garageView.handleSelectClick = this.handleSelectClick.bind(this);
+    this.appView.garageView.handleNextPageClick = this.handleNextPageClick.bind(this);
+    this.appView.garageView.handlePrevPageClick = this.handlePrevPageClick.bind(this);
+  }
+
+  public checkPagination() {
+    if (Math.ceil(this.totalCountCars / this.limitGaragePage) <= this.currentGaragePage) {
+      this.appView.garageView.toggleButtonPagination("next", true);
+    } else {
+      this.appView.garageView.toggleButtonPagination("next", false);
+    }
+    if (this.currentGaragePage === 1) {
+      this.appView.garageView.toggleButtonPagination("prev", true);
+    } else {
+      this.appView.garageView.toggleButtonPagination("prev", false);
+    }
   }
 
   public async getInitialData() {
@@ -49,7 +84,11 @@ export default class AppModel {
         cars: response.data as Car[],
         count: response.headers["x-total-count"],
       };
-      this.appView.renderPage({ dataGarage: modelInitGarage });
+      if (modelInitGarage.count !== undefined) {
+        this.totalCountCars = modelInitGarage.count;
+      }
+      this.appView.renderPage({ dataGarage: modelInitGarage, page: this.currentGaragePage });
+      this.checkPagination();
     });
 
     await this.getWinners().then(async (response) => {
@@ -72,12 +111,13 @@ export default class AppModel {
         const carWinners = await Promise.all(carWinnersPromises);
         modelCarWinners.carWinners.push(...carWinners);
       }
-      this.appView.renderPage({ dataWinners: modelCarWinners });
+      this.appView.renderPage({ dataWinners: modelCarWinners, page: this.currentWinnersPage });
     });
   }
 
   public async gerCars<T>(): Promise<AxiosResponse<T>> {
-    const response = await axios.get(`${this.SERVER}/garage?_limit=10`);
+    const page = this.currentGaragePage;
+    const response = await axios.get(`${this.SERVER}/garage?_limit=${this.limitGaragePage}&_page=${page}`);
     return response;
   }
 
@@ -96,12 +136,13 @@ export default class AppModel {
       name,
       color,
     });
-    const modelCar = {
-      id: response.data.id,
-      name: response.data.name,
-      color: response.data.color,
-    };
-    this.appView.garageView.addTrack(modelCar);
+    // const modelCar = {
+    //   id: response.data.id,
+    //   name: response.data.name,
+    //   color: response.data.color,
+    // };
+    this.getInitialData();
+    // this.appView.garageView.addTrack(modelCar);
     return response;
   }
 

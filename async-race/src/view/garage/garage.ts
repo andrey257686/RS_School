@@ -18,6 +18,10 @@ export default class GarageView {
 
   public handleSelectClick: ((ev: MouseEvent) => void) | undefined;
 
+  public handleNextPageClick: ((ev: MouseEvent) => void) | undefined;
+
+  public handlePrevPageClick: ((ev: MouseEvent) => void) | undefined;
+
   constructor() {
     this.garageContainer = this.createTracksContainer();
 
@@ -39,15 +43,16 @@ export default class GarageView {
     return this.garagePage;
   }
 
-  public renderContentGaragePage(data: ModelInitGarage) {
+  public renderContentGaragePage(data: ModelInitGarage, page: number) {
     this.renderName(data);
     this.renderTracks(data);
-    this.renderPagination();
+    this.renderPagination(page);
   }
 
   public renderName(data: ModelInitGarage) {
     if (this.garagaName !== undefined) {
       this.garagaName.innerHTML = "";
+      this.garagaName.remove();
     }
     const element: HTMLSpanElement = document.createElement("span");
     element.classList.add("garage__name");
@@ -216,26 +221,42 @@ export default class GarageView {
     return element;
   }
 
-  public renderPagination() {
+  public renderPagination(page: number) {
     if (this.garagePagination !== undefined) {
       this.garagePagination.innerHTML = "";
+      this.garagePagination.remove();
     }
     const element: HTMLDivElement = document.createElement("div");
     element.classList.add("garage__pagination");
     const buttonPrev: HTMLButtonElement = document.createElement("button");
     buttonPrev.classList.add("garage__pagination_prev");
     buttonPrev.classList.add("garage__pagination_button");
+    if (this.handlePrevPageClick !== undefined) {
+      buttonPrev.addEventListener("click", this.handlePrevPageClick);
+    }
     buttonPrev.textContent = "PREV";
     const currentPage: HTMLSpanElement = document.createElement("span");
     currentPage.classList.add("garage__pagination_curPage");
-    currentPage.textContent = "curPage";
+    currentPage.textContent = `${page}`;
     const buttonNext: HTMLButtonElement = document.createElement("button");
     buttonNext.classList.add("garage__pagination_next");
     buttonNext.classList.add("garage__pagination_button");
+    if (this.handleNextPageClick !== undefined) {
+      buttonNext.addEventListener("click", this.handleNextPageClick);
+    }
     buttonNext.textContent = "NEXT";
     element.append(buttonPrev, currentPage, buttonNext);
     this.garagePagination = element;
     this.garagePage.append(this.garagePagination);
+  }
+
+  public toggleButtonPagination(buttonName: string, on: boolean) {
+    const button = document.querySelector(`.garage__pagination_${buttonName}`);
+    if (on) {
+      button?.setAttribute("disabled", "true");
+    } else {
+      button?.removeAttribute("disabled");
+    }
   }
 
   public addTrack(car: Car) {
