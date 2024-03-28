@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import AppView from "../view/appView";
 import { Car, ModelInitGarage, CarWinners, ModelCarWinners } from "../types/types";
+import { generateRandomCar, generateRandomColor } from "../services/generateCar";
 
 export default class AppModel {
   private SERVER = "http://127.0.0.1:3000";
@@ -58,11 +59,18 @@ export default class AppModel {
     await this.getInitialData();
   }
 
+  public handleGenerateClick() {
+    for (let i = 0; i < 100; i += 1) {
+      this.createCar(generateRandomCar(), generateRandomColor());
+    }
+  }
+
   public initializeListeners() {
     this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.appView.garageView.handleSelectClick = this.handleSelectClick.bind(this);
     this.appView.garageView.handleNextPageClick = this.handleNextPageClick.bind(this);
     this.appView.garageView.handlePrevPageClick = this.handlePrevPageClick.bind(this);
+    this.appView.garageView.handleGenerateClick = this.handleGenerateClick.bind(this);
   }
 
   public checkPagination() {

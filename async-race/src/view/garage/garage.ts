@@ -12,6 +12,8 @@ export default class GarageView {
 
   public garagePagination: HTMLDivElement | undefined;
 
+  public garageRaceControls: HTMLDivElement | undefined;
+
   public countCars: number = 0;
 
   public handleRemoveClick: ((ev: MouseEvent) => Promise<void>) | undefined;
@@ -21,6 +23,8 @@ export default class GarageView {
   public handleNextPageClick: ((ev: MouseEvent) => void) | undefined;
 
   public handlePrevPageClick: ((ev: MouseEvent) => void) | undefined;
+
+  public handleGenerateClick: (() => void) | undefined;
 
   constructor() {
     this.garageContainer = this.createTracksContainer();
@@ -38,12 +42,15 @@ export default class GarageView {
     this.garagePage = document.createElement("div");
     this.garagePage.classList.add("garage");
     this.garagePage.append(this.renderMenu());
-    this.garagePage.append(this.renderRaceControls());
-    this.garagePage.appendChild(this.garageContainer);
+    // this.garagePage.append(this.renderRaceControls());
+    // this.garagePage.appendChild(this.garageContainer);
     return this.garagePage;
   }
 
   public renderContentGaragePage(data: ModelInitGarage, page: number) {
+    this.garagePage.append(this.renderRaceControls());
+    // this.renderRaceControls();
+    this.garagePage.appendChild(this.garageContainer);
     this.renderName(data);
     this.renderTracks(data);
     this.renderPagination(page);
@@ -201,6 +208,10 @@ export default class GarageView {
   }
 
   public renderRaceControls() {
+    if (this.garageRaceControls !== undefined) {
+      this.garageRaceControls.innerHTML = "";
+      this.garageRaceControls.remove();
+    }
     const element: HTMLDivElement = document.createElement("div");
     element.classList.add("garage__controls");
     for (let i = 0; i < 3; i += 1) {
@@ -215,9 +226,13 @@ export default class GarageView {
       } else if (i === 2) {
         button.classList.add("garage__controls_generate");
         button.textContent = "Generate cars";
+        if (this.handleGenerateClick !== undefined) {
+          button.addEventListener("click", this.handleGenerateClick!);
+        }
       }
       element.appendChild(button);
     }
+    this.garageRaceControls = element;
     return element;
   }
 
