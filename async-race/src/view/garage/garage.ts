@@ -10,6 +10,8 @@ export default class GarageView {
 
   public garagaName: HTMLSpanElement | undefined;
 
+  public garagePagination: HTMLDivElement | undefined;
+
   public countCars: number = 0;
 
   public handleRemoveClick: ((ev: MouseEvent) => Promise<void>) | undefined;
@@ -40,6 +42,7 @@ export default class GarageView {
   public renderContentGaragePage(data: ModelInitGarage) {
     this.renderName(data);
     this.renderTracks(data);
+    this.renderPagination();
   }
 
   public renderName(data: ModelInitGarage) {
@@ -211,6 +214,28 @@ export default class GarageView {
       element.appendChild(button);
     }
     return element;
+  }
+
+  public renderPagination() {
+    if (this.garagePagination !== undefined) {
+      this.garagePagination.innerHTML = "";
+    }
+    const element: HTMLDivElement = document.createElement("div");
+    element.classList.add("garage__pagination");
+    const buttonPrev: HTMLButtonElement = document.createElement("button");
+    buttonPrev.classList.add("garage__pagination_prev");
+    buttonPrev.classList.add("garage__pagination_button");
+    buttonPrev.textContent = "PREV";
+    const currentPage: HTMLSpanElement = document.createElement("span");
+    currentPage.classList.add("garage__pagination_curPage");
+    currentPage.textContent = "curPage";
+    const buttonNext: HTMLButtonElement = document.createElement("button");
+    buttonNext.classList.add("garage__pagination_next");
+    buttonNext.classList.add("garage__pagination_button");
+    buttonNext.textContent = "NEXT";
+    element.append(buttonPrev, currentPage, buttonNext);
+    this.garagePagination = element;
+    this.garagePage.append(this.garagePagination);
   }
 
   public addTrack(car: Car) {

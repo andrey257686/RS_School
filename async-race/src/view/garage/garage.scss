@@ -26,6 +26,23 @@
     gap: 20px;
     padding-bottom: 20px;
   }
+  &__pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    &_button {
+      padding: 5px;
+      border-radius: 10px;
+      border: none;
+      background-color: rgb(255, 255, 255);
+      cursor: pointer;
+      &:hover {
+        background-color: rgb(105, 225, 54);
+      }
+    }
+  }
 }
 
 .options {
