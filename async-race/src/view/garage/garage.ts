@@ -301,7 +301,7 @@ export default class GarageView {
     const currentCarWidth = (currentCar as HTMLDivElement).offsetWidth;
     const roadWidth = (track.querySelector(".track__road") as HTMLDivElement).offsetWidth;
     const newPosition = roadWidth - currentCarWidth;
-    (currentCar as HTMLDivElement).style.transition = `all ${time}s linear`;
+    (currentCar as HTMLDivElement).style.transition = `transform ${time}s linear`;
     (currentCar as HTMLDivElement).style.transform = `translateX(${newPosition}px)`;
   }
 

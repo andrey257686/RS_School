@@ -1,5 +1,6 @@
 .winners {
-  display: none;
+  display: flex;
+  visibility: hidden;
   flex-direction: column;
   &__table {
     border-collapse: collapse;

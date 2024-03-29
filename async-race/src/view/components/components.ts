@@ -32,15 +32,16 @@ export default class Components {
         button.textContent = "To garage";
         button.classList.add("header__button_garage");
         button.addEventListener("click", () => {
-          (document.querySelector(".winners") as HTMLDivElement).style.display = "none";
-          (document.querySelector(".garage") as HTMLDivElement).style.display = "block";
+          (document.querySelector(".winners") as HTMLDivElement).style.visibility = "hidden";
+          (document.querySelector(".garage") as HTMLDivElement).style.visibility = "visible";
         });
       } else {
         button.textContent = "To winners";
         button.classList.add("header__button_winners");
         button.addEventListener("click", () => {
-          (document.querySelector(".garage") as HTMLDivElement).style.display = "none";
-          (document.querySelector(".winners") as HTMLDivElement).style.display = "block";
+          (document.querySelector(".winners") as HTMLDivElement).style.visibility = "visible";
+          (document.querySelector(".garage") as HTMLDivElement).style.visibility = "hidden";
+          (document.querySelector(".garage") as HTMLDivElement).style.height = "0px";
         });
       }
       element.appendChild(button);
