@@ -28,6 +28,7 @@ export default class WinnersView {
   public renderName(data: ModelCarWinners) {
     if (this.winnersName !== undefined) {
       this.winnersName.innerHTML = "";
+      this.winnersName.remove();
     }
     const element: HTMLSpanElement = document.createElement("span");
     element.classList.add("winners__name");
@@ -43,6 +44,7 @@ export default class WinnersView {
     const { carWinners } = data;
     if (this.winnersTable !== undefined) {
       this.winnersTable.innerHTML = "";
+      this.winnersTable.remove();
     }
     const table: HTMLTableElement = document.createElement("table");
     table.classList.add("winners__table");

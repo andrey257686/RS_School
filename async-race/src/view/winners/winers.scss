@@ -1,8 +1,11 @@
 .winners {
   display: flex;
   visibility: hidden;
+  height: 0px;
   flex-direction: column;
+  overflow: hidden;
   &__table {
+    height: 100%;
     border-collapse: collapse;
     width: 500px;
     flex-direction: column;

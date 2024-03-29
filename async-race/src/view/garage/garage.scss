@@ -1,6 +1,7 @@
 .garage {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   &__name {
     font-size: 22px;
   }
