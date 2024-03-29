@@ -79,6 +79,24 @@ export default class AppModel {
     }
   }
 
+  public async handleRaceClick() {
+    const tracks = document.querySelectorAll(".track");
+    const tracksPromises = [];
+    for (let i = 0; i < tracks.length; i += 1) {
+      tracksPromises.push(this.startCar(tracks[i] as HTMLDivElement));
+    }
+    await Promise.all(tracksPromises);
+  }
+
+  public async handleResetClick() {
+    const tracks = document.querySelectorAll(".track");
+    const tracksPromises = [];
+    for (let i = 0; i < tracks.length; i += 1) {
+      tracksPromises.push(this.stopCar(tracks[i] as HTMLDivElement));
+    }
+    await Promise.all(tracksPromises);
+  }
+
   public initializeListeners() {
     this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.appView.garageView.handleSelectClick = this.handleSelectClick.bind(this);
@@ -87,6 +105,8 @@ export default class AppModel {
     this.appView.garageView.handleGenerateClick = this.handleGenerateClick.bind(this);
     this.appView.garageView.handleStartClick = this.handleStartClick.bind(this);
     this.appView.garageView.handleStopClick = this.handleStopClick.bind(this);
+    this.appView.garageView.handleRaceClick = this.handleRaceClick.bind(this);
+    this.appView.garageView.handleResetClick = this.handleResetClick.bind(this);
   }
 
   public checkPagination() {

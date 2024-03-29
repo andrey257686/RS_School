@@ -30,6 +30,10 @@ export default class GarageView {
 
   public handleStopClick: ((ev: MouseEvent) => void) | undefined;
 
+  public handleRaceClick: (() => void) | undefined;
+
+  public handleResetClick: (() => void) | undefined;
+
   constructor() {
     this.garageContainer = this.createTracksContainer();
 
@@ -231,9 +235,15 @@ export default class GarageView {
       if (i === 0) {
         button.classList.add("garage__controls_race");
         button.textContent = "Race";
+        if (this.handleRaceClick !== undefined) {
+          button.addEventListener("click", this.handleRaceClick);
+        }
       } else if (i === 1) {
         button.classList.add("garage__controls_reset");
         button.textContent = "Reset";
+        if (this.handleResetClick !== undefined) {
+          button.addEventListener("click", this.handleResetClick);
+        }
       } else if (i === 2) {
         button.classList.add("garage__controls_generate");
         button.textContent = "Generate cars";
