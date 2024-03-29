@@ -80,12 +80,22 @@ export default class AppModel {
   }
 
   public async handleRaceClick() {
-    const tracks = document.querySelectorAll(".track");
-    const tracksPromises = [];
-    for (let i = 0; i < tracks.length; i += 1) {
-      tracksPromises.push(this.startCar(tracks[i] as HTMLDivElement));
-    }
-    await Promise.all(tracksPromises);
+    // const tracks = document.querySelectorAll(".track");
+    const tracks = Array.from(document.querySelectorAll(".track"));
+    // const tracksPromises = [];
+    // for (let i = 0; i < tracks.length; i += 1) {
+    //   tracksPromises.push(this.startCar(tracks[i] as HTMLDivElement));
+    // }
+    const promises = tracks.map((track) => {
+      return this.startCar(track as HTMLDivElement);
+    });
+    Promise.any(promises)
+      .then((result) => {
+        console.log("First car", result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   public async handleResetClick() {
@@ -209,13 +219,17 @@ export default class AppModel {
   }
 
   public async startCar(track: HTMLDivElement) {
-    const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
-    const { velocity, distance } = response.data;
-    const time = distance / velocity / 1000;
-    this.appView.garageView.moveCar(track, time);
-    axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`).catch(() => {
+    try {
+      const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
+      const { velocity, distance } = response.data;
+      const time = distance / velocity / 1000;
+      this.appView.garageView.moveCar(track, time);
+      await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`);
+      return track.id;
+    } catch (error) {
       this.appView.garageView.stopCar(track);
-    });
+      throw error;
+    }
   }
 
   public async stopCar(track: HTMLDivElement) {
