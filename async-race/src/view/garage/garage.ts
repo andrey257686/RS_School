@@ -26,6 +26,10 @@ export default class GarageView {
 
   public handleGenerateClick: (() => void) | undefined;
 
+  public handleStartClick: ((ev: MouseEvent) => void) | undefined;
+
+  public handleStopClick: ((ev: MouseEvent) => void) | undefined;
+
   constructor() {
     this.garageContainer = this.createTracksContainer();
 
@@ -129,8 +133,15 @@ export default class GarageView {
       button.classList.add("track__button");
       if (i === 0) {
         button.textContent = "Start";
+        button.classList.add("track__button_start");
+        if (this.handleStartClick !== undefined) {
+          button.addEventListener("click", this.handleStartClick);
+        }
       } else {
         button.textContent = "Stop";
+        if (this.handleStopClick !== undefined) {
+          button.addEventListener("click", this.handleStopClick);
+        }
       }
       element.appendChild(button);
     }
@@ -283,5 +294,29 @@ export default class GarageView {
     this.countCars += 1;
     this.garagaName!.textContent = `Garage (${this.countCars})`;
     this.garageContainer.appendChild(element);
+  }
+
+  public moveCar(track: HTMLDivElement, time: number) {
+    const currentCar = track.querySelector(".track__road_car");
+    const currentCarWidth = (currentCar as HTMLDivElement).offsetWidth;
+    const roadWidth = (track.querySelector(".track__road") as HTMLDivElement).offsetWidth;
+    const newPosition = roadWidth - currentCarWidth;
+    (currentCar as HTMLDivElement).style.transition = `all ${time}s linear`;
+    (currentCar as HTMLDivElement).style.transform = `translateX(${newPosition}px)`;
+  }
+
+  public stopCar(track: HTMLDivElement) {
+    const currentCar = track.querySelector(".track__road_car");
+    const transformValue = getComputedStyle(currentCar!).transform;
+    const currentPositionX = transformValue ? parseFloat(transformValue.split(",")[4]) : 0;
+
+    (currentCar as HTMLDivElement).style.transition = "";
+    (currentCar as HTMLDivElement).style.transform = `translateX(${currentPositionX}px)`;
+  }
+
+  public toBeginCar(track: HTMLDivElement) {
+    const currentCar = track.querySelector(".track__road_car");
+    (currentCar as HTMLDivElement).style.transition = "";
+    (currentCar as HTMLDivElement).style.transform = `translateX(0px)`;
   }
 }

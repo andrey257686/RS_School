@@ -65,12 +65,28 @@ export default class AppModel {
     }
   }
 
+  public async handleStartClick(event: MouseEvent) {
+    const parentTrack = (event.target as Element).closest(".track");
+    if (parentTrack !== null) {
+      await this.startCar(parentTrack as HTMLDivElement);
+    }
+  }
+
+  public async handleStopClick(event: MouseEvent) {
+    const parentTrack = (event.target as Element).closest(".track");
+    if (parentTrack !== null) {
+      await this.stopCar(parentTrack as HTMLDivElement);
+    }
+  }
+
   public initializeListeners() {
     this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.appView.garageView.handleSelectClick = this.handleSelectClick.bind(this);
     this.appView.garageView.handleNextPageClick = this.handleNextPageClick.bind(this);
     this.appView.garageView.handlePrevPageClick = this.handlePrevPageClick.bind(this);
     this.appView.garageView.handleGenerateClick = this.handleGenerateClick.bind(this);
+    this.appView.garageView.handleStartClick = this.handleStartClick.bind(this);
+    this.appView.garageView.handleStopClick = this.handleStopClick.bind(this);
   }
 
   public checkPagination() {
@@ -170,5 +186,20 @@ export default class AppModel {
       console.log("There is no winner with this id");
     }
     this.getInitialData();
+  }
+
+  public async startCar(track: HTMLDivElement) {
+    const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
+    const { velocity, distance } = response.data;
+    const time = distance / velocity / 1000;
+    this.appView.garageView.moveCar(track, time);
+    axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`).catch(() => {
+      this.appView.garageView.stopCar(track);
+    });
+  }
+
+  public async stopCar(track: HTMLDivElement) {
+    await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=stopped`);
+    this.appView.garageView.toBeginCar(track);
   }
 }
