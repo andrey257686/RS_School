@@ -143,6 +143,7 @@ export default class GarageView {
         }
       } else {
         button.textContent = "Stop";
+        button.classList.add("track__button_stop");
         if (this.handleStopClick !== undefined) {
           button.addEventListener("click", this.handleStopClick);
         }
@@ -290,8 +291,10 @@ export default class GarageView {
     const button = document.querySelector(`.garage__pagination_${buttonName}`);
     if (on) {
       button?.setAttribute("disabled", "true");
+      button?.classList.add("disabled");
     } else {
       button?.removeAttribute("disabled");
+      button?.classList.remove("disabled");
     }
   }
 

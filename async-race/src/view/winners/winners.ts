@@ -6,9 +6,17 @@ export default class WinnersView {
 
   public winnersName: HTMLSpanElement | undefined;
 
-  public winnersTable: HTMLTableElement | undefined;
+  public winnersTable: HTMLTableElement | undefined | null;
+
+  public winnersPagination: HTMLDivElement | undefined;
+
+  public handlePrevPageClick: ((ev: MouseEvent) => void) | undefined;
+
+  public handleNextPageClick: ((ev: MouseEvent) => void) | undefined;
 
   public countWinners: number = 0;
+
+  public placeCounter: number = 1;
 
   constructor() {
     this.winnersPage = this.createWinnersPage();
@@ -20,9 +28,10 @@ export default class WinnersView {
     return element;
   }
 
-  public renderContentGaragePage(data: ModelCarWinners) {
+  public renderContentWinnersPage(data: ModelCarWinners, page: number) {
     this.renderName(data);
-    this.renderWinnersTable(data);
+    this.renderWinnersTable(data, page);
+    this.renderPagination(page);
   }
 
   public renderName(data: ModelCarWinners) {
@@ -40,11 +49,11 @@ export default class WinnersView {
     this.winnersPage.prepend(this.winnersName);
   }
 
-  public renderWinnersTable(data: ModelCarWinners) {
+  public renderWinnersTable(data: ModelCarWinners, page: number) {
     const { carWinners } = data;
     if (this.winnersTable !== undefined) {
-      this.winnersTable.innerHTML = "";
-      this.winnersTable.remove();
+      this.winnersTable!.innerHTML = "";
+      this.winnersTable!.remove();
     }
     const table: HTMLTableElement = document.createElement("table");
     table.classList.add("winners__table");
@@ -77,13 +86,14 @@ export default class WinnersView {
       trHead.appendChild(th);
     }
     table.appendChild(trHead);
-    carWinners.forEach((winner, idx) => {
+    carWinners.forEach((winner) => {
       const tr: HTMLTableRowElement = document.createElement("tr");
       tr.classList.add("table__row");
       for (let i = 0; i < 5; i += 1) {
         const td: HTMLTableCellElement = document.createElement("td");
         if (i === 0) {
-          td.textContent = String(idx + 1);
+          td.textContent = String(this.placeCounter + (page - 1) * 10);
+          this.placeCounter += 1;
           td.classList.add("table__cell_num");
           td.classList.add("table__cell");
         } else if (i === 1) {
@@ -109,6 +119,7 @@ export default class WinnersView {
       this.winnersTable = table;
       this.winnersPage.appendChild(table);
     });
+    this.placeCounter = 1;
   }
 
   public renderCar(color: string) {
@@ -118,8 +129,111 @@ export default class WinnersView {
     return element;
   }
 
-  public updateWinnerTable(data: ModelCarWinners) {
-    this.renderWinnersTable(data);
-    console.log(data);
+  public renderPagination(page: number) {
+    if (this.winnersPagination !== undefined) {
+      this.winnersPagination.innerHTML = "";
+      this.winnersPagination.remove();
+    }
+    const element: HTMLDivElement = document.createElement("div");
+    element.classList.add("winners__pagination");
+    const buttonPrev: HTMLButtonElement = document.createElement("button");
+    buttonPrev.classList.add("winners__pagination_prev");
+    buttonPrev.classList.add("winners__pagination_button");
+    if (this.handlePrevPageClick !== undefined) {
+      buttonPrev.addEventListener("click", this.handlePrevPageClick);
+    }
+    buttonPrev.textContent = "PREV";
+    const currentPage: HTMLSpanElement = document.createElement("span");
+    currentPage.classList.add("winners__pagination_curPage");
+    currentPage.textContent = `${page}`;
+    const buttonNext: HTMLButtonElement = document.createElement("button");
+    buttonNext.classList.add("winners__pagination_next");
+    buttonNext.classList.add("winners__pagination_button");
+    if (this.handleNextPageClick !== undefined) {
+      buttonNext.addEventListener("click", this.handleNextPageClick);
+    }
+    buttonNext.textContent = "NEXT";
+    element.append(buttonPrev, currentPage, buttonNext);
+    this.winnersPagination = element;
+    this.winnersPage.append(this.winnersPagination);
+  }
+
+  public toggleButtonPagination(buttonName: string, on: boolean) {
+    const button = document.querySelector(`.winners__pagination_${buttonName}`);
+    if (on) {
+      button?.setAttribute("disabled", "true");
+      button?.classList.add("disabled");
+    } else {
+      button?.removeAttribute("disabled");
+      button?.classList.remove("disabled");
+    }
+  }
+
+  public updateWinnerTable(data: ModelCarWinners, page: number) {
+    const { carWinners } = data;
+    const table: HTMLTableElement | null = document.querySelector(".winners__table");
+    table!.innerHTML = "";
+    const trHead: HTMLTableRowElement = document.createElement("tr");
+    trHead.classList.add("table__head");
+    for (let i = 0; i < 5; i += 1) {
+      const th: HTMLTableCellElement = document.createElement("th");
+      if (i === 0) {
+        th.textContent = "№";
+        th.classList.add("table__head_num");
+        th.classList.add("table__head_cell");
+      } else if (i === 1) {
+        th.textContent = "Car";
+        th.classList.add("table__head_car");
+        th.classList.add("table__head_cell");
+      } else if (i === 2) {
+        th.textContent = "Name";
+        th.classList.add("table__head_name");
+        th.classList.add("table__head_cell");
+      } else if (i === 3) {
+        th.textContent = "Wins";
+        th.classList.add("table__head_wins");
+        th.classList.add("table__head_cell");
+      } else if (i === 4) {
+        th.textContent = "Best time";
+        th.classList.add("table__head_time");
+        th.classList.add("table__head_cell");
+      }
+      trHead.appendChild(th);
+    }
+    table!.appendChild(trHead);
+    carWinners.forEach((winner) => {
+      const tr: HTMLTableRowElement = document.createElement("tr");
+      tr.classList.add("table__row");
+      for (let i = 0; i < 5; i += 1) {
+        const td: HTMLTableCellElement = document.createElement("td");
+        if (i === 0) {
+          td.textContent = String(this.placeCounter + (page - 1) * 10);
+          this.placeCounter += 1;
+          td.classList.add("table__cell_num");
+          td.classList.add("table__cell");
+        } else if (i === 1) {
+          td.append(this.renderCar(winner.color));
+          td.classList.add("table__cell_car");
+          td.classList.add("table__cell");
+        } else if (i === 2) {
+          td.textContent = winner.name;
+          td.classList.add("table__cell_name");
+          td.classList.add("table__cell");
+        } else if (i === 3) {
+          td.textContent = String(winner.wins);
+          td.classList.add("table__cell_wins");
+          td.classList.add("table__cell");
+        } else if (i === 4) {
+          td.textContent = String(winner.time);
+          td.classList.add("table__cell_time");
+          td.classList.add("table__cell");
+        }
+        tr.appendChild(td);
+      }
+      table!.appendChild(tr);
+      this.winnersTable = table;
+      // this.winnersPage.appendChild(table!);
+    });
+    this.placeCounter = 1;
   }
 }

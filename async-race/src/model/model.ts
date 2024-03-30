@@ -14,7 +14,11 @@ export default class AppModel {
 
   public totalCountCars: number = 4;
 
+  public totalCountWinners: number = 1;
+
   public currentWinnersPage: number = 1;
+
+  public limitWinnersPage: number = 10;
 
   public limitGaragePage: number = 7;
 
@@ -112,6 +116,18 @@ export default class AppModel {
     Promise.all(tracksPromises);
   }
 
+  public handleNextPageClickWinners(event: MouseEvent) {
+    event.preventDefault();
+    this.currentWinnersPage += 1;
+    this.getInitialData();
+  }
+
+  public handlePrevPageClickWinners(event: MouseEvent) {
+    event.preventDefault();
+    this.currentWinnersPage -= 1;
+    this.getInitialData();
+  }
+
   public initializeListeners() {
     this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.appView.garageView.handleSelectClick = this.handleSelectClick.bind(this);
@@ -122,9 +138,11 @@ export default class AppModel {
     this.appView.garageView.handleStopClick = this.handleStopClick.bind(this);
     this.appView.garageView.handleRaceClick = this.handleRaceClick.bind(this);
     this.appView.garageView.handleResetClick = this.handleResetClick.bind(this);
+    this.appView.winnersView.handleNextPageClick = this.handleNextPageClickWinners.bind(this);
+    this.appView.winnersView.handlePrevPageClick = this.handlePrevPageClickWinners.bind(this);
   }
 
-  public checkPagination() {
+  public checkGaragePagination() {
     if (Math.ceil(this.totalCountCars / this.limitGaragePage) <= this.currentGaragePage) {
       this.appView.garageView.toggleButtonPagination("next", true);
     } else {
@@ -134,6 +152,19 @@ export default class AppModel {
       this.appView.garageView.toggleButtonPagination("prev", true);
     } else {
       this.appView.garageView.toggleButtonPagination("prev", false);
+    }
+  }
+
+  public checkWinnersPagination() {
+    if (Math.ceil(this.totalCountWinners / this.limitWinnersPage) <= this.currentWinnersPage) {
+      this.appView.winnersView.toggleButtonPagination("next", true);
+    } else {
+      this.appView.winnersView.toggleButtonPagination("next", false);
+    }
+    if (this.currentWinnersPage === 1) {
+      this.appView.winnersView.toggleButtonPagination("prev", true);
+    } else {
+      this.appView.winnersView.toggleButtonPagination("prev", false);
     }
   }
 
@@ -147,7 +178,7 @@ export default class AppModel {
         this.totalCountCars = modelInitGarage.count;
       }
       this.appView.renderPage({ dataGarage: modelInitGarage, page: this.currentGaragePage });
-      this.checkPagination();
+      this.checkGaragePagination();
     });
 
     await this.getWinners().then(async (response) => {
@@ -155,6 +186,9 @@ export default class AppModel {
         carWinners: [],
         count: response.headers["x-total-count"],
       };
+      if (modelCarWinners.count !== undefined) {
+        this.totalCountWinners = modelCarWinners.count;
+      }
       if (Array.isArray(response.data)) {
         const carWinnersPromises: Promise<CarWinners>[] = [];
         response.data.forEach((winner) => {
@@ -171,6 +205,7 @@ export default class AppModel {
         modelCarWinners.carWinners.push(...carWinners);
       }
       this.appView.renderPage({ dataWinners: modelCarWinners, page: this.currentWinnersPage });
+      this.checkWinnersPagination();
     });
   }
 
@@ -181,7 +216,8 @@ export default class AppModel {
   }
 
   public async getWinners<T>(): Promise<AxiosResponse<T>> {
-    const response = await axios.get(`${this.SERVER}/winners?_limit=10`);
+    const page = this.currentWinnersPage;
+    const response = await axios.get(`${this.SERVER}/winners?_limit=${this.limitWinnersPage}&_page=${page}`);
     return response;
   }
 
@@ -286,7 +322,7 @@ export default class AppModel {
         const carWinners = await Promise.all(carWinnersPromises);
         modelCarWinners.carWinners.push(...carWinners);
       }
-      this.appView.winnersView.updateWinnerTable(modelCarWinners);
+      this.appView.winnersView.updateWinnerTable(modelCarWinners, this.currentWinnersPage);
       // this.appView.renderPage({ dataWinners: modelCarWinners, page: this.currentWinnersPage });
     });
   }

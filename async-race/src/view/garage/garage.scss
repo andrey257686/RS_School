@@ -33,6 +33,7 @@
     align-items: center;
     gap: 10px;
     padding-top: 20px;
+    padding-bottom: 20px;
     &_button {
       padding: 5px;
       border-radius: 10px;
@@ -130,5 +131,12 @@
       width: 50px;
       height: 100%;
     }
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  &:hover {
+    background-color: rgb(255, 255, 255);
   }
 }

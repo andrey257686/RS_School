@@ -36,7 +36,7 @@ export default class AppView {
       this.garageView.renderContentGaragePage(dataGarage, page);
     }
     if (dataWinners !== undefined) {
-      this.winnersView.renderContentGaragePage(dataWinners);
+      this.winnersView.renderContentWinnersPage(dataWinners, page);
     }
   }
 
