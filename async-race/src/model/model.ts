@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import AppView from "../view/appView";
+import garageListeners from "../view/garage/garageListeners";
+import winnersListeners from "../view/winners/winnersListeners";
 import { Car, ModelInitGarage, CarWinners, ModelCarWinners } from "../types/types";
 import { generateRandomCar, generateRandomColor } from "../services/generateCar";
 
@@ -23,8 +25,87 @@ export default class AppModel {
   public limitGaragePage: number = 7;
 
   constructor() {
-    this.appView = new AppView();
     this.initializeListeners();
+    this.appView = new AppView();
+  }
+
+  public initializeListeners() {
+    garageListeners.handleCreateClick = this.handleCreateClick.bind(this);
+    garageListeners.handleUpdateClick = this.handleUpdateClick.bind(this);
+    garageListeners.handleRaceClick = this.handleRaceClick.bind(this);
+    garageListeners.handleResetClick = this.handleResetClick.bind(this);
+    garageListeners.handleGenerateClick = this.handleGenerateClick.bind(this);
+    garageListeners.handleRemoveClick = this.handleRemoveClick.bind(this);
+    garageListeners.handleSelectClick = this.handleSelectClick.bind(this);
+    garageListeners.handleStartClick = this.handleStartClick.bind(this);
+    garageListeners.handleStopClick = this.handleStopClick.bind(this);
+    garageListeners.handleNextPageClick = this.handleNextPageClick.bind(this);
+    garageListeners.handlePrevPageClick = this.handlePrevPageClick.bind(this);
+    winnersListeners.handlePrevPageClick = this.handlePrevPageClickWinners.bind(this);
+    winnersListeners.handleNextPageClick = this.handleNextPageClickWinners.bind(this);
+  }
+
+  public handleCreateClick(): void {
+    if ((document.querySelector(".options__create_name") as HTMLInputElement).value === "") {
+      alert("Enter the name of the car");
+    } else {
+      const name: string = (document.querySelector(".options__create_name") as HTMLInputElement).value;
+      const color: string = (document.querySelector(".options__create_color") as HTMLInputElement).value;
+      this.createCar(name, color);
+    }
+  }
+
+  public handleUpdateClick(): void {
+    if ((document.querySelector(".options__update_name") as HTMLInputElement).value === "") {
+      alert("Enter the name of the car");
+    } else {
+      const name: string = (document.querySelector(".options__update_name") as HTMLInputElement).value;
+      const color: string = (document.querySelector(".options__update_color") as HTMLInputElement).value;
+      this.updateCar(name, color);
+    }
+  }
+
+  public async handleRaceClick() {
+    const tracks = Array.from(document.querySelectorAll(".track"));
+    const promises = tracks.map((track) => {
+      return this.startCar(track as HTMLDivElement);
+    });
+    Promise.any(promises)
+      .then(async (result) => {
+        await this.getWinner(Number(result.id))
+          .then(async (res) => {
+            const currentWins = res.wins + 1;
+            await this.updateWinner(Number(result.id), result.time, currentWins);
+            await this.updateWinnersData();
+          })
+          .catch(async () => {
+            await this.createWinner(Number(result.id), result.time);
+            await this.updateWinnersData();
+          });
+        console.log("First car", result);
+      })
+      .catch(() => {
+        // console.log(err);
+      });
+  }
+
+  public async handleResetClick() {
+    const tracks = document.querySelectorAll(".track");
+    const tracksPromises = [];
+    for (let i = 0; i < tracks.length; i += 1) {
+      tracksPromises.push(this.stopCar(tracks[i] as HTMLDivElement));
+    }
+    Promise.all(tracksPromises);
+  }
+
+  public handleGenerateClick() {
+    const promises = [];
+    for (let i = 0; i < 100; i += 1) {
+      promises.push(this.createCar(generateRandomCar(), generateRandomColor(), true));
+    }
+    Promise.all(promises).then(() => {
+      this.updateCarsData();
+    });
   }
 
   public async handleRemoveClick(event: MouseEvent): Promise<void> {
@@ -51,24 +132,6 @@ export default class AppModel {
     }
   }
 
-  public async handleNextPageClick(event: MouseEvent) {
-    event.preventDefault();
-    this.currentGaragePage += 1;
-    await this.getInitialData();
-  }
-
-  public async handlePrevPageClick(event: MouseEvent) {
-    event.preventDefault();
-    this.currentGaragePage -= 1;
-    await this.getInitialData();
-  }
-
-  public handleGenerateClick() {
-    for (let i = 0; i < 100; i += 1) {
-      this.createCar(generateRandomCar(), generateRandomColor());
-    }
-  }
-
   public async handleStartClick(event: MouseEvent) {
     const parentTrack = (event.target as Element).closest(".track");
     if (parentTrack !== null) {
@@ -83,63 +146,28 @@ export default class AppModel {
     }
   }
 
-  public async handleRaceClick() {
-    const tracks = Array.from(document.querySelectorAll(".track"));
-    const promises = tracks.map((track) => {
-      return this.startCar(track as HTMLDivElement);
-    });
-    Promise.any(promises)
-      .then(async (result) => {
-        await this.getWinner(Number(result.id))
-          .then(async (res) => {
-            const currentWins = res.wins + 1;
-            await this.updateWinner(Number(result.id), result.time, currentWins);
-            await this.updateWinnerTable();
-          })
-          .catch(async () => {
-            await this.createWinner(Number(result.id), result.time);
-            await this.updateWinnerTable();
-          });
-        console.log("First car", result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  public async handleNextPageClick(event: MouseEvent) {
+    event.preventDefault();
+    this.currentGaragePage += 1;
+    await this.updateCarsData();
   }
 
-  public async handleResetClick() {
-    const tracks = document.querySelectorAll(".track");
-    const tracksPromises = [];
-    for (let i = 0; i < tracks.length; i += 1) {
-      tracksPromises.push(this.stopCar(tracks[i] as HTMLDivElement));
-    }
-    Promise.all(tracksPromises);
+  public async handlePrevPageClick(event: MouseEvent) {
+    event.preventDefault();
+    this.currentGaragePage -= 1;
+    await this.updateCarsData();
   }
 
   public handleNextPageClickWinners(event: MouseEvent) {
     event.preventDefault();
     this.currentWinnersPage += 1;
-    this.getInitialData();
+    this.updateWinnersData();
   }
 
   public handlePrevPageClickWinners(event: MouseEvent) {
     event.preventDefault();
     this.currentWinnersPage -= 1;
-    this.getInitialData();
-  }
-
-  public initializeListeners() {
-    this.appView.garageView.handleRemoveClick = this.handleRemoveClick.bind(this);
-    this.appView.garageView.handleSelectClick = this.handleSelectClick.bind(this);
-    this.appView.garageView.handleNextPageClick = this.handleNextPageClick.bind(this);
-    this.appView.garageView.handlePrevPageClick = this.handlePrevPageClick.bind(this);
-    this.appView.garageView.handleGenerateClick = this.handleGenerateClick.bind(this);
-    this.appView.garageView.handleStartClick = this.handleStartClick.bind(this);
-    this.appView.garageView.handleStopClick = this.handleStopClick.bind(this);
-    this.appView.garageView.handleRaceClick = this.handleRaceClick.bind(this);
-    this.appView.garageView.handleResetClick = this.handleResetClick.bind(this);
-    this.appView.winnersView.handleNextPageClick = this.handleNextPageClickWinners.bind(this);
-    this.appView.winnersView.handlePrevPageClick = this.handlePrevPageClickWinners.bind(this);
+    this.updateWinnersData();
   }
 
   public checkGaragePagination() {
@@ -168,7 +196,7 @@ export default class AppModel {
     }
   }
 
-  public async getInitialData() {
+  public async updateCarsData() {
     await this.gerCars().then((response) => {
       const modelInitGarage: ModelInitGarage = {
         cars: response.data as Car[],
@@ -177,10 +205,12 @@ export default class AppModel {
       if (modelInitGarage.count !== undefined) {
         this.totalCountCars = modelInitGarage.count;
       }
-      this.appView.renderPage({ dataGarage: modelInitGarage, page: this.currentGaragePage });
+      this.appView.garageView.updateGaragePage(modelInitGarage, this.currentGaragePage);
       this.checkGaragePagination();
     });
+  }
 
+  public async updateWinnersData() {
     await this.getWinners().then(async (response) => {
       const modelCarWinners: ModelCarWinners = {
         carWinners: [],
@@ -204,9 +234,14 @@ export default class AppModel {
         const carWinners = await Promise.all(carWinnersPromises);
         modelCarWinners.carWinners.push(...carWinners);
       }
-      this.appView.renderPage({ dataWinners: modelCarWinners, page: this.currentWinnersPage });
+      this.appView.winnersView.updateWinnersPage(modelCarWinners, this.currentWinnersPage);
       this.checkWinnersPagination();
     });
+  }
+
+  public async getInitialData() {
+    await this.updateCarsData();
+    await this.updateWinnersData();
   }
 
   public async gerCars<T>(): Promise<AxiosResponse<T>> {
@@ -226,19 +261,14 @@ export default class AppModel {
     return response;
   }
 
-  public async createCar(name: string, color: string): Promise<AxiosResponse<Car>> {
-    const response = await axios.post(`${this.SERVER}/garage`, {
+  public async createCar(name: string, color: string, generation = false): Promise<void> {
+    await axios.post(`${this.SERVER}/garage`, {
       name,
       color,
     });
-    // const modelCar = {
-    //   id: response.data.id,
-    //   name: response.data.name,
-    //   color: response.data.color,
-    // };
-    this.getInitialData();
-    // this.appView.garageView.addTrack(modelCar);
-    return response;
+    if (!generation) {
+      this.updateCarsData();
+    }
   }
 
   public async updateCar(name: string, color: string) {
@@ -246,7 +276,7 @@ export default class AppModel {
       name,
       color,
     });
-    this.getInitialData();
+    await this.getInitialData();
   }
 
   public async deleteCar(id: number) {
@@ -256,7 +286,7 @@ export default class AppModel {
     } catch (err) {
       console.log("There is no winner with this id");
     }
-    this.getInitialData();
+    await this.getInitialData();
   }
 
   public async startCar(track: HTMLDivElement) {
@@ -299,31 +329,5 @@ export default class AppModel {
   public async getWinner(id: number) {
     const response = await axios.get(`${this.SERVER}/winners/${id}`);
     return response.data;
-  }
-
-  public async updateWinnerTable() {
-    await this.getWinners().then(async (response) => {
-      const modelCarWinners: ModelCarWinners = {
-        carWinners: [],
-        count: response.headers["x-total-count"],
-      };
-      if (Array.isArray(response.data)) {
-        const carWinnersPromises: Promise<CarWinners>[] = [];
-        response.data.forEach((winner) => {
-          carWinnersPromises.push(
-            this.getCar(winner.id).then((responseWinner) => ({
-              color: responseWinner.data.color,
-              name: responseWinner.data.name,
-              wins: winner.wins,
-              time: winner.time,
-            })),
-          );
-        });
-        const carWinners = await Promise.all(carWinnersPromises);
-        modelCarWinners.carWinners.push(...carWinners);
-      }
-      this.appView.winnersView.updateWinnerTable(modelCarWinners, this.currentWinnersPage);
-      // this.appView.renderPage({ dataWinners: modelCarWinners, page: this.currentWinnersPage });
-    });
   }
 }

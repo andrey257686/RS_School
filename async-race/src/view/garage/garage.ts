@@ -1,96 +1,187 @@
 import { ModelInitGarage, Car } from "../../types/types";
+import garageListeners from "./garageListeners";
 import "./garage.scss";
 
 export default class GarageView {
   public garagePage: HTMLDivElement;
 
+  public garageMenu: HTMLDivElement;
+
+  public garageRaceControls: HTMLDivElement;
+
+  public garageName: HTMLSpanElement;
+
   public garageContainer: HTMLDivElement;
 
-  public garageTracks: HTMLDivElement[] | undefined;
-
-  public garagaName: HTMLSpanElement | undefined;
-
-  public garagePagination: HTMLDivElement | undefined;
-
-  public garageRaceControls: HTMLDivElement | undefined;
+  public garagePagination: HTMLDivElement;
 
   public countCars: number = 0;
 
-  public handleRemoveClick: ((ev: MouseEvent) => Promise<void>) | undefined;
-
-  public handleSelectClick: ((ev: MouseEvent) => void) | undefined;
-
-  public handleNextPageClick: ((ev: MouseEvent) => void) | undefined;
-
-  public handlePrevPageClick: ((ev: MouseEvent) => void) | undefined;
-
-  public handleGenerateClick: (() => void) | undefined;
-
-  public handleStartClick: ((ev: MouseEvent) => void) | undefined;
-
-  public handleStopClick: ((ev: MouseEvent) => void) | undefined;
-
-  public handleRaceClick: (() => void) | undefined;
-
-  public handleResetClick: (() => void) | undefined;
-
   constructor() {
-    this.garageContainer = this.createTracksContainer();
+    this.garagePage = document.createElement("div");
+    this.garageMenu = document.createElement("div");
+    this.garageRaceControls = document.createElement("div");
+    this.garageName = document.createElement("span");
+    this.garageContainer = document.createElement("div");
+    this.garagePagination = document.createElement("div");
 
-    this.garagePage = this.createGaragePage();
-  }
-
-  public createTracksContainer() {
-    const element: HTMLDivElement = document.createElement("div");
-    element.classList.add("tracks__container");
-    return element;
+    this.createGaragePage();
   }
 
   public createGaragePage() {
-    this.garagePage = document.createElement("div");
     this.garagePage.classList.add("garage");
     this.garagePage.append(this.renderMenu());
-    // this.garagePage.append(this.renderRaceControls());
-    // this.garagePage.appendChild(this.garageContainer);
-    return this.garagePage;
-  }
-
-  public renderContentGaragePage(data: ModelInitGarage, page: number) {
     this.garagePage.append(this.renderRaceControls());
-    // this.renderRaceControls();
-    this.garagePage.appendChild(this.garageContainer);
-    this.renderName(data);
-    this.renderTracks(data);
-    this.renderPagination(page);
+    this.garagePage.append(this.renderName());
+    this.garagePage.append(this.renderTracksContainer());
+    this.garagePage.append(this.renderPagination());
   }
 
-  public renderName(data: ModelInitGarage) {
-    if (this.garagaName !== undefined) {
-      this.garagaName.innerHTML = "";
-      this.garagaName.remove();
+  public renderMenu() {
+    this.garageMenu.classList.add("garage__menu");
+    for (let i = 0; i < 2; i += 1) {
+      const element: HTMLDivElement = document.createElement("div");
+      if (i === 0) {
+        element.classList.add("options");
+        element.classList.add("garage__menu_create");
+        const inputName: HTMLInputElement = document.createElement("input");
+        inputName.classList.add("garage__menu_input");
+        inputName.classList.add("options__create_name");
+        inputName.type = "text";
+        inputName.id = "create-name";
+        const inputColor: HTMLInputElement = document.createElement("input");
+        inputColor.classList.add("garage__menu_input");
+        inputColor.classList.add("options__create_color");
+        inputColor.type = "color";
+        inputColor.id = "create-color";
+        const button: HTMLButtonElement = document.createElement("button");
+        button.classList.add("garage__menu_button");
+        button.classList.add("options__create_button");
+        button.textContent = "Create";
+        if (garageListeners.handleCreateClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleCreateClick);
+        }
+        element.append(inputName, inputColor, button);
+      } else {
+        element.classList.add("options");
+        element.classList.add("garage__menu_update");
+        const inputName: HTMLInputElement = document.createElement("input");
+        inputName.classList.add("garage__menu_input");
+        inputName.classList.add("options__update_name");
+        inputName.type = "text";
+        inputName.id = "update-name";
+        const inputColor: HTMLInputElement = document.createElement("input");
+        inputColor.classList.add("garage__menu_input");
+        inputColor.classList.add("options__update_color");
+        inputColor.type = "color";
+        inputColor.id = "update-color";
+        const button: HTMLButtonElement = document.createElement("button");
+        button.classList.add("garage__menu_button");
+        button.classList.add("options__update_button");
+        button.textContent = "Update";
+        if (garageListeners.handleUpdateClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleUpdateClick);
+        }
+        element.append(inputName, inputColor, button);
+      }
+      this.garageMenu.appendChild(element);
     }
-    const element: HTMLSpanElement = document.createElement("span");
-    element.classList.add("garage__name");
-    if (data.count !== undefined) {
-      this.countCars = Number(data.count);
-      element.textContent = `Garage (${this.countCars})`;
-    }
-    this.garagaName = element;
-    this.garagePage.insertBefore(this.garagaName, this.garageContainer);
+    return this.garageMenu;
   }
 
-  public renderTracks(data: ModelInitGarage) {
+  public renderRaceControls() {
+    this.garageRaceControls.classList.add("garage__controls");
+    for (let i = 0; i < 3; i += 1) {
+      const button: HTMLButtonElement = document.createElement("button");
+      button.classList.add("garage__menu_button");
+      if (i === 0) {
+        button.classList.add("garage__controls_race");
+        button.textContent = "Race";
+        if (garageListeners.handleRaceClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleRaceClick);
+        }
+      } else if (i === 1) {
+        button.classList.add("garage__controls_reset");
+        button.textContent = "Reset";
+        if (garageListeners.handleResetClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleResetClick);
+        }
+      } else if (i === 2) {
+        button.classList.add("garage__controls_generate");
+        button.textContent = "Generate cars";
+        if (garageListeners.handleGenerateClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleGenerateClick!);
+        }
+      }
+      this.garageRaceControls.appendChild(button);
+    }
+    return this.garageRaceControls;
+  }
+
+  public renderName() {
+    this.garageName.classList.add("garage__name");
+    return this.garageName;
+  }
+
+  public renderTracksContainer() {
+    this.garageContainer.classList.add("garage__container");
+    return this.garageContainer;
+  }
+
+  public renderPagination() {
+    this.garagePagination.classList.add("garage__pagination");
+    const buttonPrev: HTMLButtonElement = document.createElement("button");
+    buttonPrev.classList.add("garage__pagination_prev");
+    buttonPrev.classList.add("garage__pagination_button");
+    if (garageListeners.handlePrevPageClick !== undefined) {
+      buttonPrev.addEventListener("click", garageListeners.handlePrevPageClick);
+    }
+    buttonPrev.textContent = "PREV";
+    const currentPage: HTMLSpanElement = document.createElement("span");
+    currentPage.classList.add("garage__pagination_curPage");
+    const buttonNext: HTMLButtonElement = document.createElement("button");
+    buttonNext.classList.add("garage__pagination_next");
+    buttonNext.classList.add("garage__pagination_button");
+    if (garageListeners.handleNextPageClick !== undefined) {
+      buttonNext.addEventListener("click", garageListeners.handleNextPageClick);
+    }
+    buttonNext.textContent = "NEXT";
+    this.garagePagination.append(buttonPrev, currentPage, buttonNext);
+    return this.garagePagination;
+  }
+
+  public updateGaragePage(data: ModelInitGarage, page: number) {
+    this.updateGarageName(data);
+    this.updateGarageContainer(data);
+    this.updatePagination(page);
+  }
+
+  public updateGarageContainer(data: ModelInitGarage) {
     this.garageContainer.innerHTML = "";
     const { cars } = data;
     cars.forEach((car) => {
       const element: HTMLDivElement = document.createElement("div");
-      // element.classList.add(`track_${idx}`);
       element.classList.add(`track`);
       element.id = String(car.id);
       element.prepend(this.renderControl(car.name));
       element.append(this.renderTrackRoad(car.color));
       this.garageContainer.appendChild(element);
     });
+  }
+
+  public updateGarageName(data: ModelInitGarage) {
+    const { count } = data;
+    const element: HTMLSpanElement | null = document.querySelector(".garage__name");
+    if (element !== null) {
+      element.textContent = `Garage (${count})`;
+    }
+  }
+
+  public updatePagination(page: number) {
+    const element: HTMLSpanElement | null = document.querySelector(".garage__pagination_curPage");
+    if (element !== null) {
+      element.textContent = `${page}`;
+    }
   }
 
   public renderControl(name: string) {
@@ -114,14 +205,14 @@ export default class GarageView {
       if (i === 0) {
         button.textContent = "Select";
         button.classList.add("track__button_select");
-        if (this.handleSelectClick !== undefined) {
-          button.addEventListener("click", this.handleSelectClick);
+        if (garageListeners.handleSelectClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleSelectClick);
         }
       } else {
         button.textContent = "Remove";
         button.classList.add("track__button_remove");
-        if (this.handleRemoveClick !== undefined) {
-          button.addEventListener("click", this.handleRemoveClick);
+        if (garageListeners.handleRemoveClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleRemoveClick);
         }
       }
       element.appendChild(button);
@@ -138,14 +229,14 @@ export default class GarageView {
       if (i === 0) {
         button.textContent = "Start";
         button.classList.add("track__button_start");
-        if (this.handleStartClick !== undefined) {
-          button.addEventListener("click", this.handleStartClick);
+        if (garageListeners.handleStartClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleStartClick);
         }
       } else {
         button.textContent = "Stop";
         button.classList.add("track__button_stop");
-        if (this.handleStopClick !== undefined) {
-          button.addEventListener("click", this.handleStopClick);
+        if (garageListeners.handleStopClick !== undefined) {
+          button.addEventListener("click", garageListeners.handleStopClick);
         }
       }
       element.appendChild(button);
@@ -175,118 +266,6 @@ export default class GarageView {
     return element;
   }
 
-  public renderMenu() {
-    const elementMenu: HTMLDivElement = document.createElement("div");
-    elementMenu.classList.add("garage__menu");
-    for (let i = 0; i < 2; i += 1) {
-      const element: HTMLDivElement = document.createElement("div");
-      if (i === 0) {
-        element.classList.add("options");
-        element.classList.add("garage__menu_create");
-        const inputName: HTMLInputElement = document.createElement("input");
-        inputName.classList.add("garage__menu_input");
-        inputName.classList.add("options__create_name");
-        inputName.type = "text";
-        inputName.id = "create-name";
-        const inputColor: HTMLInputElement = document.createElement("input");
-        inputColor.classList.add("garage__menu_input");
-        inputColor.classList.add("options__create_color");
-        inputColor.type = "color";
-        inputColor.id = "create-color";
-        const button: HTMLButtonElement = document.createElement("button");
-        button.classList.add("garage__menu_button");
-        button.classList.add("options__create_button");
-        button.textContent = "Create";
-        button.addEventListener("click", () => {});
-        element.append(inputName, inputColor, button);
-      } else {
-        element.classList.add("options");
-        element.classList.add("garage__menu_update");
-        const inputName: HTMLInputElement = document.createElement("input");
-        inputName.classList.add("garage__menu_input");
-        inputName.classList.add("options__update_name");
-        inputName.type = "text";
-        inputName.id = "update-name";
-        const inputColor: HTMLInputElement = document.createElement("input");
-        inputColor.classList.add("garage__menu_input");
-        inputColor.classList.add("options__update_color");
-        inputColor.type = "color";
-        inputColor.id = "update-color";
-        const button: HTMLButtonElement = document.createElement("button");
-        button.classList.add("garage__menu_button");
-        button.classList.add("options__update_button");
-        button.textContent = "Update";
-        element.append(inputName, inputColor, button);
-      }
-      elementMenu.appendChild(element);
-    }
-    return elementMenu;
-  }
-
-  public renderRaceControls() {
-    if (this.garageRaceControls !== undefined) {
-      this.garageRaceControls.innerHTML = "";
-      this.garageRaceControls.remove();
-    }
-    const element: HTMLDivElement = document.createElement("div");
-    element.classList.add("garage__controls");
-    for (let i = 0; i < 3; i += 1) {
-      const button: HTMLButtonElement = document.createElement("button");
-      button.classList.add("garage__menu_button");
-      if (i === 0) {
-        button.classList.add("garage__controls_race");
-        button.textContent = "Race";
-        if (this.handleRaceClick !== undefined) {
-          button.addEventListener("click", this.handleRaceClick);
-        }
-      } else if (i === 1) {
-        button.classList.add("garage__controls_reset");
-        button.textContent = "Reset";
-        if (this.handleResetClick !== undefined) {
-          button.addEventListener("click", this.handleResetClick);
-        }
-      } else if (i === 2) {
-        button.classList.add("garage__controls_generate");
-        button.textContent = "Generate cars";
-        if (this.handleGenerateClick !== undefined) {
-          button.addEventListener("click", this.handleGenerateClick!);
-        }
-      }
-      element.appendChild(button);
-    }
-    this.garageRaceControls = element;
-    return element;
-  }
-
-  public renderPagination(page: number) {
-    if (this.garagePagination !== undefined) {
-      this.garagePagination.innerHTML = "";
-      this.garagePagination.remove();
-    }
-    const element: HTMLDivElement = document.createElement("div");
-    element.classList.add("garage__pagination");
-    const buttonPrev: HTMLButtonElement = document.createElement("button");
-    buttonPrev.classList.add("garage__pagination_prev");
-    buttonPrev.classList.add("garage__pagination_button");
-    if (this.handlePrevPageClick !== undefined) {
-      buttonPrev.addEventListener("click", this.handlePrevPageClick);
-    }
-    buttonPrev.textContent = "PREV";
-    const currentPage: HTMLSpanElement = document.createElement("span");
-    currentPage.classList.add("garage__pagination_curPage");
-    currentPage.textContent = `${page}`;
-    const buttonNext: HTMLButtonElement = document.createElement("button");
-    buttonNext.classList.add("garage__pagination_next");
-    buttonNext.classList.add("garage__pagination_button");
-    if (this.handleNextPageClick !== undefined) {
-      buttonNext.addEventListener("click", this.handleNextPageClick);
-    }
-    buttonNext.textContent = "NEXT";
-    element.append(buttonPrev, currentPage, buttonNext);
-    this.garagePagination = element;
-    this.garagePage.append(this.garagePagination);
-  }
-
   public toggleButtonPagination(buttonName: string, on: boolean) {
     const button = document.querySelector(`.garage__pagination_${buttonName}`);
     if (on) {
@@ -305,7 +284,7 @@ export default class GarageView {
     element.prepend(this.renderControl(car.name));
     element.append(this.renderTrackRoad(car.color));
     this.countCars += 1;
-    this.garagaName!.textContent = `Garage (${this.countCars})`;
+    this.garageName!.textContent = `Garage (${this.countCars})`;
     this.garageContainer.appendChild(element);
   }
 

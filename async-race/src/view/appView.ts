@@ -1,7 +1,7 @@
 import GarageView from "./garage/garage";
 import WinnersView from "./winners/winners";
 import Components from "./components/components";
-import { ModelInitGarage, ModelCarWinners } from "../types/types";
+// import { ModelInitGarage, ModelCarWinners } from "../types/types";
 
 export default class AppView {
   public garageView: GarageView;
@@ -19,25 +19,12 @@ export default class AppView {
     this.components = new Components();
     this.container.appendChild(this.garageView.garagePage);
     this.container.appendChild(this.winnersView.winnersPage);
+    this.buildPage();
   }
 
-  public renderPage({
-    dataGarage,
-    dataWinners,
-    page,
-  }: {
-    dataGarage?: ModelInitGarage;
-    dataWinners?: ModelCarWinners;
-    page: number;
-  }) {
+  public buildPage() {
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
-    if (dataGarage !== undefined) {
-      this.garageView.renderContentGaragePage(dataGarage, page);
-    }
-    if (dataWinners !== undefined) {
-      this.winnersView.renderContentWinnersPage(dataWinners, page);
-    }
   }
 
   public createContainer() {
