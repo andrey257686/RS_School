@@ -80,17 +80,22 @@ export default class AppModel {
   }
 
   public async handleRaceClick() {
-    // const tracks = document.querySelectorAll(".track");
     const tracks = Array.from(document.querySelectorAll(".track"));
-    // const tracksPromises = [];
-    // for (let i = 0; i < tracks.length; i += 1) {
-    //   tracksPromises.push(this.startCar(tracks[i] as HTMLDivElement));
-    // }
     const promises = tracks.map((track) => {
       return this.startCar(track as HTMLDivElement);
     });
     Promise.any(promises)
-      .then((result) => {
+      .then(async (result) => {
+        await this.getWinner(Number(result.id))
+          .then(async (res) => {
+            const currentWins = res.wins + 1;
+            await this.updateWinner(Number(result.id), result.time, currentWins);
+            await this.updateWinnerTable();
+          })
+          .catch(async () => {
+            await this.createWinner(Number(result.id), result.time);
+            await this.updateWinnerTable();
+          });
         console.log("First car", result);
       })
       .catch((err) => {
@@ -104,7 +109,7 @@ export default class AppModel {
     for (let i = 0; i < tracks.length; i += 1) {
       tracksPromises.push(this.stopCar(tracks[i] as HTMLDivElement));
     }
-    await Promise.all(tracksPromises);
+    Promise.all(tracksPromises);
   }
 
   public initializeListeners() {
@@ -225,7 +230,10 @@ export default class AppModel {
       const time = distance / velocity / 1000;
       this.appView.garageView.moveCar(track, time);
       await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`);
-      return track.id;
+      return {
+        id: track.id,
+        time,
+      };
     } catch (error) {
       this.appView.garageView.stopCar(track);
       throw error;
@@ -235,5 +243,51 @@ export default class AppModel {
   public async stopCar(track: HTMLDivElement) {
     await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=stopped`);
     this.appView.garageView.toBeginCar(track);
+  }
+
+  public async createWinner(id: number, time: number, wins = 1) {
+    return axios.post(`${this.SERVER}/winners`, {
+      id,
+      wins,
+      time,
+    });
+  }
+
+  public async updateWinner(id: number, time: number, wins: number) {
+    return axios.patch(`${this.SERVER}/winners/${id}`, {
+      wins,
+      time,
+    });
+  }
+
+  public async getWinner(id: number) {
+    const response = await axios.get(`${this.SERVER}/winners/${id}`);
+    return response.data;
+  }
+
+  public async updateWinnerTable() {
+    await this.getWinners().then(async (response) => {
+      const modelCarWinners: ModelCarWinners = {
+        carWinners: [],
+        count: response.headers["x-total-count"],
+      };
+      if (Array.isArray(response.data)) {
+        const carWinnersPromises: Promise<CarWinners>[] = [];
+        response.data.forEach((winner) => {
+          carWinnersPromises.push(
+            this.getCar(winner.id).then((responseWinner) => ({
+              color: responseWinner.data.color,
+              name: responseWinner.data.name,
+              wins: winner.wins,
+              time: winner.time,
+            })),
+          );
+        });
+        const carWinners = await Promise.all(carWinnersPromises);
+        modelCarWinners.carWinners.push(...carWinners);
+      }
+      this.appView.winnersView.updateWinnerTable(modelCarWinners);
+      // this.appView.renderPage({ dataWinners: modelCarWinners, page: this.currentWinnersPage });
+    });
   }
 }
