@@ -70,15 +70,19 @@ export default class GarageView {
         inputName.classList.add("options__update_name");
         inputName.type = "text";
         inputName.id = "update-name";
+        inputName.setAttribute("disabled", "true");
         const inputColor: HTMLInputElement = document.createElement("input");
         inputColor.classList.add("garage__menu_input");
         inputColor.classList.add("options__update_color");
         inputColor.type = "color";
         inputColor.id = "update-color";
+        inputColor.setAttribute("disabled", "true");
         const button: HTMLButtonElement = document.createElement("button");
         button.classList.add("garage__menu_button");
         button.classList.add("options__update_button");
         button.textContent = "Update";
+        button.setAttribute("disabled", "true");
+        button.classList.add("disabled");
         if (garageListeners.handleUpdateClick !== undefined) {
           button.addEventListener("click", garageListeners.handleUpdateClick);
         }
@@ -292,7 +296,6 @@ export default class GarageView {
 
   public moveCar(track: HTMLDivElement, time: number) {
     const buttonStart = track.querySelector(".track__button_start");
-    console.log(buttonStart);
     buttonStart?.classList.add("disabled");
     buttonStart?.setAttribute("disabled", "true");
     const buttonStop = track.querySelector(".track__button_stop");
@@ -325,5 +328,24 @@ export default class GarageView {
     const currentCar = track.querySelector(".track__road_car");
     (currentCar as HTMLDivElement).style.transition = "";
     (currentCar as HTMLDivElement).style.transform = `translateX(0px)`;
+  }
+
+  public changeUpdateState(on: boolean) {
+    const inputUpdateName = document.querySelector(".options__update_name");
+    const inputUpdateColor = document.querySelector(".options__update_color");
+    const buttonUpdate = document.querySelector(".options__update_button");
+    if (on) {
+      buttonUpdate?.classList.remove("disabled");
+      buttonUpdate?.removeAttribute("disabled");
+      inputUpdateName?.removeAttribute("disabled");
+      inputUpdateColor?.removeAttribute("disabled");
+    } else {
+      buttonUpdate?.classList.add("disabled");
+      buttonUpdate?.setAttribute("disabled", "true");
+      (inputUpdateName as HTMLInputElement).value = "";
+      (inputUpdateColor as HTMLInputElement).value = "";
+      inputUpdateName?.setAttribute("disabled", "true");
+      inputUpdateColor?.setAttribute("disabled", "true");
+    }
   }
 }

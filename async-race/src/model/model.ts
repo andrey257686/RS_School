@@ -52,23 +52,16 @@ export default class AppModel {
   }
 
   public handleCreateClick(): void {
-    if ((document.querySelector(".options__create_name") as HTMLInputElement).value === "") {
-      alert("Enter the name of the car");
-    } else {
-      const name: string = (document.querySelector(".options__create_name") as HTMLInputElement).value;
-      const color: string = (document.querySelector(".options__create_color") as HTMLInputElement).value;
-      this.createCar(name, color);
-    }
+    const name: string = (document.querySelector(".options__create_name") as HTMLInputElement).value;
+    const color: string = (document.querySelector(".options__create_color") as HTMLInputElement).value;
+    this.createCar(name, color);
   }
 
   public handleUpdateClick(): void {
-    if ((document.querySelector(".options__update_name") as HTMLInputElement).value === "") {
-      alert("Enter the name of the car");
-    } else {
-      const name: string = (document.querySelector(".options__update_name") as HTMLInputElement).value;
-      const color: string = (document.querySelector(".options__update_color") as HTMLInputElement).value;
-      this.updateCar(name, color);
-    }
+    const name: string = (document.querySelector(".options__update_name") as HTMLInputElement).value;
+    const color: string = (document.querySelector(".options__update_color") as HTMLInputElement).value;
+    this.updateCar(name, color);
+    this.appView.garageView.changeUpdateState(false);
   }
 
   public async handleRaceClick() {
@@ -134,14 +127,15 @@ export default class AppModel {
     const inputUpdateName = document.querySelector(".options__update_name");
     const inputUpdateColor = document.querySelector(".options__update_color");
     if (parentTrack) {
+      this.appView.garageView.changeUpdateState(true);
       this.selectedId = Number(parentTrack.id);
       const name = parentTrack.querySelector(".track__controls_name")?.textContent;
       const color = parentTrack.querySelector("svg g")?.getAttribute("fill");
       if (name) {
-        inputUpdateName?.setAttribute("value", name);
+        (inputUpdateName as HTMLInputElement).value = name;
       }
       if (color) {
-        inputUpdateColor?.setAttribute("value", color);
+        (inputUpdateColor as HTMLInputElement).value = color;
       }
     }
   }
