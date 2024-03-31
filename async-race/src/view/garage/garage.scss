@@ -27,6 +27,12 @@
     gap: 20px;
     padding-bottom: 20px;
   }
+  &__container {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
   &__pagination {
     display: flex;
     flex-direction: row;

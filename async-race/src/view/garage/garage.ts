@@ -235,6 +235,8 @@ export default class GarageView {
       } else {
         button.textContent = "Stop";
         button.classList.add("track__button_stop");
+        button.setAttribute("disabled", "true");
+        button.classList.add("disabled");
         if (garageListeners.handleStopClick !== undefined) {
           button.addEventListener("click", garageListeners.handleStopClick);
         }
@@ -289,6 +291,13 @@ export default class GarageView {
   }
 
   public moveCar(track: HTMLDivElement, time: number) {
+    const buttonStart = track.querySelector(".track__button_start");
+    console.log(buttonStart);
+    buttonStart?.classList.add("disabled");
+    buttonStart?.setAttribute("disabled", "true");
+    const buttonStop = track.querySelector(".track__button_stop");
+    buttonStop?.classList.remove("disabled");
+    buttonStop?.removeAttribute("disabled");
     const currentCar = track.querySelector(".track__road_car");
     const currentCarWidth = (currentCar as HTMLDivElement).offsetWidth;
     const roadWidth = (track.querySelector(".track__road") as HTMLDivElement).offsetWidth;
@@ -307,6 +316,12 @@ export default class GarageView {
   }
 
   public toBeginCar(track: HTMLDivElement) {
+    const buttonStop = track.querySelector(".track__button_stop");
+    buttonStop?.classList.add("disabled");
+    buttonStop?.setAttribute("disabled", "true");
+    const buttonStart = track.querySelector(".track__button_start");
+    buttonStart?.classList.remove("disabled");
+    buttonStart?.removeAttribute("disabled");
     const currentCar = track.querySelector(".track__road_car");
     (currentCar as HTMLDivElement).style.transition = "";
     (currentCar as HTMLDivElement).style.transform = `translateX(0px)`;

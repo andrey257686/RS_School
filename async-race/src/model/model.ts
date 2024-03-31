@@ -74,7 +74,7 @@ export default class AppModel {
   public async handleRaceClick() {
     const tracks = Array.from(document.querySelectorAll(".track"));
     const promises = tracks.map((track) => {
-      return this.startCar(track as HTMLDivElement);
+      return this.startRace(track as HTMLDivElement);
     });
     Promise.any(promises)
       .then(async (result) => {
@@ -336,7 +336,23 @@ export default class AppModel {
       const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
       const { velocity, distance } = response.data;
       const time = distance / velocity / 1000;
-      console.log(time);
+      this.appView.garageView.moveCar(track, time);
+      await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`);
+      return {
+        id: track.id,
+        time,
+      };
+    } catch (error) {
+      this.appView.garageView.stopCar(track);
+      return null;
+    }
+  }
+
+  public async startRace(track: HTMLDivElement) {
+    try {
+      const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
+      const { velocity, distance } = response.data;
+      const time = distance / velocity / 1000;
       this.appView.garageView.moveCar(track, time);
       await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`);
       return {
