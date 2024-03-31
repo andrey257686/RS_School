@@ -78,20 +78,25 @@ export default class AppModel {
     });
     Promise.any(promises)
       .then(async (result) => {
+        console.log(result);
+        let currentTime = 0;
         await this.getWinner(Number(result.id))
           .then(async (res) => {
+            const bestTime: number = res.time < result.time ? res.time : result.time;
+            currentTime = result.time;
             const currentWins = res.wins + 1;
-            await this.updateWinner(Number(result.id), result.time, currentWins);
+            await this.updateWinner(Number(result.id), Number(bestTime.toFixed(3)), currentWins);
             await this.updateWinnersData();
           })
           .catch(async () => {
-            await this.createWinner(Number(result.id), result.time);
+            currentTime = result.time;
+            await this.createWinner(Number(result.id), Number(currentTime.toFixed(3)));
             await this.updateWinnersData();
           });
         const response = await this.getCar(Number(result.id));
-        console.log(response);
-        this.appView.components.showModal(response.data.name, result.time);
-        console.log("First car", result);
+        // console.log(response);
+        this.appView.components.showModal(response.data.name, currentTime);
+        // console.log("First car", result);
       })
       .catch(() => {
         // console.log(err);
@@ -331,6 +336,7 @@ export default class AppModel {
       const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
       const { velocity, distance } = response.data;
       const time = distance / velocity / 1000;
+      console.log(time);
       this.appView.garageView.moveCar(track, time);
       await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`);
       return {
