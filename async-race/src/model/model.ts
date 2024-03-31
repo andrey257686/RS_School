@@ -28,6 +28,10 @@ export default class AppModel {
 
   public sortWinnersBy: string = "";
 
+  public abortController: AbortController | undefined;
+
+  public abortControllersArray: AbortController[] = [];
+
   constructor() {
     this.initializeListeners();
     this.appView = new AppView();
@@ -65,13 +69,19 @@ export default class AppModel {
   }
 
   public async handleRaceClick() {
+    console.log(this.abortControllersArray);
     const tracks = Array.from(document.querySelectorAll(".track"));
     const promises = tracks.map((track) => {
-      return this.startRace(track as HTMLDivElement);
+      const abortController = new AbortController();
+      const { signal } = abortController;
+      this.abortControllersArray.push(abortController);
+      return this.startRace(track as HTMLDivElement, signal);
     });
     Promise.any(promises)
       .then(async (result) => {
-        console.log(result);
+        if (result === null) {
+          return;
+        }
         let currentTime = 0;
         await this.getWinner(Number(result.id))
           .then(async (res) => {
@@ -87,9 +97,10 @@ export default class AppModel {
             await this.updateWinnersData();
           });
         const response = await this.getCar(Number(result.id));
-        // console.log(response);
         this.appView.components.showModal(response.data.name, currentTime);
-        // console.log("First car", result);
+        while (this.abortControllersArray.length > 0) {
+          this.abortControllersArray.pop();
+        }
       })
       .catch(() => {
         // console.log(err);
@@ -99,8 +110,11 @@ export default class AppModel {
   public async handleResetClick() {
     const tracks = document.querySelectorAll(".track");
     const tracksPromises = [];
+    while (this.abortControllersArray.length > 0) {
+      this.abortControllersArray.pop()!.abort();
+    }
     for (let i = 0; i < tracks.length; i += 1) {
-      tracksPromises.push(this.stopCar(tracks[i] as HTMLDivElement));
+      tracksPromises.push(this.stopRace(tracks[i] as HTMLDivElement));
     }
     Promise.all(tracksPromises);
   }
@@ -155,12 +169,18 @@ export default class AppModel {
   }
 
   public async handleNextPageClick(event: MouseEvent) {
+    while (this.abortControllersArray.length > 0) {
+      this.abortControllersArray.pop();
+    }
     event.preventDefault();
     this.currentGaragePage += 1;
     await this.updateCarsData();
   }
 
   public async handlePrevPageClick(event: MouseEvent) {
+    while (this.abortControllersArray.length > 0) {
+      this.abortControllersArray.pop();
+    }
     event.preventDefault();
     this.currentGaragePage -= 1;
     await this.updateCarsData();
@@ -326,12 +346,15 @@ export default class AppModel {
   }
 
   public async startCar(track: HTMLDivElement) {
+    this.abortController = new AbortController();
+    const { signal } = this.abortController;
     try {
       const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
       const { velocity, distance } = response.data;
       const time = distance / velocity / 1000;
       this.appView.garageView.moveCar(track, time);
-      await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`);
+      await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`, { signal });
+      console.log(signal.aborted);
       return {
         id: track.id,
         time,
@@ -342,17 +365,20 @@ export default class AppModel {
     }
   }
 
-  public async startRace(track: HTMLDivElement) {
+  public async startRace(track: HTMLDivElement, signal: AbortSignal) {
     try {
       const response = await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=started`);
       const { velocity, distance } = response.data;
       const time = distance / velocity / 1000;
       this.appView.garageView.moveCar(track, time);
-      await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`);
-      return {
-        id: track.id,
-        time,
-      };
+      await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`, { signal });
+      if (!signal.aborted) {
+        return {
+          id: track.id,
+          time,
+        };
+      }
+      return null;
     } catch (error) {
       this.appView.garageView.stopCar(track);
       throw error;
@@ -360,6 +386,14 @@ export default class AppModel {
   }
 
   public async stopCar(track: HTMLDivElement) {
+    if (this.abortController) {
+      this.abortController.abort();
+    }
+    await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=stopped`);
+    this.appView.garageView.toBeginCar(track);
+  }
+
+  public async stopRace(track: HTMLDivElement) {
     await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=stopped`);
     this.appView.garageView.toBeginCar(track);
   }
