@@ -25,6 +25,7 @@ export default class AppView {
   public buildPage() {
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
+    document.querySelector("body")?.appendChild(this.components.modal);
   }
 
   public createContainer() {

@@ -86,6 +86,9 @@ export default class AppModel {
             await this.createWinner(Number(result.id), result.time);
             await this.updateWinnersData();
           });
+        const response = await this.getCar(Number(result.id));
+        console.log(response);
+        this.appView.components.showModal(response.data.name, result.time);
         console.log("First car", result);
       })
       .catch(() => {

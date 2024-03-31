@@ -3,8 +3,12 @@ import "./components.scss";
 export default class Components {
   public header: HTMLHeadElement;
 
+  public modal: HTMLDivElement;
+
   constructor() {
     this.header = this.createHeader();
+
+    this.modal = this.createModal();
   }
 
   public createHeader() {
@@ -50,5 +54,26 @@ export default class Components {
       element.appendChild(button);
     }
     return element;
+  }
+
+  public createModal() {
+    const element: HTMLDivElement = document.createElement("div");
+    element.classList.add("modal");
+    const modalWinner = document.createElement("span");
+    modalWinner.classList.add("modal__winner");
+    const modalTime = document.createElement("span");
+    modalTime.classList.add("modal__time");
+    element.appendChild(modalWinner);
+    element.appendChild(modalTime);
+    return element;
+  }
+
+  public showModal(name: string, time: number) {
+    (document.querySelector(".modal") as HTMLDivElement).style.display = "flex";
+    (document.querySelector(".modal__winner") as HTMLSpanElement).textContent = `Winner: ${name}`;
+    (document.querySelector(".modal__time") as HTMLSpanElement).textContent = `Time: ${time.toFixed(3)}`;
+    setTimeout(() => {
+      (document.querySelector(".modal") as HTMLDivElement).style.display = "none";
+    }, 4000);
   }
 }
