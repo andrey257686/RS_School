@@ -11,13 +11,13 @@ export default class WinnersView {
 
   public winnersPagination: HTMLDivElement;
 
-  // public handlePrevPageClick: ((ev: MouseEvent) => void) | undefined;
-
-  // public handleNextPageClick: ((ev: MouseEvent) => void) | undefined;
-
   public countWinners: number = 0;
 
   public placeCounter: number = 1;
+
+  public orderByWins = "";
+
+  public orderByTime = "";
 
   constructor() {
     this.winnersPage = document.createElement("div");
@@ -104,13 +104,38 @@ export default class WinnersView {
         th.classList.add("table__head_name");
         th.classList.add("table__head_cell");
       } else if (i === 3) {
-        th.textContent = "Wins";
         th.classList.add("table__head_wins");
         th.classList.add("table__head_cell");
+        const contentTH = document.createElement("div");
+        contentTH.classList.add("table__head_wins-content");
+        const text = document.createElement("span");
+        text.textContent = "Wins";
+        contentTH.append(text);
+        const arrow = document.createElement("span");
+        arrow.classList.add("table__head_wins-arrow");
+        arrow.textContent = this.orderByWins;
+        contentTH.append(arrow);
+        th.append(contentTH);
+        if (winnersListeners.handleSortByWins !== undefined) {
+          th.addEventListener("click", winnersListeners.handleSortByWins);
+        }
       } else if (i === 4) {
-        th.textContent = "Best time";
+        // th.textContent = "Best time";
         th.classList.add("table__head_time");
         th.classList.add("table__head_cell");
+        const contentTH = document.createElement("div");
+        contentTH.classList.add("table__head_time-content");
+        const text = document.createElement("span");
+        text.textContent = "Best time";
+        contentTH.append(text);
+        const arrow = document.createElement("span");
+        arrow.classList.add("table__head_time-arrow");
+        arrow.textContent = this.orderByTime;
+        contentTH.append(arrow);
+        th.append(contentTH);
+        if (winnersListeners.handleSortByTime !== undefined) {
+          th.addEventListener("click", winnersListeners.handleSortByTime);
+        }
       }
       trHead.appendChild(th);
     }
@@ -171,6 +196,24 @@ export default class WinnersView {
     } else {
       button?.removeAttribute("disabled");
       button?.classList.remove("disabled");
+    }
+  }
+
+  public updateSortByWins(order: string) {
+    this.orderByTime = "";
+    if (order === "ASC") {
+      this.orderByWins = "↑";
+    } else {
+      this.orderByWins = "↓";
+    }
+  }
+
+  public updateSortByTime(order: string) {
+    this.orderByWins = "";
+    if (order === "ASC") {
+      this.orderByTime = "↑";
+    } else {
+      this.orderByTime = "↓";
     }
   }
 }

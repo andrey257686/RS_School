@@ -42,6 +42,13 @@
       padding: 8px;
       text-align: center;
     }
+    &_wins {
+      cursor: pointer;
+      gap: 10px;
+    }
+    &_time {
+      cursor: pointer;
+    }
   }
   &__cell {
     border: 2px solid black;
@@ -56,3 +63,11 @@
     background-color: rgb(255, 255, 255);
   }
 }
+
+// .arrow {
+//   width: 10px;
+//   height: 10px;
+//   border-top: 2px solid black;
+//   border-right: 2px solid black;
+//   transform: rotate(-45deg);
+// }

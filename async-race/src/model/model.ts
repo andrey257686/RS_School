@@ -24,6 +24,8 @@ export default class AppModel {
 
   public limitGaragePage: number = 7;
 
+  public orderWinnersBy: string = "ASC";
+
   constructor() {
     this.initializeListeners();
     this.appView = new AppView();
@@ -43,6 +45,8 @@ export default class AppModel {
     garageListeners.handlePrevPageClick = this.handlePrevPageClick.bind(this);
     winnersListeners.handlePrevPageClick = this.handlePrevPageClickWinners.bind(this);
     winnersListeners.handleNextPageClick = this.handleNextPageClickWinners.bind(this);
+    winnersListeners.handleSortByWins = this.handleSortByWins.bind(this);
+    winnersListeners.handleSortByTime = this.handleSortByTime.bind(this);
   }
 
   public handleCreateClick(): void {
@@ -170,6 +174,26 @@ export default class AppModel {
     this.updateWinnersData();
   }
 
+  public handleSortByWins() {
+    if (this.orderWinnersBy === "ASC") {
+      this.orderWinnersBy = "DESC";
+    } else {
+      this.orderWinnersBy = "ASC";
+    }
+    this.updateWinnersData("wins", this.orderWinnersBy);
+    this.appView.winnersView.updateSortByWins(this.orderWinnersBy);
+  }
+
+  public handleSortByTime() {
+    if (this.orderWinnersBy === "ASC") {
+      this.orderWinnersBy = "DESC";
+    } else {
+      this.orderWinnersBy = "ASC";
+    }
+    this.updateWinnersData("time", this.orderWinnersBy);
+    this.appView.winnersView.updateSortByTime(this.orderWinnersBy);
+  }
+
   public checkGaragePagination() {
     if (Math.ceil(this.totalCountCars / this.limitGaragePage) <= this.currentGaragePage) {
       this.appView.garageView.toggleButtonPagination("next", true);
@@ -210,8 +234,8 @@ export default class AppModel {
     });
   }
 
-  public async updateWinnersData() {
-    await this.getWinners().then(async (response) => {
+  public async updateWinnersData(sort = "id", order = "ASC") {
+    await this.getWinners(sort, order).then(async (response) => {
       const modelCarWinners: ModelCarWinners = {
         carWinners: [],
         count: response.headers["x-total-count"],
@@ -250,9 +274,11 @@ export default class AppModel {
     return response;
   }
 
-  public async getWinners<T>(): Promise<AxiosResponse<T>> {
+  public async getWinners<T>(sort = "id", order = "ASC"): Promise<AxiosResponse<T>> {
     const page = this.currentWinnersPage;
-    const response = await axios.get(`${this.SERVER}/winners?_limit=${this.limitWinnersPage}&_page=${page}`);
+    const response = await axios.get(
+      `${this.SERVER}/winners?_limit=${this.limitWinnersPage}&_page=${page}&_sort=${sort}&_order=${order}`,
+    );
     return response;
   }
 
