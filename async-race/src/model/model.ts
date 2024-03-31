@@ -69,7 +69,6 @@ export default class AppModel {
   }
 
   public async handleRaceClick() {
-    console.log(this.abortControllersArray);
     const tracks = Array.from(document.querySelectorAll(".track"));
     const promises = tracks.map((track) => {
       const abortController = new AbortController();
@@ -340,7 +339,7 @@ export default class AppModel {
     try {
       await axios.delete(`${this.SERVER}/winners/${id}`);
     } catch (err) {
-      console.log("There is no winner with this id");
+      console.log("No winner with this id");
     }
     await this.getInitialData();
   }
@@ -354,7 +353,6 @@ export default class AppModel {
       const time = distance / velocity / 1000;
       this.appView.garageView.moveCar(track, time);
       await axios.patch(`${this.SERVER}/engine?id=${track.id}&status=drive`, { signal });
-      console.log(signal.aborted);
       return {
         id: track.id,
         time,
