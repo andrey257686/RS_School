@@ -26,6 +26,8 @@ export default class AppModel {
 
   public orderWinnersBy: string = "ASC";
 
+  public sortWinnersBy: string = "";
+
   constructor() {
     this.initializeListeners();
     this.appView = new AppView();
@@ -183,7 +185,8 @@ export default class AppModel {
     } else {
       this.orderWinnersBy = "ASC";
     }
-    this.updateWinnersData("wins", this.orderWinnersBy);
+    this.sortWinnersBy = "wins";
+    this.updateWinnersData(this.sortWinnersBy, this.orderWinnersBy);
     this.appView.winnersView.updateSortByWins(this.orderWinnersBy);
   }
 
@@ -193,7 +196,8 @@ export default class AppModel {
     } else {
       this.orderWinnersBy = "ASC";
     }
-    this.updateWinnersData("time", this.orderWinnersBy);
+    this.sortWinnersBy = "time";
+    this.updateWinnersData(this.sortWinnersBy, this.orderWinnersBy);
     this.appView.winnersView.updateSortByTime(this.orderWinnersBy);
   }
 
@@ -238,7 +242,11 @@ export default class AppModel {
   }
 
   public async updateWinnersData(sort = "id", order = "ASC") {
-    await this.getWinners(sort, order).then(async (response) => {
+    let sortMethod = sort;
+    sortMethod = this.sortWinnersBy || "id";
+    let orderMethod = order;
+    orderMethod = this.orderWinnersBy || "ASC";
+    await this.getWinners(sortMethod, orderMethod).then(async (response) => {
       const modelCarWinners: ModelCarWinners = {
         carWinners: [],
         count: response.headers["x-total-count"],
