@@ -285,7 +285,6 @@ export default class GarageView {
 
   public toggleButtonControl(buttonName: string, on: boolean) {
     const button = document.querySelector(`.garage__controls_${buttonName}`);
-    console.log(button);
     if (on) {
       button?.setAttribute("disabled", "true");
       button?.classList.add("disabled");
