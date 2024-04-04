@@ -76,6 +76,7 @@ export default class AppModel {
       this.abortControllersArray.push(abortController);
       return this.startRace(track as HTMLDivElement, signal);
     });
+    this.appView.garageView.toggleButtonControl("race", true);
     Promise.any(promises)
       .then(async (result) => {
         if (result === null) {
@@ -115,6 +116,7 @@ export default class AppModel {
     for (let i = 0; i < tracks.length; i += 1) {
       tracksPromises.push(this.stopRace(tracks[i] as HTMLDivElement));
     }
+    this.appView.garageView.toggleButtonControl("race", false);
     Promise.all(tracksPromises);
   }
 

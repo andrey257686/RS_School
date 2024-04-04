@@ -283,6 +283,18 @@ export default class GarageView {
     }
   }
 
+  public toggleButtonControl(buttonName: string, on: boolean) {
+    const button = document.querySelector(`.garage__controls_${buttonName}`);
+    console.log(button);
+    if (on) {
+      button?.setAttribute("disabled", "true");
+      button?.classList.add("disabled");
+    } else {
+      button?.removeAttribute("disabled");
+      button?.classList.remove("disabled");
+    }
+  }
+
   public addTrack(car: Car) {
     const element: HTMLDivElement = document.createElement("div");
     element.classList.add(`track`);
