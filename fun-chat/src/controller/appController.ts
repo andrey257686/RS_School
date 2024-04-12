@@ -1,18 +1,22 @@
-// import AppModel from "../model/model";
+import AppModel from "../model/appModel";
 import AppView from "../view/appView";
 import Router from "./router";
 
 export default class AppController {
   public appView: AppView;
 
+  public appModel: AppModel;
+
   public router: Router;
 
   constructor() {
     this.appView = new AppView();
+    this.appModel = new AppModel();
     this.router = new Router();
   }
 
   public initialize() {
+    this.initializeListeners();
     this.appView.buildPage();
     const page = this.router.handleLocation();
     if (page) {
@@ -38,5 +42,26 @@ export default class AppController {
         this.appView.renderContent(page);
       }
     });
+  }
+
+  private initializeListeners() {
+    this.appView.loginView.handleLoginButtonClick = this.handleLoginButtonClick.bind(this);
+    this.appView.loginView.handleInputName = this.handleInputName.bind(this);
+    this.appView.loginView.handleInputPassword = this.handleInputPassword.bind(this);
+  }
+
+  private handleInputName(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.appModel.validateName(target.value, this.appView.loginView.showErrorValidation);
+  }
+
+  private handleInputPassword(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.appModel.validatePassword(target.value, this.appView.loginView.showErrorValidation);
+  }
+
+  private handleLoginButtonClick(event: Event) {
+    console.log("click");
+    event.preventDefault();
   }
 }

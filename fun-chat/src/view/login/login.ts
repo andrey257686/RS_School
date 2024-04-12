@@ -7,11 +7,19 @@ export default class LoginView {
 
   private fieldSet: HTMLFieldSetElement;
 
+  public handleLoginButtonClick: ((event: MouseEvent) => void) | undefined;
+
+  public handleInputName: ((event: Event) => void) | undefined;
+
+  public handleInputPassword: ((event: Event) => void) | undefined;
+
   constructor() {
     this.loginContainer = document.createElement("div");
     this.loginForm = document.createElement("form");
     this.fieldSet = document.createElement("fieldset");
+  }
 
+  public create() {
     this.createLoginContainer();
   }
 
@@ -29,6 +37,11 @@ export default class LoginView {
       if (i === 0) {
         button.innerText = "Login";
         button.classList.add("form__button_login");
+        if (this.handleLoginButtonClick) {
+          button.addEventListener("click", this.handleLoginButtonClick);
+        } else {
+          console.log('Не определён прослушивтель  для кнопки "Login"');
+        }
       } else {
         button.innerText = "Info";
         button.classList.add("form__button_info");
@@ -63,19 +76,53 @@ export default class LoginView {
       }
       const input = document.createElement("input");
       input.className = "fieldset__input";
+      const containerError = document.createElement("div");
+      containerError.className = "fieldset__errors";
       if (i === 0) {
         input.type = "text";
         input.classList.add("fieldset__input_name");
         input.setAttribute("id", "name");
+        if (this.handleInputName) {
+          input.addEventListener("input", this.handleInputName);
+        } else {
+          console.log('Не определён прослушивтель  для input "Name"');
+        }
         inputContainer.append(input);
+        containerError.classList.add("fieldset__errors_name");
+        inputContainer.append(containerError);
       } else if (i === 1) {
         input.type = "password";
         input.classList.add("fieldset__input_password");
         input.setAttribute("id", "password");
+        if (this.handleInputPassword) {
+          input.addEventListener("input", this.handleInputPassword);
+        } else {
+          console.log('Не определён прослушивтель  для input "Password"');
+        }
         inputContainer.append(input);
+        containerError.classList.add("fieldset__errors_password");
+        inputContainer.append(containerError);
       }
       this.fieldSet.appendChild(inputContainer);
     }
     return this.fieldSet;
+  }
+
+  public showErrorValidation(errors: string[], field: string) {
+    let errorContainer: HTMLDivElement | null = null;
+    if (field === "name") {
+      errorContainer = document.querySelector(".fieldset__errors_name");
+    } else if (field === "password") {
+      errorContainer = document.querySelector(".fieldset__errors_password");
+    }
+    if (errorContainer) {
+      errorContainer.innerText = "";
+      errors.forEach((error) => {
+        const errorElement = document.createElement("p");
+        errorElement.className = "fieldset__error";
+        errorElement.innerText = error;
+        errorContainer.append(errorElement);
+      });
+    }
   }
 }

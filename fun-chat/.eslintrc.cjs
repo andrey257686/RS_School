@@ -32,5 +32,6 @@ module.exports = {
   plugins: ["import", "eslint-plugin-import", "@typescript-eslint", "prettier"],
   rules: {
     "no-console": 0,
+    "class-methods-use-this": 0,
   },
 };

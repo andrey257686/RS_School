@@ -62,4 +62,11 @@
       outline: 1px solid #0482ff;
     }
   }
+  &__errors {
+    padding: 5px;
+  }
+  &__error {
+    color: red;
+    font-size: 12px;
+  }
 }

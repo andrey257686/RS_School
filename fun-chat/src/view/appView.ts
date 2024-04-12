@@ -18,11 +18,10 @@ export default class AppView {
 
     this.container = document.createElement("div");
     this.container.classList.add("container");
-
-    this.buildPage();
   }
 
   public buildPage() {
+    this.loginView.create();
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
   }
