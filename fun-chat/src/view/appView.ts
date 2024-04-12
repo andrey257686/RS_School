@@ -30,7 +30,7 @@ export default class AppView {
   public renderContent(page: string) {
     this.container.innerHTML = "";
     if (page === "login") {
-      this.container.appendChild(this.loginView.loginForm);
+      this.container.appendChild(this.loginView.loginContainer);
     }
     if (page === "chat") {
       this.container.appendChild(this.chatView.chat);

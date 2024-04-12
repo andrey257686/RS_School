@@ -1,3 +1,4 @@
+import "./style/style.scss";
 import AppController from "./controller/appController";
 
 class App {
