@@ -42,6 +42,18 @@ export default class AppController {
         this.appView.renderContent(page);
       }
     });
+    this.appModel.apiService.socket.onopen = () => {
+      this.appModel.onOpenSocket();
+    };
+    this.appModel.apiService.socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "USER_LOGIN") {
+        this.appModel.responseLogin(data);
+      }
+      if (data.type === "ERROR") {
+        this.appModel.responseError(data);
+      }
+    };
   }
 
   private initializeListeners() {
@@ -63,6 +75,8 @@ export default class AppController {
 
   private handleLoginButtonClick(event: Event) {
     event.preventDefault();
-    this.appModel.validateFields(this.appView.loginView.showErrorValidation);
+    if (this.appModel.isValidFields(this.appView.loginView.showErrorValidation)) {
+      this.appModel.requestLoginUser();
+    }
   }
 }
