@@ -17,6 +17,9 @@ export function validateErrorsPassword(password: string): string[] {
   if (password.length < 6) {
     errors.push("Password should be at least 6 characters long");
   }
+  if (password.length === 0) {
+    errors.push("Password should not be empty");
+  }
   if (!regexPassword.test(password)) {
     errors.push("Password must contain uppercase and lowercase letters");
   }

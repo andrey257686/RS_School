@@ -13,6 +13,8 @@ export default class LoginView {
 
   public handleInputPassword: ((event: Event) => void) | undefined;
 
+  public handleSubmitForm: ((event: Event) => void) | undefined;
+
   constructor() {
     this.loginContainer = document.createElement("div");
     this.loginForm = document.createElement("form");
@@ -30,12 +32,18 @@ export default class LoginView {
 
   private createForm() {
     this.loginForm.className = "login__form";
+    if (this.handleSubmitForm) {
+      this.loginForm.addEventListener("submit", this.handleSubmitForm);
+    } else {
+      console.log('Не определён прослушивтель для события "submit"');
+    }
     this.loginForm.appendChild(this.createFieldset());
     for (let i = 0; i < 2; i += 1) {
       const button = document.createElement("button");
       button.className = "login__form_button";
       if (i === 0) {
         button.innerText = "Login";
+        button.setAttribute("type", "submit");
         button.classList.add("form__button_login");
         if (this.handleLoginButtonClick) {
           button.addEventListener("click", this.handleLoginButtonClick);
@@ -75,6 +83,7 @@ export default class LoginView {
         inputContainer.append(label);
       }
       const input = document.createElement("input");
+      input.required = true;
       input.className = "fieldset__input";
       const containerError = document.createElement("div");
       containerError.className = "fieldset__errors";

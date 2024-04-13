@@ -48,6 +48,7 @@ export default class AppController {
     this.appView.loginView.handleLoginButtonClick = this.handleLoginButtonClick.bind(this);
     this.appView.loginView.handleInputName = this.handleInputName.bind(this);
     this.appView.loginView.handleInputPassword = this.handleInputPassword.bind(this);
+    this.appView.loginView.handleSubmitForm = this.handleLoginButtonClick.bind(this);
   }
 
   private handleInputName(event: Event) {
@@ -61,7 +62,8 @@ export default class AppController {
   }
 
   private handleLoginButtonClick(event: Event) {
-    console.log("click");
     event.preventDefault();
+    this.appModel.validateFields(this.appView.loginView.showErrorValidation);
+    console.log("click");
   }
 }
