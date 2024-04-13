@@ -64,6 +64,5 @@ export default class AppController {
   private handleLoginButtonClick(event: Event) {
     event.preventDefault();
     this.appModel.validateFields(this.appView.loginView.showErrorValidation);
-    console.log("click");
   }
 }
