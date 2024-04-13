@@ -11,8 +11,8 @@ class Router {
     return page;
   }
 
-  public route(event: Event) {
-    window.history.pushState({}, "", (event.target as HTMLAnchorElement).href);
+  public route(href: string) {
+    window.history.pushState({}, "", href);
     return this.handleLocation();
   }
 }

@@ -1,6 +1,6 @@
 import { validateErrorsName, validateErrorsPassword } from "../service/login.service";
 import ApiService from "../service/api.service";
-import { ResponseUserLogin, ResponseError } from "../types/types";
+import { ResponseUserLogin, ResponseError, ErrorTypeResponse, ErrorTypeShow } from "../types/types";
 
 export default class AppModel {
   private nameErrors: string[] = [];
@@ -19,13 +19,15 @@ export default class AppModel {
     this.apiService = new ApiService();
   }
 
-  public onOpenSocket() {
+  public onOpenSocket(fn: (page: string) => void) {
     const userCredentials = sessionStorage.getItem("userCredentials");
     if (userCredentials) {
       const { name, password } = JSON.parse(userCredentials);
       this.userName = name;
       this.userPassword = password;
       this.apiService.userLogin(this.userName, this.userPassword);
+    } else {
+      fn("/login");
     }
   }
 
@@ -62,13 +64,21 @@ export default class AppModel {
     this.apiService.userLogin(this.userName, this.userPassword);
   }
 
-  public responseLogin(data: ResponseUserLogin) {
+  public responseLogin(data: ResponseUserLogin, fn: (page: string) => void) {
     if (data.payload.user.isLogined === true) {
+      console.log("Пользователь авторизован");
       sessionStorage.setItem("userCredentials", JSON.stringify({ name: this.userName, password: this.userPassword }));
+      fn("/");
     }
   }
 
-  public responseError(data: ResponseError) {
+  public responseError(data: ResponseError, fn: (message: string) => void) {
     console.log(data.payload.error);
+    if (data.payload.error === ErrorTypeResponse.INCORRECT_PASSWORD) {
+      fn(ErrorTypeShow.INCORRECT_PASSWORD);
+    }
+    if (data.payload.error === ErrorTypeResponse.USER_ALREADY_AUTHORIZED) {
+      fn(ErrorTypeShow.USER_ALREADY_AUTHORIZED);
+    }
   }
 }

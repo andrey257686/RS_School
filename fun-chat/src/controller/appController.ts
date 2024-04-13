@@ -29,10 +29,8 @@ export default class AppController {
     document.querySelectorAll(".nav-link").forEach((link) => {
       link.addEventListener("click", (event) => {
         event.preventDefault();
-        const page = this.router.route(event);
-        if (page) {
-          this.appView.renderContent(page);
-        }
+        const { href } = event.target as HTMLAnchorElement;
+        this.changePage(href);
       });
     });
     window.addEventListener("popstate", (event) => {
@@ -43,15 +41,15 @@ export default class AppController {
       }
     });
     this.appModel.apiService.socket.onopen = () => {
-      this.appModel.onOpenSocket();
+      this.appModel.onOpenSocket(this.changePage.bind(this));
     };
     this.appModel.apiService.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "USER_LOGIN") {
-        this.appModel.responseLogin(data);
+        this.appModel.responseLogin(data, this.changePage.bind(this));
       }
       if (data.type === "ERROR") {
-        this.appModel.responseError(data);
+        this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }
     };
   }
@@ -61,6 +59,14 @@ export default class AppController {
     this.appView.loginView.handleInputName = this.handleInputName.bind(this);
     this.appView.loginView.handleInputPassword = this.handleInputPassword.bind(this);
     this.appView.loginView.handleSubmitForm = this.handleLoginButtonClick.bind(this);
+    this.appView.modal.handleCloseModal = this.handleCloseModal.bind(this);
+  }
+
+  private changePage(href: string) {
+    const page = this.router.route(href);
+    if (page) {
+      this.appView.renderContent(page);
+    }
   }
 
   private handleInputName(event: Event) {
@@ -78,5 +84,9 @@ export default class AppController {
     if (this.appModel.isValidFields(this.appView.loginView.showErrorValidation)) {
       this.appModel.requestLoginUser();
     }
+  }
+
+  private handleCloseModal() {
+    this.appView.closeModal();
   }
 }
