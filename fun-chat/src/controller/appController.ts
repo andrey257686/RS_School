@@ -35,10 +35,7 @@ export default class AppController {
     });
     window.addEventListener("popstate", (event) => {
       event.preventDefault();
-      const page = this.router.handleLocation();
-      if (page) {
-        this.appView.renderContent(page);
-      }
+      this.changePage();
     });
     this.appModel.apiService.socket.onopen = () => {
       this.appModel.onOpenSocket(this.changePage.bind(this));
@@ -62,8 +59,20 @@ export default class AppController {
     this.appView.modal.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
-  private changePage(href: string) {
-    const page = this.router.route(href);
+  private changePage(href?: string) {
+    let page = "";
+    if (!href) {
+      page = this.router.handleLocation();
+    } else {
+      page = this.router.route(href);
+    }
+    if (this.appModel.isLogined && page === "login") {
+      page = this.router.route("/main");
+    }
+    console.log(this.appModel.isLogined);
+    if (!this.appModel.isLogined && page === "chat") {
+      page = this.router.route("/login");
+    }
     if (page) {
       this.appView.renderContent(page);
     }

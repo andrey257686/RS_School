@@ -11,11 +11,14 @@ export default class AppModel {
 
   private userPassword: string;
 
+  public isLogined: boolean;
+
   public apiService: ApiService;
 
   constructor() {
     this.userName = "";
     this.userPassword = "";
+    this.isLogined = false;
     this.apiService = new ApiService();
   }
 
@@ -67,8 +70,12 @@ export default class AppModel {
   public responseLogin(data: ResponseUserLogin, fn: (page: string) => void) {
     if (data.payload.user.isLogined === true) {
       console.log("Пользователь авторизован");
-      sessionStorage.setItem("userCredentials", JSON.stringify({ name: this.userName, password: this.userPassword }));
-      fn("/");
+      this.isLogined = true;
+      sessionStorage.setItem(
+        "userCredentials",
+        JSON.stringify({ name: this.userName, password: this.userPassword, isLogined: true }),
+      );
+      fn("/main");
     }
   }
 

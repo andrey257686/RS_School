@@ -1,6 +1,6 @@
 class Router {
   routes: Record<string, string> = {
-    "/": "chat",
+    "/main": "chat",
     "/login": "login",
     "/about": "about",
   };
