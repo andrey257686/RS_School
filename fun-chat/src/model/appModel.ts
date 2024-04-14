@@ -22,16 +22,25 @@ export default class AppModel {
     this.apiService = new ApiService();
   }
 
-  public onOpenSocket(fn: (page: string) => void) {
+  // public onOpenSocket(fn: (page: string) => void) {
+  //   const userCredentials = sessionStorage.getItem("userCredentials");
+  //   if (userCredentials) {
+  //     const { name, password } = JSON.parse(userCredentials);
+  //     this.userName = name;
+  //     this.userPassword = password;
+  //     this.apiService.userLogin(this.userName, this.userPassword);
+  //   } else {
+  //     fn("/login");
+  //   }
+  // }
+
+  public isUserLogined(): boolean {
     const userCredentials = sessionStorage.getItem("userCredentials");
     if (userCredentials) {
-      const { name, password } = JSON.parse(userCredentials);
-      this.userName = name;
-      this.userPassword = password;
-      this.apiService.userLogin(this.userName, this.userPassword);
-    } else {
-      fn("/login");
+      const { isLogined } = JSON.parse(userCredentials);
+      this.isLogined = isLogined;
     }
+    return this.isLogined;
   }
 
   public validateName(name: string, fn: (errors: string[], field: string) => void): string[] {
@@ -75,7 +84,7 @@ export default class AppModel {
         "userCredentials",
         JSON.stringify({ name: this.userName, password: this.userPassword, isLogined: true }),
       );
-      fn("/main");
+      fn(`/main`);
     }
   }
 

@@ -11,7 +11,7 @@ class Router {
     return page;
   }
 
-  public route(href: string) {
+  public route(href: string): string {
     window.history.pushState({}, "", href);
     return this.handleLocation();
   }

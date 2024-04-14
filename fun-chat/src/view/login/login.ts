@@ -15,6 +15,8 @@ export default class LoginView {
 
   public handleSubmitForm: ((event: Event) => void) | undefined;
 
+  public handleInfoClick: ((event: MouseEvent) => void) | undefined;
+
   constructor() {
     this.loginContainer = document.createElement("div");
     this.loginForm = document.createElement("form");
@@ -52,6 +54,11 @@ export default class LoginView {
         }
       } else {
         button.innerText = "Info";
+        if (this.handleInfoClick) {
+          button.addEventListener("click", this.handleInfoClick);
+        } else {
+          console.log('Не определён прослушивтель для события "click"');
+        }
         button.classList.add("form__button_info");
       }
       this.loginForm.appendChild(button);

@@ -9,6 +9,8 @@ export default class AppController {
 
   public router: Router;
 
+  public currentPage: string = "";
+
   constructor() {
     this.appView = new AppView();
     this.appModel = new AppModel();
@@ -18,27 +20,20 @@ export default class AppController {
   public initialize() {
     this.initializeListeners();
     this.appView.buildPage();
-    const page = this.router.handleLocation();
-    if (page) {
-      this.appView.renderContent(page);
-    }
+    // const page = this.router.handleLocation();
+    // if (page) {
+    //   this.appView.renderContent(page);
+    // }
     this.listeners();
   }
 
   public listeners() {
-    document.querySelectorAll(".nav-link").forEach((link) => {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        const { href } = event.target as HTMLAnchorElement;
-        this.changePage(href);
-      });
-    });
     window.addEventListener("popstate", (event) => {
       event.preventDefault();
       this.changePage();
     });
     this.appModel.apiService.socket.onopen = () => {
-      this.appModel.onOpenSocket(this.changePage.bind(this));
+      this.changePage();
     };
     this.appModel.apiService.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -56,24 +51,28 @@ export default class AppController {
     this.appView.loginView.handleInputName = this.handleInputName.bind(this);
     this.appView.loginView.handleInputPassword = this.handleInputPassword.bind(this);
     this.appView.loginView.handleSubmitForm = this.handleLoginButtonClick.bind(this);
+    this.appView.loginView.handleInfoClick = this.handleInfoClick.bind(this);
     this.appView.modal.handleCloseModal = this.handleCloseModal.bind(this);
+    this.appView.aboutView.handleCloseAbout = this.handleCloseAbout.bind(this);
   }
 
   private changePage(href?: string) {
     let page = "";
-    if (!href) {
+    let currentHref = href;
+    if (window.location.pathname === "/about" && !href) {
+      currentHref = "/about";
+    } else if (this.appModel.isUserLogined() && href !== "/about") {
+      currentHref = "/main";
+    } else if (href !== "/about") {
+      currentHref = "/login";
+    }
+    if (!currentHref) {
       page = this.router.handleLocation();
     } else {
-      page = this.router.route(href);
-    }
-    if (this.appModel.isLogined && page === "login") {
-      page = this.router.route("/main");
-    }
-    console.log(this.appModel.isLogined);
-    if (!this.appModel.isLogined && page === "chat") {
-      page = this.router.route("/login");
+      page = this.router.route(currentHref);
     }
     if (page) {
+      this.currentPage = page;
       this.appView.renderContent(page);
     }
   }
@@ -95,7 +94,16 @@ export default class AppController {
     }
   }
 
+  private handleInfoClick(event: Event) {
+    event.preventDefault();
+    this.changePage("/about");
+  }
+
   private handleCloseModal() {
     this.appView.closeModal();
+  }
+
+  private handleCloseAbout() {
+    this.changePage("/main");
   }
 }

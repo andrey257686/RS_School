@@ -2,6 +2,7 @@ import Components from "./compenents/components";
 import LoginView from "./login/login";
 import ChatView from "./chat/chat";
 import ModalView from "./modal/modal";
+import AboutView from "./about/about";
 
 export default class AppView {
   public loginView: LoginView;
@@ -12,12 +13,15 @@ export default class AppView {
 
   public modal: ModalView;
 
+  public aboutView: AboutView;
+
   public container: HTMLDivElement;
 
   constructor() {
     this.loginView = new LoginView();
     this.chatView = new ChatView();
     this.components = new Components();
+    this.aboutView = new AboutView();
     this.modal = new ModalView();
 
     this.container = document.createElement("div");
@@ -27,6 +31,7 @@ export default class AppView {
   public buildPage() {
     this.loginView.create();
     this.modal.create();
+    this.aboutView.create();
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
   }
@@ -38,6 +43,9 @@ export default class AppView {
     }
     if (page === "chat") {
       this.container.appendChild(this.chatView.chat);
+    }
+    if (page === "about") {
+      this.container.appendChild(this.aboutView.aboutContainer);
     }
   }
 
