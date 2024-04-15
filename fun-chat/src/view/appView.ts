@@ -30,6 +30,7 @@ export default class AppView {
 
   public buildPage() {
     this.loginView.create();
+    this.chatView.create();
     this.modal.create();
     this.aboutView.create();
     document.querySelector("body")?.appendChild(this.components.header);
@@ -42,7 +43,7 @@ export default class AppView {
       this.container.appendChild(this.loginView.loginContainer);
     }
     if (page === "chat") {
-      this.container.appendChild(this.chatView.chat);
+      this.container.appendChild(this.chatView.chatContainer);
     }
     if (page === "about") {
       this.container.appendChild(this.aboutView.aboutContainer);
