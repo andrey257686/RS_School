@@ -1,3 +1,5 @@
+import "./chat.scss";
+
 export default class ChatView {
   public chatContainer: HTMLDivElement;
 
@@ -50,7 +52,15 @@ export default class ChatView {
 
   private createDialogField() {
     this.dialogField.classList.add("chat__dialog");
-    this.dialogFieldHeader.className = "chat__dialog_header";
+    this.dialogFieldHeader.className = "chat__dialog_header dialog__header";
+    const labelUserName = document.createElement("label");
+    labelUserName.className = "dialog__header_username";
+    labelUserName.innerText = "userName";
+    this.dialogFieldHeader.appendChild(labelUserName);
+    const labelUserStatus = document.createElement("label");
+    labelUserStatus.className = "dialog__header_status";
+    labelUserStatus.innerText = "status";
+    this.dialogFieldHeader.appendChild(labelUserStatus);
     this.dialogFieldBody.className = "chat__dialog_body";
     this.dialogFieldSending.className = "chat__dialog_sending sending";
     this.dialogFieldSending.appendChild(this.createFormSending());

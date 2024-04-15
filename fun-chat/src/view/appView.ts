@@ -33,8 +33,10 @@ export default class AppView {
     this.chatView.create();
     this.modal.create();
     this.aboutView.create();
+    this.components.create();
     document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
+    document.querySelector("body")?.appendChild(this.components.footer);
   }
 
   public renderContent(page: string) {
