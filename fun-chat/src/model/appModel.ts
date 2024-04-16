@@ -37,8 +37,12 @@ export default class AppModel {
   public isUserLogined(): boolean {
     const userCredentials = sessionStorage.getItem("userCredentials");
     if (userCredentials) {
-      const { isLogined } = JSON.parse(userCredentials);
+      const { name, password, isLogined } = JSON.parse(userCredentials);
       this.isLogined = isLogined;
+      if (this.isLogined) {
+        this.userName = name;
+        this.userPassword = password;
+      }
     }
     return this.isLogined;
   }
@@ -76,7 +80,11 @@ export default class AppModel {
     this.apiService.userLogin(this.userName, this.userPassword);
   }
 
-  public responseLogin(data: ResponseUserLogin, fn: (page: string) => void) {
+  public responseLogin(
+    data: ResponseUserLogin,
+    changePage: (page: string) => void,
+    showUserName: (name: string) => void,
+  ) {
     if (data.payload.user.isLogined === true) {
       console.log("Пользователь авторизован");
       this.isLogined = true;
@@ -84,8 +92,24 @@ export default class AppModel {
         "userCredentials",
         JSON.stringify({ name: this.userName, password: this.userPassword, isLogined: true }),
       );
-      fn(`/main`);
+      showUserName(this.userName);
+      changePage(`/main`);
     }
+  }
+
+  public requestLogoutUser() {
+    this.apiService.userLogout(this.userName, this.userPassword);
+  }
+
+  public responseLogout(data: ResponseUserLogin, changePage: (page: string) => void) {
+    this.userName = "";
+    this.userPassword = "";
+    this.isLogined = false;
+    sessionStorage.setItem(
+      "userCredentials",
+      JSON.stringify({ name: this.userName, password: this.userPassword, isLogined: data.payload.user.isLogined }),
+    );
+    changePage(`/login`);
   }
 
   public responseError(data: ResponseError, fn: (message: string) => void) {

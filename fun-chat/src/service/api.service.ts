@@ -19,4 +19,19 @@ export default class ApiService {
       }),
     );
   }
+
+  public userLogout(login: string, password: string) {
+    this.socket.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: "USER_LOGOUT",
+        payload: {
+          user: {
+            login,
+            password,
+          },
+        },
+      }),
+    );
+  }
 }

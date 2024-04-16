@@ -33,12 +33,22 @@ export default class AppController {
       this.changePage();
     });
     this.appModel.apiService.socket.onopen = () => {
+      if (this.appModel.isUserLogined()) {
+        this.appModel.requestLoginUser();
+      }
       this.changePage();
     };
     this.appModel.apiService.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "USER_LOGIN") {
-        this.appModel.responseLogin(data, this.changePage.bind(this));
+        this.appModel.responseLogin(
+          data,
+          this.changePage.bind(this),
+          this.appView.components.showUserName.bind(this.appView.components),
+        );
+      }
+      if (data.type === "USER_LOGOUT") {
+        this.appModel.responseLogout(data, this.changePage.bind(this));
       }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
@@ -54,6 +64,8 @@ export default class AppController {
     this.appView.loginView.handleInfoClick = this.handleInfoClick.bind(this);
     this.appView.modal.handleCloseModal = this.handleCloseModal.bind(this);
     this.appView.aboutView.handleCloseAbout = this.handleCloseAbout.bind(this);
+    this.appView.components.handleInfoClick = this.handleInfoClick.bind(this);
+    this.appView.components.handleLogoutClick = this.handleLogoutClick.bind(this);
   }
 
   private changePage(href?: string) {
@@ -61,7 +73,7 @@ export default class AppController {
     let currentHref = href;
     if (window.location.pathname === "/about" && !href) {
       currentHref = "/about";
-    } else if (this.appModel.isUserLogined() && href !== "/about") {
+    } else if (this.appModel.isLogined && href !== "/about") {
       currentHref = "/main";
     } else if (href !== "/about") {
       currentHref = "/login";
@@ -105,5 +117,9 @@ export default class AppController {
 
   private handleCloseAbout() {
     this.changePage("/main");
+  }
+
+  private handleLogoutClick() {
+    this.appModel.requestLogoutUser();
   }
 }

@@ -5,11 +5,18 @@ export default class Components {
 
   private headerDescription: HTMLDivElement;
 
+  public headerUserName: HTMLLabelElement;
+
   public footer: HTMLElement;
+
+  public handleInfoClick: ((event: MouseEvent) => void) | undefined;
+
+  public handleLogoutClick: ((event: MouseEvent) => void) | undefined;
 
   constructor() {
     this.header = document.createElement("header");
     this.headerDescription = document.createElement("div");
+    this.headerUserName = document.createElement("label");
     this.footer = document.createElement("footer");
     // this.createHeader();
   }
@@ -35,9 +42,19 @@ export default class Components {
     const buttonInfo = document.createElement("button");
     buttonInfo.className = "header__info header__button";
     buttonInfo.innerText = "Info";
+    if (this.handleInfoClick) {
+      buttonInfo.addEventListener("click", this.handleInfoClick);
+    } else {
+      console.log('Не определён прослушивтель для события "click"');
+    }
     const buttonLogout = document.createElement("button");
     buttonLogout.className = "header__logout header__button";
     buttonLogout.innerText = "Logout";
+    if (this.handleLogoutClick) {
+      buttonLogout.addEventListener("click", this.handleLogoutClick);
+    } else {
+      console.log('Не определён прослушивтель для события "click"');
+    }
     buttonContainer.appendChild(buttonInfo);
     buttonContainer.appendChild(buttonLogout);
     this.header.appendChild(buttonContainer);
@@ -45,13 +62,12 @@ export default class Components {
 
   private createHeaderDescription() {
     this.headerDescription.className = "header__description";
-    const labelUserName = document.createElement("label");
-    labelUserName.className = "header__description_username";
-    labelUserName.innerText = "userName";
+    this.headerUserName.className = "header__description_username";
+    this.headerUserName.innerText = "userName";
     const labelAppName = document.createElement("label");
     labelAppName.className = "header__description_appname";
     labelAppName.innerText = "Fun chat";
-    this.headerDescription.appendChild(labelUserName);
+    this.headerDescription.appendChild(this.headerUserName);
     this.headerDescription.appendChild(labelAppName);
     return this.headerDescription;
   }
@@ -109,5 +125,9 @@ export default class Components {
     infoContainer.appendChild(infoLogoContainer);
     infoContainer.appendChild(infoLabel);
     return infoContainer;
+  }
+
+  public showUserName(username: string) {
+    this.headerUserName.innerText = `${username}`;
   }
 }
