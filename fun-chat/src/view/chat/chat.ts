@@ -1,4 +1,5 @@
 import "./chat.scss";
+import { UserStatus } from "../../types/types";
 
 export default class ChatView {
   public chatContainer: HTMLDivElement;
@@ -82,5 +83,9 @@ export default class ChatView {
     this.dialogFieldSendingForm.appendChild(input);
     this.dialogFieldSendingForm.appendChild(button);
     return this.dialogFieldSendingForm;
+  }
+
+  public showUsersAll(users: UserStatus[]) {
+    console.log(users);
   }
 }

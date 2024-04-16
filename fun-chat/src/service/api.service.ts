@@ -34,4 +34,24 @@ export default class ApiService {
       }),
     );
   }
+
+  public getActiveUsers() {
+    this.socket.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: "USER_ACTIVE",
+        payload: null,
+      }),
+    );
+  }
+
+  public getInactiveUsers() {
+    this.socket.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: "USER_INACTIVE",
+        payload: null,
+      }),
+    );
+  }
 }

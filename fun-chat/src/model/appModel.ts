@@ -1,6 +1,15 @@
 import { validateErrorsName, validateErrorsPassword } from "../service/login.service";
 import ApiService from "../service/api.service";
-import { ResponseUserLogin, ResponseError, ErrorTypeResponse, ErrorTypeShow } from "../types/types";
+import {
+  UserStatus,
+  ResponseUserLogin,
+  ResponseUserLogout,
+  ResponseActiveUsers,
+  ResponseInactiveUsers,
+  ResponseError,
+  ErrorTypeResponse,
+  ErrorTypeShow,
+} from "../types/types";
 
 export default class AppModel {
   private nameErrors: string[] = [];
@@ -12,6 +21,8 @@ export default class AppModel {
   private userPassword: string;
 
   public isLogined: boolean;
+
+  public userAll: UserStatus[] = [];
 
   public apiService: ApiService;
 
@@ -93,6 +104,7 @@ export default class AppModel {
         JSON.stringify({ name: this.userName, password: this.userPassword, isLogined: true }),
       );
       showUserName(this.userName);
+      this.getUserAll();
       changePage(`/main`);
     }
   }
@@ -101,15 +113,25 @@ export default class AppModel {
     this.apiService.userLogout(this.userName, this.userPassword);
   }
 
-  public responseLogout(data: ResponseUserLogin, changePage: (page: string) => void) {
+  public responseLogout(data: ResponseUserLogout, _changePage: (page: string) => void) {
     this.userName = "";
     this.userPassword = "";
     this.isLogined = false;
+    this.userAll = [];
     sessionStorage.setItem(
       "userCredentials",
       JSON.stringify({ name: this.userName, password: this.userPassword, isLogined: data.payload.user.isLogined }),
     );
-    changePage(`/login`);
+    _changePage(`/login`);
+  }
+
+  public responseActiveInactiveUsers(
+    data: ResponseActiveUsers | ResponseInactiveUsers,
+    _showUsersAll: (users: UserStatus[]) => void,
+  ) {
+    this.userAll = [...this.userAll, ...data.payload.users];
+    _showUsersAll(this.userAll);
+    console.log(this.userAll);
   }
 
   public responseError(data: ResponseError, fn: (message: string) => void) {
@@ -120,5 +142,10 @@ export default class AppModel {
     if (data.payload.error === ErrorTypeResponse.USER_ALREADY_AUTHORIZED) {
       fn(ErrorTypeShow.USER_ALREADY_AUTHORIZED);
     }
+  }
+
+  public getUserAll() {
+    this.apiService.getActiveUsers();
+    this.apiService.getInactiveUsers();
   }
 }
