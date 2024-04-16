@@ -34,20 +34,23 @@ export default class AppView {
     this.modal.create();
     this.aboutView.create();
     this.components.create();
-    document.querySelector("body")?.appendChild(this.components.header);
     document.querySelector("body")?.appendChild(this.container);
-    document.querySelector("body")?.appendChild(this.components.footer);
   }
 
   public renderContent(page: string) {
     this.container.innerHTML = "";
     if (page === "login") {
+      this.container.innerHTML = "";
       this.container.appendChild(this.loginView.loginContainer);
     }
     if (page === "chat") {
+      this.container.innerHTML = "";
+      this.container.appendChild(this.components.header);
       this.container.appendChild(this.chatView.chatContainer);
+      this.container.appendChild(this.components.footer);
     }
     if (page === "about") {
+      this.container.innerHTML = "";
       this.container.appendChild(this.aboutView.aboutContainer);
     }
   }
