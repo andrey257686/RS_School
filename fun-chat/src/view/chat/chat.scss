@@ -25,7 +25,8 @@
     &_list {
       width: 90%;
       padding-top: 10px;
-      &-online, &-offline {
+      &-online,
+      &-offline {
         width: 100%;
         margin: 0;
         padding: 0;
@@ -52,7 +53,6 @@
         background-color: red;
       }
     }
-
   }
   &__dialog {
     outline: 2px solid #0482ff;
