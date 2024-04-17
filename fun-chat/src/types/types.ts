@@ -49,6 +49,28 @@ export interface ResponseInactiveUsers {
   };
 }
 
+export interface ResponseExternalLogin {
+  id: null;
+  type: "USER_EXTERNAL_LOGIN";
+  payload: {
+    user: {
+      login: string;
+      isLogined: boolean;
+    };
+  };
+}
+
+export interface ResponseExternalLogout {
+  id: null;
+  type: "USER_EXTERNAL_LOGOUT";
+  payload: {
+    user: {
+      login: string;
+      isLogined: boolean;
+    };
+  };
+}
+
 export enum ErrorTypeResponse {
   INCORRECT_PASSWORD = "incorrect password",
   USER_ALREADY_AUTHORIZED = "a user with this login is already authorized",

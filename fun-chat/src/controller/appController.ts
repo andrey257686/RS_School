@@ -56,6 +56,12 @@ export default class AppController {
       if (data.type === "USER_INACTIVE") {
         this.appModel.responseInactiveUsers(data, this.appView.chatView.showUsersOffline.bind(this.appView.chatView));
       }
+      if (data.type === "USER_EXTERNAL_LOGIN") {
+        this.appModel.responseExternalLogin(data, this.appView.chatView.addOnlineUser.bind(this.appView.chatView));
+      }
+      if (data.type === "USER_EXTERNAL_LOGOUT") {
+        this.appModel.responseExternalLogout(data, this.appView.chatView.addOfflineUser.bind(this.appView.chatView));
+      }
       // if (data.type === "USER_ACTIVE" || data.type === "USER_INACTIVE") {
       //   this.appModel.responseActiveInactiveUsers(data, this.appView.chatView.showUsersAll.bind(this.appView.chatView));
       // }

@@ -6,6 +6,8 @@ import {
   ResponseUserLogout,
   ResponseActiveUsers,
   ResponseInactiveUsers,
+  ResponseExternalLogin,
+  ResponseExternalLogout,
   ResponseError,
   ErrorTypeResponse,
   ErrorTypeShow,
@@ -161,6 +163,18 @@ export default class AppModel {
     if (data.payload.error === ErrorTypeResponse.USER_ALREADY_AUTHORIZED) {
       fn(ErrorTypeShow.USER_ALREADY_AUTHORIZED);
     }
+  }
+
+  public responseExternalLogin(data: ResponseExternalLogin, _addOnlineUser: (user: UserStatus) => void) {
+    this.userOnline.push(data.payload.user);
+    this.userOffline = this.userOffline.filter((user) => user.login !== data.payload.user.login);
+    _addOnlineUser(data.payload.user);
+  }
+
+  public responseExternalLogout(data: ResponseExternalLogout, _addOfflineUser: (user: UserStatus) => void) {
+    this.userOffline.push(data.payload.user);
+    this.userOnline = this.userOnline.filter((user) => user.login !== data.payload.user.login);
+    _addOfflineUser(data.payload.user);
   }
 
   public getUserAll() {

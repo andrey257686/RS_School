@@ -113,14 +113,18 @@ export default class ChatView {
   public showUsersOnline(users: UserStatus[]) {
     this.contactsListOnline.innerHTML = "";
     for (let i = 0; i < users.length; i += 1) {
-      this.contactsListOnline.appendChild(this.createUserContainer(users[i]));
+      const userContainer = this.createUserContainer(users[i]);
+      this.contactsListOnline.appendChild(userContainer);
+      this.onlineUsersItemArray.push(userContainer);
     }
   }
 
   public showUsersOffline(users: UserStatus[]) {
     this.contactsListOffline.innerHTML = "";
     for (let i = 0; i < users.length; i += 1) {
-      this.contactsListOffline.appendChild(this.createUserContainer(users[i]));
+      const userContainer = this.createUserContainer(users[i]);
+      this.contactsListOffline.appendChild(userContainer);
+      this.offlineUsersItemArray.push(userContainer);
     }
   }
 
@@ -131,10 +135,8 @@ export default class ChatView {
     status.className = "chat__contacts_status";
     if (user.isLogined) {
       status.classList.add("chat__contacts_status-online");
-      this.onlineUsersItemArray.push(li);
     } else {
       status.classList.add("chat__contacts_status-offline");
-      this.offlineUsersItemArray.push(li);
     }
     const username = document.createElement("label");
     username.className = "chat__contacts_username";
@@ -153,5 +155,32 @@ export default class ChatView {
         (users[i] as HTMLElement).style.display = "flex";
       }
     }
+  }
+
+  public addOnlineUser(user: UserStatus) {
+    const arrOfflineUsers = Array.from(this.contactsListOffline.children);
+    const userContainer = arrOfflineUsers.find((item) => item.children[1].textContent === user.login);
+    if (userContainer) {
+      this.contactsListOffline.removeChild(userContainer);
+      this.contactsListOnline.appendChild(userContainer);
+      userContainer.children[0].classList.add("chat__contacts_status-online");
+      userContainer.children[0].classList.remove("chat__contacts_status-offline");
+    } else {
+      const userContainerNew = this.createUserContainer(user);
+      this.contactsListOnline.appendChild(userContainerNew);
+      this.onlineUsersItemArray.push(userContainerNew);
+    }
+  }
+
+  public addOfflineUser(user: UserStatus) {
+    const arrOnlineUsers = Array.from(this.contactsListOnline.children);
+    const userContainer = arrOnlineUsers.find((item) => item.children[1].textContent === user.login);
+    if (userContainer) {
+      this.contactsListOnline.removeChild(userContainer);
+      this.contactsListOffline.appendChild(userContainer);
+      userContainer.children[0].classList.add("chat__contacts_status-offline");
+      userContainer.children[0].classList.remove("chat__contacts_status-online");
+    }
+    console.log(userContainer);
   }
 }
