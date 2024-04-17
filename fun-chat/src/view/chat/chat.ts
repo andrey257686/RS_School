@@ -26,6 +26,8 @@ export default class ChatView {
 
   private offlineUsersItemArray: HTMLLIElement[] = [];
 
+  public handleInputSearch: ((event: Event) => void) | undefined;
+
   constructor() {
     this.chatContainer = document.createElement("div");
     this.contactsField = document.createElement("aside");
@@ -55,6 +57,11 @@ export default class ChatView {
     input.className = "chat__contacts_search";
     input.placeholder = "Search...";
     input.type = "text";
+    if (this.handleInputSearch) {
+      input.addEventListener("input", this.handleInputSearch);
+    } else {
+      console.log('Не определён прослушивтель для события "input"');
+    }
     this.contactsField.appendChild(input);
     this.contactsListContainer.className = "chat__contacts_list";
     this.contactsListOnline.className = "chat__contacts_list-online";
@@ -135,5 +142,16 @@ export default class ChatView {
     li.appendChild(status);
     li.appendChild(username);
     return li;
+  }
+
+  public filterUsers(text: string) {
+    const users = document.querySelectorAll(".chat__contacts_item");
+    for (let i = 0; i < users.length; i += 1) {
+      if (!users[i].textContent?.toLowerCase().startsWith(text.toLowerCase())) {
+        (users[i] as HTMLElement).style.display = "none";
+      } else {
+        (users[i] as HTMLElement).style.display = "flex";
+      }
+    }
   }
 }

@@ -75,6 +75,7 @@ export default class AppController {
     this.appView.aboutView.handleCloseAbout = this.handleCloseAbout.bind(this);
     this.appView.components.handleInfoClick = this.handleInfoClick.bind(this);
     this.appView.components.handleLogoutClick = this.handleLogoutClick.bind(this);
+    this.appView.chatView.handleInputSearch = this.handleInputSearch.bind(this);
   }
 
   private changePage(href?: string) {
@@ -130,5 +131,10 @@ export default class AppController {
 
   private handleLogoutClick() {
     this.appModel.requestLogoutUser();
+  }
+
+  public handleInputSearch(event: Event) {
+    console.log((event.target as HTMLInputElement).value);
+    this.appView.chatView.filterUsers((event.target as HTMLInputElement).value);
   }
 }
