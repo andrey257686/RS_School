@@ -39,13 +39,16 @@
       flex-direction: row;
       align-items: center;
       padding-left: 10px;
+      color: #1148d3;
+      &:hover {
+        background-color: hsla(0, 0%, 100%, 0.402);
+      }
     }
     &_status {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       margin-right: 10px;
-      outline: 1px solid #0482ff;
       &-online {
         background-color: green;
       }
