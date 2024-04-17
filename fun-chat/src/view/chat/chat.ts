@@ -22,11 +22,9 @@ export default class ChatView {
 
   private dialogFieldSendingForm: HTMLFormElement;
 
-  private onlineUsersItemArray: HTMLLIElement[] = [];
-
-  private offlineUsersItemArray: HTMLLIElement[] = [];
-
   public handleInputSearch: ((event: Event) => void) | undefined;
+
+  public handleClickUser: ((event: Event) => void) | undefined;
 
   constructor() {
     this.chatContainer = document.createElement("div");
@@ -115,7 +113,6 @@ export default class ChatView {
     for (let i = 0; i < users.length; i += 1) {
       const userContainer = this.createUserContainer(users[i]);
       this.contactsListOnline.appendChild(userContainer);
-      this.onlineUsersItemArray.push(userContainer);
     }
   }
 
@@ -124,13 +121,17 @@ export default class ChatView {
     for (let i = 0; i < users.length; i += 1) {
       const userContainer = this.createUserContainer(users[i]);
       this.contactsListOffline.appendChild(userContainer);
-      this.offlineUsersItemArray.push(userContainer);
     }
   }
 
   private createUserContainer(user: UserStatus) {
     const li = document.createElement("li");
     li.className = "chat__contacts_item";
+    if (this.handleClickUser) {
+      li.addEventListener("click", this.handleClickUser);
+    } else {
+      console.log('Не определён прослушивтель для события "click"');
+    }
     const status = document.createElement("div");
     status.className = "chat__contacts_status";
     if (user.isLogined) {
@@ -168,7 +169,6 @@ export default class ChatView {
     } else {
       const userContainerNew = this.createUserContainer(user);
       this.contactsListOnline.appendChild(userContainerNew);
-      this.onlineUsersItemArray.push(userContainerNew);
     }
   }
 
@@ -182,5 +182,16 @@ export default class ChatView {
       userContainer.children[0].classList.remove("chat__contacts_status-online");
     }
     console.log(userContainer);
+  }
+
+  public openChat(target: HTMLElement) {
+    const username = target.children[1].textContent;
+    const status = target.children[0].classList.contains("chat__contacts_status-online") ? "online" : "offline";
+    const headerUsername = document.querySelector(".dialog__header_username");
+    const headerStatus = document.querySelector(".dialog__header_status");
+    if (headerUsername && headerStatus) {
+      headerUsername.textContent = username;
+      headerStatus.textContent = status;
+    }
   }
 }

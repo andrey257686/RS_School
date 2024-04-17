@@ -62,9 +62,6 @@ export default class AppController {
       if (data.type === "USER_EXTERNAL_LOGOUT") {
         this.appModel.responseExternalLogout(data, this.appView.chatView.addOfflineUser.bind(this.appView.chatView));
       }
-      // if (data.type === "USER_ACTIVE" || data.type === "USER_INACTIVE") {
-      //   this.appModel.responseActiveInactiveUsers(data, this.appView.chatView.showUsersAll.bind(this.appView.chatView));
-      // }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }
@@ -82,6 +79,7 @@ export default class AppController {
     this.appView.components.handleInfoClick = this.handleInfoClick.bind(this);
     this.appView.components.handleLogoutClick = this.handleLogoutClick.bind(this);
     this.appView.chatView.handleInputSearch = this.handleInputSearch.bind(this);
+    this.appView.chatView.handleClickUser = this.handleClickUser.bind(this);
   }
 
   private changePage(href?: string) {
@@ -139,8 +137,15 @@ export default class AppController {
     this.appModel.requestLogoutUser();
   }
 
-  public handleInputSearch(event: Event) {
+  private handleInputSearch(event: Event) {
     console.log((event.target as HTMLInputElement).value);
     this.appView.chatView.filterUsers((event.target as HTMLInputElement).value);
+  }
+
+  private handleClickUser(event: Event) {
+    const target = event.currentTarget as HTMLElement;
+    if (target) {
+      this.appView.chatView.openChat(target);
+    }
   }
 }
