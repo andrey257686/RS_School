@@ -6,7 +6,11 @@ export default class ChatView {
 
   private contactsField: HTMLElement;
 
-  private contactsList: HTMLUListElement;
+  private contactsListContainer: HTMLDivElement;
+
+  private contactsListOnline: HTMLUListElement;
+
+  private contactsListOffline: HTMLUListElement;
 
   private dialogField: HTMLElement;
 
@@ -18,10 +22,16 @@ export default class ChatView {
 
   private dialogFieldSendingForm: HTMLFormElement;
 
+  private onlineUsersItemArray: HTMLLIElement[] = [];
+
+  private offlineUsersItemArray: HTMLLIElement[] = [];
+
   constructor() {
     this.chatContainer = document.createElement("div");
     this.contactsField = document.createElement("aside");
-    this.contactsList = document.createElement("ul");
+    this.contactsListContainer = document.createElement("div");
+    this.contactsListOnline = document.createElement("ul");
+    this.contactsListOffline = document.createElement("ul");
     this.dialogField = document.createElement("article");
     this.dialogFieldHeader = document.createElement("div");
     this.dialogFieldBody = document.createElement("div");
@@ -46,8 +56,12 @@ export default class ChatView {
     input.placeholder = "Search...";
     input.type = "text";
     this.contactsField.appendChild(input);
-    this.contactsList.className = "chat__contacts_list";
-    this.contactsField.appendChild(this.contactsList);
+    this.contactsListContainer.className = "chat__contacts_list";
+    this.contactsListOnline.className = "chat__contacts_list-online";
+    this.contactsListOffline.className = "chat__contacts_list-offline";
+    this.contactsListContainer.appendChild(this.contactsListOnline);
+    this.contactsListContainer.appendChild(this.contactsListOffline);
+    this.contactsField.appendChild(this.contactsListContainer);
     return this.contactsField;
   }
 
@@ -85,7 +99,41 @@ export default class ChatView {
     return this.dialogFieldSendingForm;
   }
 
-  public showUsersAll(users: UserStatus[]) {
-    console.log(users);
+  // public showUsersAll(users: UserStatus[]) {
+  //   console.log(users);
+  // }
+
+  public showUsersOnline(users: UserStatus[]) {
+    this.contactsListOnline.innerHTML = "";
+    for (let i = 0; i < users.length; i += 1) {
+      this.contactsListOnline.appendChild(this.createUserContainer(users[i]));
+    }
+  }
+
+  public showUsersOffline(users: UserStatus[]) {
+    this.contactsListOffline.innerHTML = "";
+    for (let i = 0; i < users.length; i += 1) {
+      this.contactsListOffline.appendChild(this.createUserContainer(users[i]));
+    }
+  }
+
+  private createUserContainer(user: UserStatus) {
+    const li = document.createElement("li");
+    li.className = "chat__contacts_item";
+    const status = document.createElement("div");
+    status.className = "chat__contacts_status";
+    if (user.isLogined) {
+      status.classList.add("chat__contacts_status-online");
+      this.onlineUsersItemArray.push(li);
+    } else {
+      status.classList.add("chat__contacts_status-offline");
+      this.offlineUsersItemArray.push(li);
+    }
+    const username = document.createElement("label");
+    username.className = "chat__contacts_username";
+    username.innerText = user.login;
+    li.appendChild(status);
+    li.appendChild(username);
+    return li;
   }
 }

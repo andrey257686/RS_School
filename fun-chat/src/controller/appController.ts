@@ -50,9 +50,15 @@ export default class AppController {
       if (data.type === "USER_LOGOUT") {
         this.appModel.responseLogout(data, this.changePage.bind(this));
       }
-      if (data.type === "USER_ACTIVE" || data.type === "USER_INACTIVE") {
-        this.appModel.responseActiveInactiveUsers(data, this.appView.chatView.showUsersAll.bind(this.appView.chatView));
+      if (data.type === "USER_ACTIVE") {
+        this.appModel.responseActiveUsers(data, this.appView.chatView.showUsersOnline.bind(this.appView.chatView));
       }
+      if (data.type === "USER_INACTIVE") {
+        this.appModel.responseInactiveUsers(data, this.appView.chatView.showUsersOffline.bind(this.appView.chatView));
+      }
+      // if (data.type === "USER_ACTIVE" || data.type === "USER_INACTIVE") {
+      //   this.appModel.responseActiveInactiveUsers(data, this.appView.chatView.showUsersAll.bind(this.appView.chatView));
+      // }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }

@@ -22,6 +22,37 @@
       outline: none;
       color: #1148d3;
     }
+    &_list {
+      width: 90%;
+      padding-top: 10px;
+      &-online, &-offline {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+    }
+    &_item {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding-left: 10px;
+    }
+    &_status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 10px;
+      outline: 1px solid #0482ff;
+      &-online {
+        background-color: green;
+      }
+      &-offline {
+        background-color: red;
+      }
+    }
+
   }
   &__dialog {
     outline: 2px solid #0482ff;

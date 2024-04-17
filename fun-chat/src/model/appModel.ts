@@ -22,7 +22,9 @@ export default class AppModel {
 
   public isLogined: boolean;
 
-  public userAll: UserStatus[] = [];
+  public userOnline: UserStatus[] = [];
+
+  public userOffline: UserStatus[] = [];
 
   public apiService: ApiService;
 
@@ -117,7 +119,6 @@ export default class AppModel {
     this.userName = "";
     this.userPassword = "";
     this.isLogined = false;
-    this.userAll = [];
     sessionStorage.setItem(
       "userCredentials",
       JSON.stringify({ name: this.userName, password: this.userPassword, isLogined: data.payload.user.isLogined }),
@@ -125,13 +126,25 @@ export default class AppModel {
     _changePage(`/login`);
   }
 
-  public responseActiveInactiveUsers(
-    data: ResponseActiveUsers | ResponseInactiveUsers,
-    _showUsersAll: (users: UserStatus[]) => void,
-  ) {
-    this.userAll = [...this.userAll, ...data.payload.users];
-    _showUsersAll(this.userAll);
-    console.log(this.userAll);
+  // public responseActiveInactiveUsers(
+  //   data: ResponseActiveUsers | ResponseInactiveUsers,
+  //   _showUsersAll: (users: UserStatus[]) => void,
+  // ) {
+  //   this.userAll = [...this.userAll, ...data.payload.users];
+  //   _showUsersAll(this.userAll);
+  //   console.log(this.userAll);
+  // }
+
+  public responseActiveUsers(data: ResponseActiveUsers, _showUsersOnline: (users: UserStatus[]) => void) {
+    this.userOnline = [...data.payload.users];
+    _showUsersOnline(this.userOnline);
+    this.apiService.getInactiveUsers();
+  }
+
+  public responseInactiveUsers(data: ResponseInactiveUsers, _showUsersOffline: (users: UserStatus[]) => void) {
+    // this.userAll = [...this.userAll, ...data.payload.users];
+    this.userOffline = [...data.payload.users];
+    _showUsersOffline(this.userOffline);
   }
 
   public responseError(data: ResponseError, fn: (message: string) => void) {
@@ -146,6 +159,5 @@ export default class AppModel {
 
   public getUserAll() {
     this.apiService.getActiveUsers();
-    this.apiService.getInactiveUsers();
   }
 }
