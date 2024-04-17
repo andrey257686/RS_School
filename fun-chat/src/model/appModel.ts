@@ -137,6 +137,12 @@ export default class AppModel {
 
   public responseActiveUsers(data: ResponseActiveUsers, _showUsersOnline: (users: UserStatus[]) => void) {
     this.userOnline = [...data.payload.users];
+    for (let i = 0; i < this.userOnline.length; i += 1) {
+      if (this.userOnline[i].login === this.userName) {
+        this.userOnline.splice(i, 1);
+        break;
+      }
+    }
     _showUsersOnline(this.userOnline);
     this.apiService.getInactiveUsers();
   }
