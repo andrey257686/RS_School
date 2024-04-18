@@ -26,6 +26,8 @@ export default class ChatView {
 
   public handleClickUser: ((event: Event) => void) | undefined;
 
+  public handleSendMessage: ((event: SubmitEvent, message: string) => void) | undefined;
+
   constructor() {
     this.chatContainer = document.createElement("div");
     this.contactsField = document.createElement("aside");
@@ -99,6 +101,15 @@ export default class ChatView {
     const button = document.createElement("button");
     button.className = "sending__form_button";
     button.innerText = "Send";
+    button.type = "submit";
+    if (this.handleSendMessage !== undefined) {
+      this.dialogFieldSendingForm.addEventListener("submit", (event) => {
+        this.handleSendMessage!.bind(this, event, input.value)();
+        input.value = "";
+      });
+    } else {
+      console.log('Не определён прослушивтель для события "submit"');
+    }
     this.dialogFieldSendingForm.appendChild(input);
     this.dialogFieldSendingForm.appendChild(button);
     return this.dialogFieldSendingForm;

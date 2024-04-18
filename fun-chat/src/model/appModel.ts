@@ -30,6 +30,8 @@ export default class AppModel {
 
   public apiService: ApiService;
 
+  public currentRecipient: string = "";
+
   constructor() {
     this.userName = "";
     this.userPassword = "";
@@ -162,6 +164,8 @@ export default class AppModel {
     }
     if (data.payload.error === ErrorTypeResponse.USER_ALREADY_AUTHORIZED) {
       fn(ErrorTypeShow.USER_ALREADY_AUTHORIZED);
+    } else {
+      fn(data.payload.error);
     }
   }
 
@@ -179,5 +183,13 @@ export default class AppModel {
 
   public getUserAll() {
     this.apiService.getActiveUsers();
+  }
+
+  public setRecipient(username: string) {
+    this.currentRecipient = username;
+  }
+
+  public sendMessage(message: string) {
+    this.apiService.sendMessage(this.currentRecipient, message);
   }
 }

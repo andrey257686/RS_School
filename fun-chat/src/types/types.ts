@@ -71,6 +71,25 @@ export interface ResponseExternalLogout {
   };
 }
 
+export interface ResponseSendMessage {
+  id: null;
+  type: "MSG_SEND";
+  payload: {
+    message: {
+      id: string;
+      from: string;
+      to: string;
+      text: string;
+      datetime: number;
+      status: {
+        isDelivered: boolean;
+        isReaded: boolean;
+        isEdited: boolean;
+      };
+    };
+  };
+}
+
 export enum ErrorTypeResponse {
   INCORRECT_PASSWORD = "incorrect password",
   USER_ALREADY_AUTHORIZED = "a user with this login is already authorized",

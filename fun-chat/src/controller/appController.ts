@@ -80,6 +80,7 @@ export default class AppController {
     this.appView.components.handleLogoutClick = this.handleLogoutClick.bind(this);
     this.appView.chatView.handleInputSearch = this.handleInputSearch.bind(this);
     this.appView.chatView.handleClickUser = this.handleClickUser.bind(this);
+    this.appView.chatView.handleSendMessage = this.handleSendMessage.bind(this);
   }
 
   private changePage(href?: string) {
@@ -144,8 +145,16 @@ export default class AppController {
 
   private handleClickUser(event: Event) {
     const target = event.currentTarget as HTMLElement;
-    if (target) {
+    const username = target.children[1].textContent;
+    if (target && username) {
+      this.appModel.setRecipient(username);
       this.appView.chatView.openChat(target);
     }
+  }
+
+  private handleSendMessage(event: Event, message: string) {
+    event.preventDefault();
+    console.log(message);
+    this.appModel.sendMessage(message);
   }
 }
