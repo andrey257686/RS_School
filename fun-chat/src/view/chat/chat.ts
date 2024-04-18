@@ -22,6 +22,8 @@ export default class ChatView {
 
   private dialogFieldSendingForm: HTMLFormElement;
 
+  private isChatChosen: boolean = false;
+
   public handleInputSearch: ((event: Event) => void) | undefined;
 
   public handleClickUser: ((event: Event) => void) | undefined;
@@ -77,13 +79,17 @@ export default class ChatView {
     this.dialogFieldHeader.className = "chat__dialog_header dialog__header";
     const labelUserName = document.createElement("label");
     labelUserName.className = "dialog__header_username";
-    labelUserName.innerText = "userName";
     this.dialogFieldHeader.appendChild(labelUserName);
     const labelUserStatus = document.createElement("label");
     labelUserStatus.className = "dialog__header_status";
-    labelUserStatus.innerText = "status";
     this.dialogFieldHeader.appendChild(labelUserStatus);
     this.dialogFieldBody.className = "chat__dialog_body";
+    if (!this.isChatChosen) {
+      const label = document.createElement("label");
+      label.className = "chat__dialog_body-label";
+      label.innerText = "Select a user to start a chat...";
+      this.dialogFieldBody.appendChild(label);
+    }
     this.dialogFieldSending.className = "chat__dialog_sending sending";
     this.dialogFieldSending.appendChild(this.createFormSending());
     this.dialogField.appendChild(this.dialogFieldHeader);
@@ -98,10 +104,16 @@ export default class ChatView {
     input.className = "sending__form_input";
     input.type = "text";
     input.placeholder = "Message...";
+
     const button = document.createElement("button");
     button.className = "sending__form_button";
     button.innerText = "Send";
     button.type = "submit";
+    if (!this.isChatChosen) {
+      input.disabled = true;
+      button.disabled = true;
+      button.classList.add("disabled");
+    }
     if (this.handleSendMessage !== undefined) {
       this.dialogFieldSendingForm.addEventListener("submit", (event) => {
         this.handleSendMessage!.bind(this, event, input.value)();
@@ -192,10 +204,19 @@ export default class ChatView {
       userContainer.children[0].classList.add("chat__contacts_status-offline");
       userContainer.children[0].classList.remove("chat__contacts_status-online");
     }
-    console.log(userContainer);
+    // console.log(userContainer);
   }
 
   public openChat(target: HTMLElement) {
+    if (!this.isChatChosen) {
+      const input = document.querySelector(".sending__form_input") as HTMLInputElement;
+      const button = document.querySelector(".sending__form_button") as HTMLButtonElement;
+      this.dialogFieldBody.innerText = "";
+      input.disabled = false;
+      button.disabled = false;
+      button.classList.remove("disabled");
+    }
+    this.isChatChosen = true;
     const username = target.children[1].textContent;
     const status = target.children[0].classList.contains("chat__contacts_status-online") ? "online" : "offline";
     const headerUsername = document.querySelector(".dialog__header_username");
@@ -207,7 +228,6 @@ export default class ChatView {
   }
 
   public addMessage(message: Message, isFromMe: boolean) {
-    console.log(isFromMe);
     const messageContainer = this.createMessageContainer(message, isFromMe);
     this.dialogFieldBody.appendChild(messageContainer);
     this.dialogFieldBody.scrollTop = this.dialogFieldBody.scrollHeight;
