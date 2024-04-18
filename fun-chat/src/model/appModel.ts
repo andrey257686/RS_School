@@ -8,6 +8,8 @@ import {
   ResponseInactiveUsers,
   ResponseExternalLogin,
   ResponseExternalLogout,
+  ResponseSendMessage,
+  Message,
   ResponseError,
   ErrorTypeResponse,
   ErrorTypeShow,
@@ -189,7 +191,14 @@ export default class AppModel {
     this.currentRecipient = username;
   }
 
-  public sendMessage(message: string) {
+  public requestSendMessage(message: string) {
     this.apiService.sendMessage(this.currentRecipient, message);
+  }
+
+  public responseSendMessage(data: ResponseSendMessage, _addMessage: (message: Message) => void) {
+    if (data.payload.message.to === this.userName) {
+      console.log(data.payload);
+      _addMessage(data.payload.message);
+    }
   }
 }

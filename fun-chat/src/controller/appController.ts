@@ -62,6 +62,9 @@ export default class AppController {
       if (data.type === "USER_EXTERNAL_LOGOUT") {
         this.appModel.responseExternalLogout(data, this.appView.chatView.addOfflineUser.bind(this.appView.chatView));
       }
+      if (data.type === "MSG_SEND") {
+        this.appModel.responseSendMessage(data, this.appView.chatView.addMessage.bind(this.appView.chatView));
+      }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }
@@ -154,7 +157,6 @@ export default class AppController {
 
   private handleSendMessage(event: Event, message: string) {
     event.preventDefault();
-    console.log(message);
-    this.appModel.sendMessage(message);
+    this.appModel.requestSendMessage(message);
   }
 }

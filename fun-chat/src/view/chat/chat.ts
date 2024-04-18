@@ -1,5 +1,5 @@
 import "./chat.scss";
-import { UserStatus } from "../../types/types";
+import { UserStatus, Message } from "../../types/types";
 
 export default class ChatView {
   public chatContainer: HTMLDivElement;
@@ -204,5 +204,40 @@ export default class ChatView {
       headerUsername.textContent = username;
       headerStatus.textContent = status;
     }
+  }
+
+  public addMessage(message: Message) {
+    const messageContainer = this.createMessageContainer(message);
+    this.dialogFieldBody.appendChild(messageContainer);
+    this.dialogFieldBody.scrollTop = this.dialogFieldBody.scrollHeight;
+  }
+
+  private createMessageContainer(message: Message) {
+    const messageContainer = document.createElement("div");
+    messageContainer.className = "message";
+    const messageHeader = document.createElement("div");
+    messageHeader.className = "message__header";
+    const messageText = document.createElement("div");
+    messageText.className = "message__text";
+    messageText.textContent = message.text;
+    const messageFooter = document.createElement("div");
+    messageFooter.className = "message__footer";
+    const labelUsername = document.createElement("label");
+    labelUsername.className = "message__header_username";
+    labelUsername.textContent = message.from;
+    const labelDate = document.createElement("label");
+    labelDate.className = "message__header_date";
+    labelDate.textContent = new Date(message.datetime).toLocaleString();
+    const labelStatusMsg = document.createElement("label");
+    labelStatusMsg.className = "message__footer_status";
+    labelStatusMsg.textContent = "статус";
+    messageHeader.appendChild(labelUsername);
+    messageHeader.appendChild(labelDate);
+    labelStatusMsg.className = "message__footer_status";
+    messageFooter.appendChild(labelStatusMsg);
+    messageContainer.appendChild(messageHeader);
+    messageContainer.appendChild(messageText);
+    messageContainer.appendChild(messageFooter);
+    return messageContainer;
   }
 }
