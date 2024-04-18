@@ -206,15 +206,19 @@ export default class ChatView {
     }
   }
 
-  public addMessage(message: Message) {
-    const messageContainer = this.createMessageContainer(message);
+  public addMessage(message: Message, isFromMe: boolean) {
+    console.log(isFromMe);
+    const messageContainer = this.createMessageContainer(message, isFromMe);
     this.dialogFieldBody.appendChild(messageContainer);
     this.dialogFieldBody.scrollTop = this.dialogFieldBody.scrollHeight;
   }
 
-  private createMessageContainer(message: Message) {
+  private createMessageContainer(message: Message, isFromMe: boolean) {
     const messageContainer = document.createElement("div");
     messageContainer.className = "message";
+    if (isFromMe) {
+      messageContainer.classList.add("message__my");
+    }
     const messageHeader = document.createElement("div");
     messageHeader.className = "message__header";
     const messageText = document.createElement("div");
@@ -230,7 +234,18 @@ export default class ChatView {
     labelDate.textContent = new Date(message.datetime).toLocaleString();
     const labelStatusMsg = document.createElement("label");
     labelStatusMsg.className = "message__footer_status";
-    labelStatusMsg.textContent = "статус";
+    if (message.status.isDelivered) {
+      labelStatusMsg.textContent = "Доставлено";
+    }
+    if (message.status.isReaded) {
+      labelStatusMsg.textContent = "Прочитано";
+    }
+    if (message.status.isEdited) {
+      labelStatusMsg.textContent = "Изменено";
+    }
+    if (!isFromMe) {
+      labelStatusMsg.style.display = "none";
+    }
     messageHeader.appendChild(labelUsername);
     messageHeader.appendChild(labelDate);
     labelStatusMsg.className = "message__footer_status";
