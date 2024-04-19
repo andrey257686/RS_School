@@ -35,7 +35,7 @@ export default class AppModel {
 
   public currentRecipient: string = "";
 
-  private usersWithUnreadMessages: { username: string; count: number }[] = [];
+  private usersWithUnreadMessages: { username: string; unreadMessages: Set<string> }[] = [];
 
   constructor() {
     this.userName = "";
@@ -212,20 +212,20 @@ export default class AppModel {
     if (data.payload.message.to === this.userName) {
       if (data.payload.message.from === this.currentRecipient) {
         _addMessage(data.payload.message, false);
-      } else {
         let userWithUnreadMessages = this.usersWithUnreadMessages.find(
           (user) => user.username === data.payload.message.from,
         );
         if (userWithUnreadMessages) {
-          userWithUnreadMessages.count += 1;
+          userWithUnreadMessages.unreadMessages.add(data.payload.message.id);
         } else {
           userWithUnreadMessages = {
             username: data.payload.message.from,
-            count: 1,
+            unreadMessages: new Set(),
           };
+          userWithUnreadMessages.unreadMessages.add(data.payload.message.id);
           this.usersWithUnreadMessages.push(userWithUnreadMessages);
         }
-        _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.count);
+        _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.unreadMessages.size);
       }
     }
     if (data.payload.message.from === this.userName) {
@@ -250,17 +250,19 @@ export default class AppModel {
             (user) => user.username === data.payload.messages[i].from,
           );
           if (userWithUnreadMessages) {
-            userWithUnreadMessages.count += 1;
+            userWithUnreadMessages.unreadMessages.add(data.payload.messages[i].id);
           } else {
             userWithUnreadMessages = {
               username: data.payload.messages[i].from,
-              count: 1,
+              unreadMessages: new Set(),
             };
+            userWithUnreadMessages.unreadMessages.add(data.payload.messages[i].id);
             this.usersWithUnreadMessages.push(userWithUnreadMessages);
           }
           // последнее собщение для данного юзера
           if (i === data.payload.messages.length - 1) {
-            _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.count);
+            console.log("here");
+            _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.unreadMessages.size);
           }
         }
       }
