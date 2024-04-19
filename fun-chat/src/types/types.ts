@@ -91,6 +91,14 @@ export interface ResponseSendMessage {
   };
 }
 
+export interface ResponseMessageFromUser {
+  id: string;
+  type: "MSG_FROM_USER";
+  payload: {
+    messages: Message[];
+  };
+}
+
 export enum ErrorTypeResponse {
   INCORRECT_PASSWORD = "incorrect password",
   USER_ALREADY_AUTHORIZED = "a user with this login is already authorized",

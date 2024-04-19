@@ -69,4 +69,18 @@ export default class ApiService {
       }),
     );
   }
+
+  public fetchMessages(user: string) {
+    this.socket.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: "MSG_FROM_USER",
+        payload: {
+          user: {
+            login: user,
+          },
+        },
+      }),
+    );
+  }
 }

@@ -13,6 +13,7 @@ import {
   ResponseError,
   ErrorTypeResponse,
   ErrorTypeShow,
+  ResponseMessageFromUser,
 } from "../types/types";
 
 export default class AppModel {
@@ -203,5 +204,24 @@ export default class AppModel {
     if (data.payload.message.from === this.userName) {
       _addMessage(data.payload.message, true);
     }
+  }
+
+  public requestFetchMessages(username: string) {
+    this.apiService.fetchMessages(username);
+  }
+
+  public responseFetchMessages(
+    data: ResponseMessageFromUser,
+    _addMessage: (message: Message, isFromMe: boolean) => void,
+  ) {
+    for (let i = 0; i < data.payload.messages.length; i += 1) {
+      if (data.payload.messages[i].to === this.userName) {
+        _addMessage(data.payload.messages[i], false);
+      }
+      if (data.payload.messages[i].from === this.userName) {
+        _addMessage(data.payload.messages[i], true);
+      }
+    }
+    console.log(data);
   }
 }

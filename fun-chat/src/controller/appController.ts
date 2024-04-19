@@ -65,6 +65,9 @@ export default class AppController {
       if (data.type === "MSG_SEND") {
         this.appModel.responseSendMessage(data, this.appView.chatView.addMessage.bind(this.appView.chatView));
       }
+      if (data.type === "MSG_FROM_USER") {
+        this.appModel.responseFetchMessages(data, this.appView.chatView.addMessage.bind(this.appView.chatView));
+      }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }
@@ -150,8 +153,9 @@ export default class AppController {
     const target = event.currentTarget as HTMLElement;
     const username = target.children[1].textContent;
     if (target && username) {
-      this.appModel.setRecipient(username);
       this.appView.chatView.openChat(target);
+      this.appModel.requestFetchMessages(username);
+      this.appModel.setRecipient(username);
     }
   }
 

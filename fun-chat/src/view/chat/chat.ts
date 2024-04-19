@@ -217,6 +217,7 @@ export default class ChatView {
       button.classList.remove("disabled");
     }
     this.isChatChosen = true;
+    this.dialogFieldBody.innerHTML = "";
     const username = target.children[1].textContent;
     const status = target.children[0].classList.contains("chat__contacts_status-online") ? "online" : "offline";
     const headerUsername = document.querySelector(".dialog__header_username");
@@ -229,7 +230,9 @@ export default class ChatView {
 
   public addMessage(message: Message, isFromMe: boolean) {
     const messageContainer = this.createMessageContainer(message, isFromMe);
-    this.dialogFieldBody.appendChild(messageContainer);
+    if (this.isChatChosen) {
+      this.dialogFieldBody.appendChild(messageContainer);
+    }
     this.dialogFieldBody.scrollTop = this.dialogFieldBody.scrollHeight;
   }
 
