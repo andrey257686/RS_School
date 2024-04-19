@@ -76,6 +76,9 @@ export default class AppController {
           this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
         );
       }
+      if (data.type === "MSG_DELIVER") {
+        this.appModel.responseDeliverMessage(data, this.appView.chatView.setMessageStatus.bind(this.appView.chatView));
+      }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }
@@ -153,7 +156,6 @@ export default class AppController {
   }
 
   private handleInputSearch(event: Event) {
-    console.log((event.target as HTMLInputElement).value);
     this.appView.chatView.filterUsers((event.target as HTMLInputElement).value);
   }
 

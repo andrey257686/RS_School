@@ -14,6 +14,7 @@ import {
   ErrorTypeResponse,
   ErrorTypeShow,
   ResponseMessageFromUser,
+  ResponseDeliverMessages,
 } from "../types/types";
 
 export default class AppModel {
@@ -36,6 +37,8 @@ export default class AppModel {
   public currentRecipient: string = "";
 
   private usersWithUnreadMessages: { username: string; unreadMessages: Set<string> }[] = [];
+
+  private usersWithUndeliveredMessages: { username: string; unreadMessages: Set<string> }[] = [];
 
   constructor() {
     this.userName = "";
@@ -229,6 +232,22 @@ export default class AppModel {
       }
     }
     if (data.payload.message.from === this.userName) {
+      if (!data.payload.message.status.isDelivered) {
+        let userWithUndeliveredMessages = this.usersWithUndeliveredMessages.find(
+          (user) => user.username === data.payload.message.to,
+        );
+        if (userWithUndeliveredMessages) {
+          userWithUndeliveredMessages.unreadMessages.add(data.payload.message.id);
+        } else {
+          userWithUndeliveredMessages = {
+            username: data.payload.message.to,
+            unreadMessages: new Set(),
+          };
+          userWithUndeliveredMessages.unreadMessages.add(data.payload.message.id);
+          this.usersWithUndeliveredMessages.push(userWithUndeliveredMessages);
+        }
+      }
+      console.log(this.usersWithUndeliveredMessages);
       _addMessage(data.payload.message, true);
     }
   }
@@ -261,7 +280,6 @@ export default class AppModel {
           }
           // последнее собщение для данного юзера
           if (i === data.payload.messages.length - 1) {
-            console.log("here");
             _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.unreadMessages.size);
           }
         }
@@ -270,6 +288,13 @@ export default class AppModel {
         _addMessage(data.payload.messages[i], true);
       }
     }
+  }
+
+  public responseDeliverMessage(
+    data: ResponseDeliverMessages,
+    _setMessageStatus: (messageId: string, status: string) => void,
+  ) {
+    _setMessageStatus(data.payload.message.id, "isDelivered");
     console.log(data);
   }
 }

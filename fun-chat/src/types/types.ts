@@ -99,6 +99,19 @@ export interface ResponseMessageFromUser {
   };
 }
 
+export interface ResponseDeliverMessages {
+  id: null;
+  type: "MSG_DELIVER";
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isDelivered: boolean;
+      };
+    };
+  };
+}
+
 export enum ErrorTypeResponse {
   INCORRECT_PASSWORD = "incorrect password",
   USER_ALREADY_AUTHORIZED = "a user with this login is already authorized",

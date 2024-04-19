@@ -30,6 +30,8 @@ export default class ChatView {
 
   public handleSendMessage: ((event: SubmitEvent, message: string) => void) | undefined;
 
+  public messages: Map<string, HTMLDivElement> = new Map();
+
   constructor() {
     this.chatContainer = document.createElement("div");
     this.contactsField = document.createElement("aside");
@@ -234,6 +236,7 @@ export default class ChatView {
 
   public addMessage(message: Message, isFromMe: boolean) {
     const messageContainer = this.createMessageContainer(message, isFromMe);
+    this.messages.set(message.id, messageContainer);
     if (this.isChatChosen) {
       this.dialogFieldBody.appendChild(messageContainer);
     }
@@ -261,6 +264,7 @@ export default class ChatView {
     labelDate.textContent = new Date(message.datetime).toLocaleString();
     const labelStatusMsg = document.createElement("label");
     labelStatusMsg.className = "message__footer_status";
+    labelStatusMsg.textContent = "Отправлено";
     if (message.status.isDelivered) {
       labelStatusMsg.textContent = "Доставлено";
     }
@@ -292,6 +296,21 @@ export default class ChatView {
       userCountMessagesElement.style.display = "flex";
     } else {
       userCountMessagesElement.style.display = "none";
+    }
+  }
+
+  public setMessageStatus(messageId: string, status: string) {
+    const message = this.messages.get(messageId);
+    if (message) {
+      if (status === "isDelivered") {
+        message.children[2].children[0].textContent = "Доставлено";
+      }
+      if (status === "isReaded") {
+        message.children[2].children[0].textContent = "Прочитано";
+      }
+      if (status === "isEdited") {
+        message.children[2].children[0].textContent = "Изменено";
+      }
     }
   }
 }
