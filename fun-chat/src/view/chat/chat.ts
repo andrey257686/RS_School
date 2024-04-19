@@ -283,24 +283,15 @@ export default class ChatView {
     return messageContainer;
   }
 
-  public showUnreadMessagesCount(username: string, count?: number) {
+  public showUnreadMessagesCount(username: string, count: number) {
     const usersContainerArray: HTMLLIElement[] = Array.from(document.querySelectorAll(".chat__contacts_item"));
     const userContainer = usersContainerArray.find((item) => item.children[1].textContent === username);
     const userCountMessagesElement = userContainer?.children[2] as HTMLDivElement;
-    let tmpCount = 0;
-    if (!count) {
-      tmpCount = Number(userCountMessagesElement.innerText);
+    userCountMessagesElement.innerText = count.toString();
+    if (count > 0) {
+      userCountMessagesElement.style.display = "flex";
     } else {
-      tmpCount = count;
-    }
-    // let tmpCount = count || Number(userCountMessagesElement.innerText);
-    if (userCountMessagesElement) {
-      userCountMessagesElement.innerText = (tmpCount += 1).toString();
-      if (tmpCount > 0) {
-        userCountMessagesElement.style.display = "flex";
-      } else {
-        userCountMessagesElement.style.display = "none";
-      }
+      userCountMessagesElement.style.display = "none";
     }
   }
 }

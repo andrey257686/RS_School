@@ -35,6 +35,8 @@ export default class AppModel {
 
   public currentRecipient: string = "";
 
+  private usersWithUnreadMessages: { username: string; count: number }[] = [];
+
   constructor() {
     this.userName = "";
     this.userPassword = "";
@@ -205,13 +207,25 @@ export default class AppModel {
   public responseSendMessage(
     data: ResponseSendMessage,
     _addMessage: (message: Message, isFromMe: boolean) => void,
-    _showUnreadMessagesCount: (username: string, count?: number) => void,
+    _showUnreadMessagesCount: (username: string, count: number) => void,
   ) {
     if (data.payload.message.to === this.userName) {
       if (data.payload.message.from === this.currentRecipient) {
         _addMessage(data.payload.message, false);
       } else {
-        _showUnreadMessagesCount(data.payload.message.from);
+        let userWithUnreadMessages = this.usersWithUnreadMessages.find(
+          (user) => user.username === data.payload.message.from,
+        );
+        if (userWithUnreadMessages) {
+          userWithUnreadMessages.count += 1;
+        } else {
+          userWithUnreadMessages = {
+            username: data.payload.message.from,
+            count: 1,
+          };
+          this.usersWithUnreadMessages.push(userWithUnreadMessages);
+        }
+        _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.count);
       }
     }
     if (data.payload.message.from === this.userName) {
@@ -226,10 +240,29 @@ export default class AppModel {
   public responseFetchMessages(
     data: ResponseMessageFromUser,
     _addMessage: (message: Message, isFromMe: boolean) => void,
+    _showUnreadMessagesCount: (username: string, count: number) => void,
   ) {
     for (let i = 0; i < data.payload.messages.length; i += 1) {
       if (data.payload.messages[i].to === this.userName) {
         _addMessage(data.payload.messages[i], false);
+        if (data.payload.messages[i].status.isReaded === false) {
+          let userWithUnreadMessages = this.usersWithUnreadMessages.find(
+            (user) => user.username === data.payload.messages[i].from,
+          );
+          if (userWithUnreadMessages) {
+            userWithUnreadMessages.count += 1;
+          } else {
+            userWithUnreadMessages = {
+              username: data.payload.messages[i].from,
+              count: 1,
+            };
+            this.usersWithUnreadMessages.push(userWithUnreadMessages);
+          }
+          // последнее собщение для данного юзера
+          if (i === data.payload.messages.length - 1) {
+            _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.count);
+          }
+        }
       }
       if (data.payload.messages[i].from === this.userName) {
         _addMessage(data.payload.messages[i], true);

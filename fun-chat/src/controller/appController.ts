@@ -70,7 +70,11 @@ export default class AppController {
         );
       }
       if (data.type === "MSG_FROM_USER") {
-        this.appModel.responseFetchMessages(data, this.appView.chatView.addMessage.bind(this.appView.chatView));
+        this.appModel.responseFetchMessages(
+          data,
+          this.appView.chatView.addMessage.bind(this.appView.chatView),
+          this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
+        );
       }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
