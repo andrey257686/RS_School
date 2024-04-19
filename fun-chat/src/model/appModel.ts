@@ -196,10 +196,17 @@ export default class AppModel {
     this.apiService.sendMessage(this.currentRecipient, message);
   }
 
-  public responseSendMessage(data: ResponseSendMessage, _addMessage: (message: Message, isFromMe: boolean) => void) {
+  public responseSendMessage(
+    data: ResponseSendMessage,
+    _addMessage: (message: Message, isFromMe: boolean) => void,
+    _showUnreadMessagesCount: (username: string, count: number) => void,
+  ) {
     if (data.payload.message.to === this.userName) {
-      console.log(data.payload);
-      _addMessage(data.payload.message, false);
+      if (data.payload.message.from === this.currentRecipient) {
+        _addMessage(data.payload.message, false);
+      } else {
+        _showUnreadMessagesCount(data.payload.message.from, 13);
+      }
     }
     if (data.payload.message.from === this.userName) {
       _addMessage(data.payload.message, true);

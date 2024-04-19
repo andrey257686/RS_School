@@ -40,12 +40,15 @@
       align-items: center;
       padding-left: 10px;
       color: #1148d3;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-bottom: 5px;
       &:hover {
         background-color: hsla(0, 0%, 100%, 0.402);
       }
     }
     &_status {
-      width: 10px;
+      min-width: 10px;
       height: 10px;
       border-radius: 50%;
       margin-right: 10px;
@@ -55,6 +58,21 @@
       &-offline {
         background-color: red;
       }
+    }
+    &_username {
+      width: 100%;
+    }
+    &_count {
+      min-width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #0482ff;
+      color: white;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-style: italic;
+      text-align: center;
     }
   }
   &__dialog {

@@ -165,8 +165,12 @@ export default class ChatView {
     const username = document.createElement("label");
     username.className = "chat__contacts_username";
     username.innerText = user.login;
+    const countMessages = document.createElement("div");
+    countMessages.className = "chat__contacts_count";
+    countMessages.style.display = "none";
     li.appendChild(status);
     li.appendChild(username);
+    li.appendChild(countMessages);
     return li;
   }
 
@@ -277,5 +281,20 @@ export default class ChatView {
     messageContainer.appendChild(messageText);
     messageContainer.appendChild(messageFooter);
     return messageContainer;
+  }
+
+  public showUnreadMessagesCount(username: string, count: number) {
+    const usersContainerArray: HTMLLIElement[] = Array.from(document.querySelectorAll(".chat__contacts_item"));
+    const userContainer = usersContainerArray.find((item) => item.children[1].textContent === username);
+    const userCountMessagesElement = userContainer?.children[2] as HTMLDivElement;
+    let tmpCount = Number(userCountMessagesElement.innerText);
+    if (userCountMessagesElement) {
+      userCountMessagesElement.innerText = (tmpCount += 1).toString();
+      if (count > 0) {
+        userCountMessagesElement.style.display = "flex";
+      } else {
+        userCountMessagesElement.style.display = "none";
+      }
+    }
   }
 }

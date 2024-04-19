@@ -63,7 +63,11 @@ export default class AppController {
         this.appModel.responseExternalLogout(data, this.appView.chatView.addOfflineUser.bind(this.appView.chatView));
       }
       if (data.type === "MSG_SEND") {
-        this.appModel.responseSendMessage(data, this.appView.chatView.addMessage.bind(this.appView.chatView));
+        this.appModel.responseSendMessage(
+          data,
+          this.appView.chatView.addMessage.bind(this.appView.chatView),
+          this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
+        );
       }
       if (data.type === "MSG_FROM_USER") {
         this.appModel.responseFetchMessages(data, this.appView.chatView.addMessage.bind(this.appView.chatView));
