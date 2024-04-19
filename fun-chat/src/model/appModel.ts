@@ -150,6 +150,9 @@ export default class AppModel {
         break;
       }
     }
+    for (let i = 0; i < this.userOnline.length; i += 1) {
+      this.requestFetchMessages(this.userOnline[i].login);
+    }
     _showUsersOnline(this.userOnline);
     this.apiService.getInactiveUsers();
   }
@@ -157,6 +160,9 @@ export default class AppModel {
   public responseInactiveUsers(data: ResponseInactiveUsers, _showUsersOffline: (users: UserStatus[]) => void) {
     // this.userAll = [...this.userAll, ...data.payload.users];
     this.userOffline = [...data.payload.users];
+    for (let i = 0; i < this.userOffline.length; i += 1) {
+      this.requestFetchMessages(this.userOffline[i].login);
+    }
     _showUsersOffline(this.userOffline);
   }
 
@@ -199,13 +205,13 @@ export default class AppModel {
   public responseSendMessage(
     data: ResponseSendMessage,
     _addMessage: (message: Message, isFromMe: boolean) => void,
-    _showUnreadMessagesCount: (username: string, count: number) => void,
+    _showUnreadMessagesCount: (username: string, count?: number) => void,
   ) {
     if (data.payload.message.to === this.userName) {
       if (data.payload.message.from === this.currentRecipient) {
         _addMessage(data.payload.message, false);
       } else {
-        _showUnreadMessagesCount(data.payload.message.from, 13);
+        _showUnreadMessagesCount(data.payload.message.from);
       }
     }
     if (data.payload.message.from === this.userName) {
