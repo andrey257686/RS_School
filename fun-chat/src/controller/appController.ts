@@ -49,6 +49,7 @@ export default class AppController {
       }
       if (data.type === "USER_LOGOUT") {
         this.appModel.responseLogout(data, this.changePage.bind(this));
+        this.appView.chatView.isChatChosen = false;
       }
       if (data.type === "USER_ACTIVE") {
         this.appModel.responseActiveUsers(data, this.appView.chatView.showUsersOnline.bind(this.appView.chatView));
@@ -79,6 +80,13 @@ export default class AppController {
       if (data.type === "MSG_DELIVER") {
         this.appModel.responseDeliverMessage(data, this.appView.chatView.setMessageStatus.bind(this.appView.chatView));
       }
+      if (data.type === "MSG_READ") {
+        this.appModel.responseReadMessage(
+          data,
+          this.appView.chatView.setMessageStatus.bind(this.appView.chatView),
+          this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
+        );
+      }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }
@@ -98,6 +106,7 @@ export default class AppController {
     this.appView.chatView.handleInputSearch = this.handleInputSearch.bind(this);
     this.appView.chatView.handleClickUser = this.handleClickUser.bind(this);
     this.appView.chatView.handleSendMessage = this.handleSendMessage.bind(this);
+    this.appView.chatView.handleClickDialogField = this.handleClickDialogField.bind(this);
   }
 
   private changePage(href?: string) {
@@ -172,5 +181,10 @@ export default class AppController {
   private handleSendMessage(event: Event, message: string) {
     event.preventDefault();
     this.appModel.requestSendMessage(message);
+  }
+
+  private handleClickDialogField(event: Event) {
+    event.preventDefault();
+    this.appModel.requestReadMessage();
   }
 }

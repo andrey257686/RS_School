@@ -83,4 +83,18 @@ export default class ApiService {
       }),
     );
   }
+
+  public statusReadMessage(id: string) {
+    this.socket.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: "MSG_READ",
+        payload: {
+          message: {
+            id,
+          },
+        },
+      }),
+    );
+  }
 }

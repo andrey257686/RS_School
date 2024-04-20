@@ -112,6 +112,19 @@ export interface ResponseDeliverMessages {
   };
 }
 
+export interface ResponseReadMessages {
+  id: null;
+  type: "MSG_READ";
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isReaded: boolean;
+      };
+    };
+  };
+}
+
 export enum ErrorTypeResponse {
   INCORRECT_PASSWORD = "incorrect password",
   USER_ALREADY_AUTHORIZED = "a user with this login is already authorized",

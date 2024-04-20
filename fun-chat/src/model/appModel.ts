@@ -15,6 +15,7 @@ import {
   ErrorTypeShow,
   ResponseMessageFromUser,
   ResponseDeliverMessages,
+  ResponseReadMessages,
 } from "../types/types";
 
 export default class AppModel {
@@ -38,7 +39,7 @@ export default class AppModel {
 
   private usersWithUnreadMessages: { username: string; unreadMessages: Set<string> }[] = [];
 
-  private usersWithUndeliveredMessages: { username: string; unreadMessages: Set<string> }[] = [];
+  private usersWithUndeliveredMessages: { username: string; undeliveredMessages: Set<string> }[] = [];
 
   constructor() {
     this.userName = "";
@@ -215,21 +216,21 @@ export default class AppModel {
     if (data.payload.message.to === this.userName) {
       if (data.payload.message.from === this.currentRecipient) {
         _addMessage(data.payload.message, false);
-        let userWithUnreadMessages = this.usersWithUnreadMessages.find(
-          (user) => user.username === data.payload.message.from,
-        );
-        if (userWithUnreadMessages) {
-          userWithUnreadMessages.unreadMessages.add(data.payload.message.id);
-        } else {
-          userWithUnreadMessages = {
-            username: data.payload.message.from,
-            unreadMessages: new Set(),
-          };
-          userWithUnreadMessages.unreadMessages.add(data.payload.message.id);
-          this.usersWithUnreadMessages.push(userWithUnreadMessages);
-        }
-        _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.unreadMessages.size);
       }
+      let userWithUnreadMessages = this.usersWithUnreadMessages.find(
+        (user) => user.username === data.payload.message.from,
+      );
+      if (userWithUnreadMessages) {
+        userWithUnreadMessages.unreadMessages.add(data.payload.message.id);
+      } else {
+        userWithUnreadMessages = {
+          username: data.payload.message.from,
+          unreadMessages: new Set(),
+        };
+        userWithUnreadMessages.unreadMessages.add(data.payload.message.id);
+        this.usersWithUnreadMessages.push(userWithUnreadMessages);
+      }
+      _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.unreadMessages.size);
     }
     if (data.payload.message.from === this.userName) {
       if (!data.payload.message.status.isDelivered) {
@@ -237,17 +238,16 @@ export default class AppModel {
           (user) => user.username === data.payload.message.to,
         );
         if (userWithUndeliveredMessages) {
-          userWithUndeliveredMessages.unreadMessages.add(data.payload.message.id);
+          userWithUndeliveredMessages.undeliveredMessages.add(data.payload.message.id);
         } else {
           userWithUndeliveredMessages = {
             username: data.payload.message.to,
-            unreadMessages: new Set(),
+            undeliveredMessages: new Set(),
           };
-          userWithUndeliveredMessages.unreadMessages.add(data.payload.message.id);
+          userWithUndeliveredMessages.undeliveredMessages.add(data.payload.message.id);
           this.usersWithUndeliveredMessages.push(userWithUndeliveredMessages);
         }
       }
-      console.log(this.usersWithUndeliveredMessages);
       _addMessage(data.payload.message, true);
     }
   }
@@ -279,9 +279,9 @@ export default class AppModel {
             this.usersWithUnreadMessages.push(userWithUnreadMessages);
           }
           // последнее собщение для данного юзера
-          if (i === data.payload.messages.length - 1) {
-            _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.unreadMessages.size);
-          }
+          // if (i === data.payload.messages.length - 1) {
+          _showUnreadMessagesCount(userWithUnreadMessages.username, userWithUnreadMessages.unreadMessages.size);
+          // }
         }
       }
       if (data.payload.messages[i].from === this.userName) {
@@ -296,5 +296,28 @@ export default class AppModel {
   ) {
     _setMessageStatus(data.payload.message.id, "isDelivered");
     console.log(data);
+  }
+
+  public requestReadMessage() {
+    console.log(this.currentRecipient);
+    console.log(this.usersWithUnreadMessages);
+    const userWithUnreadMessages = this.usersWithUnreadMessages.find((user) => user.username === this.currentRecipient);
+    console.log(userWithUnreadMessages);
+    if (userWithUnreadMessages) {
+      while (userWithUnreadMessages.unreadMessages.size > 0) {
+        this.apiService.statusReadMessage(userWithUnreadMessages.unreadMessages.values().next().value);
+        userWithUnreadMessages.unreadMessages.delete(userWithUnreadMessages.unreadMessages.values().next().value);
+      }
+    }
+  }
+
+  public responseReadMessage(
+    data: ResponseReadMessages,
+    _setMessageStatus: (messageId: string, status: string) => void,
+    _showUnreadMessagesCount: (username: string, count: number) => void,
+  ) {
+    _setMessageStatus(data.payload.message.id, "isReaded");
+    _showUnreadMessagesCount(this.currentRecipient, 0);
+    // console.log(data);
   }
 }

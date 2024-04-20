@@ -22,13 +22,15 @@ export default class ChatView {
 
   private dialogFieldSendingForm: HTMLFormElement;
 
-  private isChatChosen: boolean = false;
+  public isChatChosen: boolean = false;
 
   public handleInputSearch: ((event: Event) => void) | undefined;
 
   public handleClickUser: ((event: Event) => void) | undefined;
 
   public handleSendMessage: ((event: SubmitEvent, message: string) => void) | undefined;
+
+  public handleClickDialogField: ((event: Event) => void) | undefined;
 
   public messages: Map<string, HTMLDivElement> = new Map();
 
@@ -86,6 +88,11 @@ export default class ChatView {
     labelUserStatus.className = "dialog__header_status";
     this.dialogFieldHeader.appendChild(labelUserStatus);
     this.dialogFieldBody.className = "chat__dialog_body";
+    if (this.handleClickDialogField) {
+      this.dialogFieldBody.addEventListener("click", this.handleClickDialogField);
+    } else {
+      console.log('Не определён прослушивтель для события "click"');
+    }
     if (!this.isChatChosen) {
       const label = document.createElement("label");
       label.className = "chat__dialog_body-label";
@@ -251,6 +258,9 @@ export default class ChatView {
     }
     const messageHeader = document.createElement("div");
     messageHeader.className = "message__header";
+    // const idlabel = document.createElement("label");
+    // idlabel.innerText = message.id;
+    // messageHeader.appendChild(idlabel);
     const messageText = document.createElement("div");
     messageText.className = "message__text";
     messageText.textContent = message.text;
