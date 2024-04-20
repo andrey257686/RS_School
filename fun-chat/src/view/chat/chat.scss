@@ -121,6 +121,31 @@
       justify-content: center;
     }
   }
+  &__context-menu {
+    position: absolute;
+    display: none;
+    border: 1px solid #0482ff;
+    border-radius: 10px;
+    color: #1148d3;
+    background-color: #a4d1fe;
+    padding: 5px;
+    &_list {
+      width: 100%;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    &_item {
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border-radius: 5px;
+      padding: 5px;
+      width: 100%;
+      &:hover {
+        background-color: hsla(0, 0%, 100%, 0.402);
+      }
+    }
+  }
 }
 
 .sending {

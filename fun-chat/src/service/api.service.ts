@@ -97,4 +97,18 @@ export default class ApiService {
       }),
     );
   }
+
+  public deleteMessage(id: string) {
+    this.socket.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: "MSG_DELETE",
+        payload: {
+          message: {
+            id,
+          },
+        },
+      }),
+    );
+  }
 }

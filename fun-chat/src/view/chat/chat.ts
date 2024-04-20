@@ -22,6 +22,8 @@ export default class ChatView {
 
   private dialogFieldSendingForm: HTMLFormElement;
 
+  private contextMenu: HTMLDivElement;
+
   public isChatChosen: boolean = false;
 
   public handleInputSearch: ((event: Event) => void) | undefined;
@@ -31,6 +33,8 @@ export default class ChatView {
   public handleSendMessage: ((event: SubmitEvent, message: string) => void) | undefined;
 
   public handleClickDialogField: ((event: Event) => void) | undefined;
+
+  public handleDeleteMessage: ((event: Event, id: string) => void) | undefined;
 
   public messages: Map<string, HTMLDivElement> = new Map();
 
@@ -45,10 +49,39 @@ export default class ChatView {
     this.dialogFieldBody = document.createElement("div");
     this.dialogFieldSending = document.createElement("div");
     this.dialogFieldSendingForm = document.createElement("form");
+    this.contextMenu = document.createElement("div");
   }
 
   public create() {
     this.createLoginForm();
+    // this.createContextMenu();
+    document.addEventListener("click", () => {
+      this.contextMenu.style.display = "none";
+      this.contextMenu.innerHTML = "";
+    });
+  }
+
+  private createContextMenu(id: string) {
+    this.contextMenu.className = "chat__context-menu";
+    const contextMenuList = document.createElement("ul");
+    contextMenuList.className = "chat__context-menu_list";
+    const contextMenuDelete = document.createElement("li");
+    contextMenuDelete.className = "chat__context-menu_item";
+    contextMenuDelete.innerText = "Delete";
+    if (this.handleDeleteMessage) {
+      contextMenuDelete.addEventListener("click", (event) => {
+        this.handleDeleteMessage!.bind(this, event, id)();
+      });
+    } else {
+      console.log('Не определён прослушивтель для события "click" в handleDeleteMessage');
+    }
+    const contextMenuEdit = document.createElement("li");
+    contextMenuEdit.className = "chat__context-menu_item";
+    contextMenuEdit.innerText = "Edit";
+    contextMenuList.appendChild(contextMenuDelete);
+    contextMenuList.appendChild(contextMenuEdit);
+    this.contextMenu.appendChild(contextMenuList);
+    this.chatContainer.appendChild(this.contextMenu);
   }
 
   private createLoginForm() {
@@ -256,6 +289,19 @@ export default class ChatView {
 
   private createMessageContainer(message: Message, isFromMe: boolean) {
     const messageContainer = document.createElement("div");
+    messageContainer.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      const entries = Array.from(this.messages.entries());
+      const element = entries.find(([, value]) => value === messageContainer);
+      if (element) {
+        this.createContextMenu(element[0]);
+      }
+      const x = event.clientX;
+      const y = event.clientY;
+      this.contextMenu.style.left = `${x}px`;
+      this.contextMenu.style.top = `${y}px`;
+      this.contextMenu.style.display = "flex";
+    });
     messageContainer.className = "message";
     if (isFromMe) {
       messageContainer.classList.add("message__my");
@@ -325,6 +371,14 @@ export default class ChatView {
       if (status === "isEdited") {
         message.children[2].children[0].textContent = "Изменено";
       }
+    }
+  }
+
+  public removeMessage(messageId: string) {
+    const message = this.messages.get(messageId);
+    if (message) {
+      message.remove();
+      this.messages.delete(messageId);
     }
   }
 }

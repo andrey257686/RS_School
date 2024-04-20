@@ -16,6 +16,7 @@ import {
   ResponseMessageFromUser,
   ResponseDeliverMessages,
   ResponseReadMessages,
+  ResponseDeleteMessage,
 } from "../types/types";
 
 export default class AppModel {
@@ -295,14 +296,10 @@ export default class AppModel {
     _setMessageStatus: (messageId: string, status: string) => void,
   ) {
     _setMessageStatus(data.payload.message.id, "isDelivered");
-    console.log(data);
   }
 
   public requestReadMessage() {
-    console.log(this.currentRecipient);
-    console.log(this.usersWithUnreadMessages);
     const userWithUnreadMessages = this.usersWithUnreadMessages.find((user) => user.username === this.currentRecipient);
-    console.log(userWithUnreadMessages);
     if (userWithUnreadMessages) {
       while (userWithUnreadMessages.unreadMessages.size > 0) {
         this.apiService.statusReadMessage(userWithUnreadMessages.unreadMessages.values().next().value);
@@ -319,5 +316,32 @@ export default class AppModel {
     _setMessageStatus(data.payload.message.id, "isReaded");
     _showUnreadMessagesCount(this.currentRecipient, 0);
     // console.log(data);
+  }
+
+  public requestDeleteMessage(messageId: string) {
+    this.apiService.deleteMessage(messageId);
+  }
+
+  public responseDeleteMessage(
+    data: ResponseDeleteMessage,
+    _removeMessage: (messageId: string) => void,
+    _showUnreadMessagesCount: (username: string, count: number) => void,
+  ) {
+    console.log(data);
+    console.log(this.usersWithUnreadMessages);
+    for (let i = 0; i < this.usersWithUnreadMessages.length; i += 1) {
+      const arrUnreadMessages = Array.from(this.usersWithUnreadMessages[i].unreadMessages);
+      for (let j = 0; j < arrUnreadMessages.length; j += 1) {
+        if (arrUnreadMessages[j] === data.payload.message.id) {
+          this.usersWithUnreadMessages[i].unreadMessages.delete(arrUnreadMessages[j]);
+          _showUnreadMessagesCount(
+            this.usersWithUnreadMessages[i].username,
+            this.usersWithUnreadMessages[i].unreadMessages.size,
+          );
+          break;
+        }
+      }
+    }
+    _removeMessage(data.payload.message.id);
   }
 }

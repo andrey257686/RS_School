@@ -125,6 +125,19 @@ export interface ResponseReadMessages {
   };
 }
 
+export interface ResponseDeleteMessage {
+  id: null;
+  type: "MSG_DELETE";
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isDeleted: boolean;
+      };
+    };
+  };
+}
+
 export enum ErrorTypeResponse {
   INCORRECT_PASSWORD = "incorrect password",
   USER_ALREADY_AUTHORIZED = "a user with this login is already authorized",

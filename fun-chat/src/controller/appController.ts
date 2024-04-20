@@ -87,6 +87,13 @@ export default class AppController {
           this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
         );
       }
+      if (data.type === "MSG_DELETE") {
+        this.appModel.responseDeleteMessage(
+          data,
+          this.appView.chatView.removeMessage.bind(this.appView.chatView),
+          this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
+        );
+      }
       if (data.type === "ERROR") {
         this.appModel.responseError(data, this.appView.showModal.bind(this.appView));
       }
@@ -107,6 +114,7 @@ export default class AppController {
     this.appView.chatView.handleClickUser = this.handleClickUser.bind(this);
     this.appView.chatView.handleSendMessage = this.handleSendMessage.bind(this);
     this.appView.chatView.handleClickDialogField = this.handleClickDialogField.bind(this);
+    this.appView.chatView.handleDeleteMessage = this.handleDeleteMessage.bind(this);
   }
 
   private changePage(href?: string) {
@@ -186,5 +194,10 @@ export default class AppController {
   private handleClickDialogField(event: Event) {
     event.preventDefault();
     this.appModel.requestReadMessage();
+  }
+
+  private handleDeleteMessage(event: Event, id: string) {
+    event.preventDefault();
+    this.appModel.requestDeleteMessage(id);
   }
 }
