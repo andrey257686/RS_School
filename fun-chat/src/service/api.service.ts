@@ -111,4 +111,19 @@ export default class ApiService {
       }),
     );
   }
+
+  public editMessage(id: string, text: string) {
+    this.socket.send(
+      JSON.stringify({
+        id: crypto.randomUUID(),
+        type: "MSG_EDIT",
+        payload: {
+          message: {
+            id,
+            text,
+          },
+        },
+      }),
+    );
+  }
 }

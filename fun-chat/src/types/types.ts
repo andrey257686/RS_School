@@ -138,6 +138,20 @@ export interface ResponseDeleteMessage {
   };
 }
 
+export interface ResponseEditMessage {
+  id: null;
+  type: "MSG_EDIT";
+  payload: {
+    message: {
+      id: string;
+      text: string;
+      status: {
+        isEdited: boolean;
+      };
+    };
+  };
+}
+
 export enum ErrorTypeResponse {
   INCORRECT_PASSWORD = "incorrect password",
   USER_ALREADY_AUTHORIZED = "a user with this login is already authorized",

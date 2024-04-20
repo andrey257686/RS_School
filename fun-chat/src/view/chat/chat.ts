@@ -26,6 +26,8 @@ export default class ChatView {
 
   public isChatChosen: boolean = false;
 
+  public isEdit: boolean = false;
+
   public handleInputSearch: ((event: Event) => void) | undefined;
 
   public handleClickUser: ((event: Event) => void) | undefined;
@@ -36,7 +38,11 @@ export default class ChatView {
 
   public handleDeleteMessage: ((event: Event, id: string) => void) | undefined;
 
+  public handleEditMessage: ((event: Event, message: string, id: string) => void) | undefined;
+
   public messages: Map<string, HTMLDivElement> = new Map();
+
+  public editMessageId: string | null = null;
 
   constructor() {
     this.chatContainer = document.createElement("div");
@@ -61,7 +67,7 @@ export default class ChatView {
     });
   }
 
-  private createContextMenu(id: string) {
+  private createContextMenu(id: string, messageText: string) {
     this.contextMenu.className = "chat__context-menu";
     const contextMenuList = document.createElement("ul");
     contextMenuList.className = "chat__context-menu_list";
@@ -78,6 +84,26 @@ export default class ChatView {
     const contextMenuEdit = document.createElement("li");
     contextMenuEdit.className = "chat__context-menu_item";
     contextMenuEdit.innerText = "Edit";
+    contextMenuEdit.addEventListener("click", () => {
+      const input = document.querySelector(".sending__form_input") as HTMLInputElement;
+      this.editMessageId = id;
+      console.log(input);
+      if (input) {
+        input.value = messageText;
+        this.isEdit = true;
+        const deleteEdit =
+          (document.querySelector(".sending__form_delete") as HTMLDivElement) ?? document.createElement("div");
+        deleteEdit.className = "sending__form_delete";
+        deleteEdit.innerText = "X";
+        this.dialogFieldSendingForm.insertBefore(deleteEdit, this.dialogFieldSendingForm.lastChild);
+        deleteEdit.addEventListener("click", () => {
+          this.isEdit = false;
+          input.value = "";
+          deleteEdit.remove();
+          this.editMessageId = "";
+        });
+      }
+    });
     contextMenuList.appendChild(contextMenuDelete);
     contextMenuList.appendChild(contextMenuEdit);
     this.contextMenu.appendChild(contextMenuList);
@@ -159,11 +185,21 @@ export default class ChatView {
       button.disabled = true;
       button.classList.add("disabled");
     }
-    if (this.handleSendMessage !== undefined) {
+    if (this.handleSendMessage !== undefined && this.handleEditMessage !== undefined) {
       this.dialogFieldSendingForm.addEventListener("submit", (event) => {
-        this.handleSendMessage!.bind(this, event, input.value)();
-        this.handleClickDialogField?.bind(this, event)();
-        input.value = "";
+        console.log(this.isEdit);
+        if (!this.isEdit) {
+          this.handleSendMessage!.bind(this, event, input.value)();
+          this.handleClickDialogField?.bind(this, event)();
+          input.value = "";
+        } else if (this.editMessageId) {
+          this.handleEditMessage!.bind(this, event, input.value, this.editMessageId)();
+          this.handleClickDialogField?.bind(this, event)();
+          input.value = "";
+          document.querySelector(".sending__form_delete")?.remove();
+          this.isEdit = false;
+          this.editMessageId = "";
+        }
       });
     } else {
       console.log('Не определён прослушивтель для события "submit"');
@@ -291,10 +327,14 @@ export default class ChatView {
     const messageContainer = document.createElement("div");
     messageContainer.addEventListener("contextmenu", (event) => {
       event.preventDefault();
+      if (this.contextMenu.style.display === "flex") {
+        this.contextMenu.style.display = "none";
+        this.contextMenu.innerHTML = "";
+      }
       const entries = Array.from(this.messages.entries());
       const element = entries.find(([, value]) => value === messageContainer);
       if (element) {
-        this.createContextMenu(element[0]);
+        this.createContextMenu(element[0], message.text);
       }
       const x = event.clientX;
       const y = event.clientY;
@@ -331,11 +371,12 @@ export default class ChatView {
     if (message.status.isReaded) {
       labelStatusMsg.textContent = "Прочитано";
     }
-    if (message.status.isEdited) {
-      labelStatusMsg.textContent = "Изменено";
-    }
     if (!isFromMe) {
       labelStatusMsg.style.display = "none";
+    }
+    if (message.status.isEdited) {
+      labelStatusMsg.style.display = "block";
+      labelStatusMsg.textContent = "Изменено";
     }
     messageHeader.appendChild(labelUsername);
     messageHeader.appendChild(labelDate);
@@ -379,6 +420,16 @@ export default class ChatView {
     if (message) {
       message.remove();
       this.messages.delete(messageId);
+    }
+  }
+
+  public editMessage(messageId: string, messageText: string) {
+    const message = this.messages.get(messageId);
+    if (message) {
+      message.children[1].textContent = messageText;
+      const messageStatus = message.querySelector(".message__footer_status") as HTMLLabelElement;
+      messageStatus.style.display = "block";
+      messageStatus.textContent = "Изменено";
     }
   }
 }

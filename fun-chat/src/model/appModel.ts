@@ -17,6 +17,7 @@ import {
   ResponseDeliverMessages,
   ResponseReadMessages,
   ResponseDeleteMessage,
+  ResponseEditMessage,
 } from "../types/types";
 
 export default class AppModel {
@@ -327,8 +328,6 @@ export default class AppModel {
     _removeMessage: (messageId: string) => void,
     _showUnreadMessagesCount: (username: string, count: number) => void,
   ) {
-    console.log(data);
-    console.log(this.usersWithUnreadMessages);
     for (let i = 0; i < this.usersWithUnreadMessages.length; i += 1) {
       const arrUnreadMessages = Array.from(this.usersWithUnreadMessages[i].unreadMessages);
       for (let j = 0; j < arrUnreadMessages.length; j += 1) {
@@ -343,5 +342,15 @@ export default class AppModel {
       }
     }
     _removeMessage(data.payload.message.id);
+  }
+
+  public requestEditMessage(message: string, id: string) {
+    console.log(id);
+    this.apiService.editMessage(id, message);
+  }
+
+  public responseEditMessage(data: ResponseEditMessage, _editMessage: (id: string, message: string) => void) {
+    console.log(data);
+    _editMessage(data.payload.message.id, data.payload.message.text);
   }
 }
