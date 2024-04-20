@@ -90,6 +90,9 @@ export default class ChatView {
     this.dialogFieldBody.className = "chat__dialog_body";
     if (this.handleClickDialogField) {
       this.dialogFieldBody.addEventListener("click", this.handleClickDialogField);
+      this.dialogFieldBody.addEventListener("scroll", (event) => {
+        console.log(event.type);
+      });
     } else {
       console.log('Не определён прослушивтель для события "click"');
     }
@@ -126,6 +129,7 @@ export default class ChatView {
     if (this.handleSendMessage !== undefined) {
       this.dialogFieldSendingForm.addEventListener("submit", (event) => {
         this.handleSendMessage!.bind(this, event, input.value)();
+        this.handleClickDialogField?.bind(this, event)();
         input.value = "";
       });
     } else {
