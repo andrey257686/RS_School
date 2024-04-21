@@ -55,14 +55,21 @@ export default class AppView {
     }
   }
 
-  public showModal(message: string) {
+  public showModal(message: string, isConnectionError = false) {
     this.modal.modalLabel.innerText = message;
+    if (isConnectionError) {
+      this.modal.modalButton.style.display = "none";
+    } else {
+      this.modal.modalButton.style.display = "block";
+    }
     this.container.appendChild(this.modal.modalContainer);
     this.container.appendChild(this.modal.overflow);
   }
 
   public closeModal() {
-    this.container.removeChild(this.modal.modalContainer);
-    this.container.removeChild(this.modal.overflow);
+    this.modal.modalContainer.remove();
+    this.modal.overflow.remove();
+    // this.container.removeChild(this.modal.modalContainer);
+    // this.container.removeChild(this.modal.overflow);
   }
 }

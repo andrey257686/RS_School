@@ -7,7 +7,7 @@ export default class ModalView {
 
   public modalLabel: HTMLLabelElement;
 
-  private modalButton: HTMLButtonElement;
+  public modalButton: HTMLButtonElement;
 
   public handleCloseModal: ((event: MouseEvent) => void) | undefined;
 

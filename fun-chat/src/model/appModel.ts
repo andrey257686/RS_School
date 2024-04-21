@@ -353,4 +353,9 @@ export default class AppModel {
     console.log(data);
     _editMessage(data.payload.message.id, data.payload.message.text);
   }
+
+  public reconnect() {
+    // console.log("here");
+    this.apiService = new ApiService();
+  }
 }

@@ -3,6 +3,7 @@ export default class ApiService {
 
   constructor() {
     this.socket = new WebSocket("ws://localhost:4000");
+    // this.connect();
   }
 
   public userLogin(login: string, password: string) {
@@ -125,5 +126,9 @@ export default class ApiService {
         },
       }),
     );
+  }
+
+  public connect() {
+    this.socket = new WebSocket("ws://localhost:4000");
   }
 }

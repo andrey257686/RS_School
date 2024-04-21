@@ -11,6 +11,8 @@ export default class AppController {
 
   public currentPage: string = "";
 
+  public reconnectInterval: number = 0;
+
   constructor() {
     this.appView = new AppView();
     this.appModel = new AppModel();
@@ -25,18 +27,39 @@ export default class AppController {
     //   this.appView.renderContent(page);
     // }
     this.listeners();
+    // this.connectSocket();
   }
+
+  // public connectSocket() {
+
+  // }
 
   public listeners() {
     window.addEventListener("popstate", (event) => {
       event.preventDefault();
       this.changePage();
     });
+    document.addEventListener("DOMContentLoaded", () => {
+      this.appView.showModal("Loading...", true);
+    });
+    console.log("here");
+    console.log(this.appModel.apiService.socket.readyState);
+    if (!(this.appModel.apiService.socket.readyState === 1 || this.appModel.apiService.socket.readyState === 0)) {
+      this.appModel.reconnect();
+    }
+    clearInterval(this.reconnectInterval);
+    this.appModel.apiService.socket.onclose = () => {
+      this.appView.showModal("Loading...", true);
+      this.reconnectInterval = setInterval(this.listeners.bind(this), 3000);
+    };
     this.appModel.apiService.socket.onopen = () => {
       if (this.appModel.isUserLogined()) {
         this.appModel.requestLoginUser();
       }
       this.changePage();
+      clearInterval(this.reconnectInterval);
+      console.log("Соединение установлено");
+      this.appView.closeModal();
     };
     this.appModel.apiService.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);

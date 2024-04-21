@@ -16,7 +16,7 @@ export default class ChatView {
 
   private dialogFieldHeader: HTMLDivElement;
 
-  private dialogFieldBody: HTMLDivElement;
+  public dialogFieldBody: HTMLDivElement;
 
   private dialogFieldSending: HTMLDivElement;
 
