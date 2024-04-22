@@ -21,7 +21,7 @@ export default class AboutView {
     const aboutDescription = document.createElement("p");
     aboutDescription.classList.add("about__description");
     aboutDescription.innerHTML =
-      "Hello, this is my Fun chat &#128232. I hope you're not 'Reviewer 3' who who likes to downgrade &#128078;. Don't be too hard on the review, we're just learning &#128588;. I might not get something done by the deadline &#8987;. If you want you can grade it now, but I'd like you to grade it by the last day of the cross check &#129309;. Good luck with your studies. &#129302";
+      "Hello, this is my Fun chat &#128232. I hope you're not 'Reviewer 3' who likes to downgrade &#128078;. Don't be too hard on the review, we're just learning &#128588;. I might not get something done by the deadline &#8987;. Good luck with your studies. &#129302";
     const aboutButton = document.createElement("button");
     aboutButton.classList.add("about__button");
     aboutButton.innerText = "Close";
