@@ -142,6 +142,7 @@ export default class AppController {
     this.appView.chatView.handleClickDialogField = this.handleClickDialogField.bind(this);
     this.appView.chatView.handleDeleteMessage = this.handleDeleteMessage.bind(this);
     this.appView.chatView.handleEditMessage = this.handleEditMessage.bind(this);
+    this.appView.chatView.handleInputSendingForm = this.handleInputSendingForm.bind(this);
   }
 
   private changePage(href?: string) {
@@ -231,5 +232,15 @@ export default class AppController {
   private handleEditMessage(event: Event, message: string, id: string) {
     event.preventDefault();
     this.appModel.requestEditMessage(message, id);
+  }
+
+  private handleInputSendingForm(event: Event) {
+    event.preventDefault();
+    const target = event.target as HTMLInputElement;
+    if (target.value === "") {
+      this.appView.chatView.toggleSendingButton(false);
+    } else {
+      this.appView.chatView.toggleSendingButton(true);
+    }
   }
 }

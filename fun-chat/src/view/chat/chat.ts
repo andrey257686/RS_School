@@ -40,6 +40,8 @@ export default class ChatView {
 
   public handleEditMessage: ((event: Event, message: string, id: string) => void) | undefined;
 
+  public handleInputSendingForm: ((event: Event) => void) | undefined;
+
   public messages: Map<string, HTMLDivElement> = new Map();
 
   public editMessageId: string | null = null;
@@ -175,9 +177,15 @@ export default class ChatView {
     input.className = "sending__form_input";
     input.type = "text";
     input.placeholder = "Message...";
-
+    if (this.handleInputSendingForm) {
+      input.addEventListener("input", this.handleInputSendingForm);
+    } else {
+      console.log('Не определён прослушивтель для события "input" в handleInputSendingForm');
+    }
     const button = document.createElement("button");
     button.className = "sending__form_button";
+    button.disabled = true;
+    button.classList.add("disabled");
     button.innerText = "Send";
     button.type = "submit";
     if (!this.isChatChosen) {
@@ -296,11 +304,8 @@ export default class ChatView {
   public openChat(target: HTMLElement) {
     if (!this.isChatChosen) {
       const input = document.querySelector(".sending__form_input") as HTMLInputElement;
-      const button = document.querySelector(".sending__form_button") as HTMLButtonElement;
       this.dialogFieldBody.innerText = "";
       input.disabled = false;
-      button.disabled = false;
-      button.classList.remove("disabled");
     }
     this.isChatChosen = true;
     this.dialogFieldBody.innerHTML = "";
@@ -430,6 +435,18 @@ export default class ChatView {
       const messageStatus = message.querySelector(".message__footer_status") as HTMLLabelElement;
       messageStatus.style.display = "block";
       messageStatus.textContent = "Изменено";
+    }
+  }
+
+  public toggleSendingButton(isEnabled: boolean) {
+    if (isEnabled) {
+      const button = document.querySelector(".sending__form_button") as HTMLButtonElement;
+      button.disabled = false;
+      button.classList.remove("disabled");
+    } else {
+      const button = document.querySelector(".sending__form_button") as HTMLButtonElement;
+      button.disabled = true;
+      button.classList.add("disabled");
     }
   }
 }
