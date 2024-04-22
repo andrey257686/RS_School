@@ -262,7 +262,12 @@ export default class AppModel {
     data: ResponseMessageFromUser,
     _addMessage: (message: Message, isFromMe: boolean) => void,
     _showUnreadMessagesCount: (username: string, count: number) => void,
+    _setDialogFieldLabelText: (text: string) => void,
   ) {
+    if (data.payload.messages.length === 0) {
+      _setDialogFieldLabelText("No messages yet");
+      return;
+    }
     for (let i = 0; i < data.payload.messages.length; i += 1) {
       if (data.payload.messages[i].to === this.userName) {
         _addMessage(data.payload.messages[i], false);

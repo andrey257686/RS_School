@@ -195,7 +195,6 @@ export default class ChatView {
     }
     if (this.handleSendMessage !== undefined && this.handleEditMessage !== undefined) {
       this.dialogFieldSendingForm.addEventListener("submit", (event) => {
-        console.log(this.isEdit);
         if (!this.isEdit) {
           this.handleSendMessage!.bind(this, event, input.value)();
           this.handleClickDialogField?.bind(this, event)();
@@ -320,6 +319,12 @@ export default class ChatView {
   }
 
   public addMessage(message: Message, isFromMe: boolean) {
+    if (this.isChatChosen) {
+      const label = document.querySelector(".chat__dialog_body-label");
+      if (label) {
+        label.remove();
+      }
+    }
     const messageContainer = this.createMessageContainer(message, isFromMe);
     this.messages.set(message.id, messageContainer);
     if (this.isChatChosen) {
@@ -447,6 +452,15 @@ export default class ChatView {
       const button = document.querySelector(".sending__form_button") as HTMLButtonElement;
       button.disabled = true;
       button.classList.add("disabled");
+    }
+  }
+
+  public setDialogFieldLabelText(text: string) {
+    if (this.isChatChosen) {
+      const label = document.createElement("label");
+      label.className = "chat__dialog_body-label";
+      label.innerText = text;
+      this.dialogFieldBody.appendChild(label);
     }
   }
 }

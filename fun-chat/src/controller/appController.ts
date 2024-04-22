@@ -98,6 +98,7 @@ export default class AppController {
           data,
           this.appView.chatView.addMessage.bind(this.appView.chatView),
           this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
+          this.appView.chatView.setDialogFieldLabelText.bind(this.appView.chatView),
         );
       }
       if (data.type === "MSG_DELIVER") {
