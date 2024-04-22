@@ -225,6 +225,12 @@
   &__my {
     align-self: flex-end;
   }
+  &__divider {
+    width: 100%;
+    min-height: 1px;
+    background-color: #0482ff;
+    z-index: 100;
+  }
 }
 
 .disabled {

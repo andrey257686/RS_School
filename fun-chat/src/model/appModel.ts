@@ -318,10 +318,11 @@ export default class AppModel {
     data: ResponseReadMessages,
     _setMessageStatus: (messageId: string, status: string) => void,
     _showUnreadMessagesCount: (username: string, count: number) => void,
+    _deleteDividedLine: () => void,
   ) {
     _setMessageStatus(data.payload.message.id, "isReaded");
     _showUnreadMessagesCount(this.currentRecipient, 0);
-    // console.log(data);
+    _deleteDividedLine();
   }
 
   public requestDeleteMessage(messageId: string) {
@@ -355,7 +356,6 @@ export default class AppModel {
   }
 
   public responseEditMessage(data: ResponseEditMessage, _editMessage: (id: string, message: string) => void) {
-    console.log(data);
     _editMessage(data.payload.message.id, data.payload.message.text);
   }
 

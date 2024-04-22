@@ -324,6 +324,14 @@ export default class ChatView {
       if (label) {
         label.remove();
       }
+      if (message.status.isReaded === false && isFromMe === false) {
+        let dividedLine = document.querySelector(".message__divider");
+        if (!dividedLine) {
+          dividedLine = document.createElement("div");
+          dividedLine.className = "message__divider";
+          this.dialogFieldBody.appendChild(dividedLine);
+        }
+      }
     }
     const messageContainer = this.createMessageContainer(message, isFromMe);
     this.messages.set(message.id, messageContainer);
@@ -461,6 +469,13 @@ export default class ChatView {
       label.className = "chat__dialog_body-label";
       label.innerText = text;
       this.dialogFieldBody.appendChild(label);
+    }
+  }
+
+  public deleteDividedLine() {
+    const dividedLine = document.querySelector(".message__divider");
+    if (dividedLine) {
+      dividedLine.remove();
     }
   }
 }

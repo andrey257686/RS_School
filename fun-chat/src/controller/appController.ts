@@ -109,6 +109,7 @@ export default class AppController {
           data,
           this.appView.chatView.setMessageStatus.bind(this.appView.chatView),
           this.appView.chatView.showUnreadMessagesCount.bind(this.appView.chatView),
+          this.appView.chatView.deleteDividedLine.bind(this.appView.chatView),
         );
       }
       if (data.type === "MSG_DELETE") {
