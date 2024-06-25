@@ -1,4 +1,7 @@
 # Hangman
+
+[LINK TO DEPLOY](https://hangman-andrey257686.netlify.app/)
+
 ## Task
 ### Project's Description
 Hangman is a classic word game in which you must find the correct answer by guessing letters one at a time.
@@ -27,5 +30,3 @@ Hangman is a classic word game in which you must find the correct answer by gues
 - the question is changed;
 - the underscores are updated according to the new secret word (the same secret word can't be used as an answer to more than one question);
 - an incorrect guesses counter is set to 0.
-
-[LINK TO DEPLOY](https://hangman-andrey257686.netlify.app/)
