@@ -34,3 +34,5 @@ In the current task you have to implement only binary version of the game
 - the latest 5 win results are saved in the high score table. Table is sorted by time of the game using XX:XX format (for example, using LocalStorage). Every line should include: solved puzzle (either naming, or picture, or both); difficulty; stop-watch result.
 - implement button "random game". When player clicks on button - the random template appears (both template and level must be chosen randomly by algorithm).
 - implement "Solution" button near the field. When player clicks the button - the field will be filled in cells with right solution. Usage of the button doesn't mean winning and will not be recorded into winning table.
+
+[LINK TO DEPLOY](https://nonograms-andrey257686.netlify.app/)
